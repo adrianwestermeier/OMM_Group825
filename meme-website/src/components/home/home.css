@@ -1,0 +1,33 @@
+/*image next to inputs*/
+* {
+    box-sizing:border-box;
+  }
+  
+  /*captions centered*/
+  figure {
+    text-align: center; 
+  }
+  
+  #bottomForm{
+    padding-top: 20px;
+  }
+  
+  /*inputs left*/
+  .left {
+    float: left;
+    padding:20px;
+    width:40%;
+  }
+  
+  /*image and captions centered*/
+  .main {
+    float:left;
+    width:60%; 
+  }
+  
+  /* Use a media query to add a break point at 800px: */
+  @media screen and (max-width:800px) {
+    .left, .main {
+      width:100%; /* The width is 100%, when the viewport is 800px or smaller */
+    }
+  }
