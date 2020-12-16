@@ -14,3 +14,13 @@ in command line
 ```
 mongoimport --jsonArray --db meme-generator-db --collection images --file imagesDatabase.json
 ```
+## see if data was imported
+```
+mongo
+```
+```
+use meme-generator-db
+```
+```
+db.images.find()
+```
