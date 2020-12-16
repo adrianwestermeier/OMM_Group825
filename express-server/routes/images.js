@@ -15,7 +15,7 @@ function getImagesFromDb() {
     // var query = { name: "Drake Hotline Bling" };
     dbo.collection("images").find().toArray(function(err, result) {
       if (err) throw err;
-      console.log(result);
+      /* console.log(result); */
       images = result;
       db.close();
     });
@@ -52,14 +52,15 @@ function getData(file){
 }
 
 
-var imagesJson = getData('imagesDatabase.json');
-getImagesFromDb();
+/* var imagesJson = getData('imagesDatabase.json'); */
 // const images = imagesJson;
   
+getImagesFromDb();
+
 /* GET images. */
 router.get('/',  cors(), function(req, res, next) {
     console.log('in images');
-    console.log(images);
+    /* console.log(images); */
     res.json({
         "images": images
     });
@@ -68,7 +69,8 @@ router.get('/',  cors(), function(req, res, next) {
   
   /* POST image. */
   router.post('/handle', cors(), function(req, res, next) {
-      console.log(req.body);
+    console.log('in post');
+      console.log('got post request ', req.body);
       var newImage = {
         "name": req.body.name,
         "url": req.body.url,
