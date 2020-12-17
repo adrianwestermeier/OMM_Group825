@@ -2,7 +2,8 @@
 posts image to express server
 */
 function submitForm(event) {
-  var payload = {
+  event.preventDefault();
+  const payload = {
     name: event.target.elements.name.value,
     url: event.target.elements.url.value,
     width: event.target.elements.width.value,
@@ -17,13 +18,15 @@ function submitForm(event) {
 
 fetch(`http://localhost:3000/images/handle`, 
 {
-  method: 'POST', 
-  mode: 'no-cors',
-  body: JSON.stringify( payload )
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify( payload ),
 })
   .then(jsonResponse => jsonResponse.json()
   .then(responseObject => {
-      alert('recieved answer for post request: ' + JSON.stringify( responseObject ));
+      console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
     })
     .catch(jsonParseError => {
       console.error(jsonParseError);

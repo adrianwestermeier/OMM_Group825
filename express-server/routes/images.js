@@ -4,6 +4,12 @@ var router = express.Router();
 var cors = require('cors');
 var mongoClient = require('mongodb').MongoClient;
 
+var corsOptions = {
+  origin: 'http://localhost:8080',
+  optionsSuccessStatus: 200,
+  methods: "GET, PUT"
+}
+
 var url = "mongodb://localhost:27017/";
 
 var images;
@@ -58,7 +64,7 @@ function getData(file){
 getImagesFromDb();
 
 /* GET images. */
-router.get('/',  cors(), function(req, res, next) {
+router.get('/', function(req, res, next) {
     console.log('in images');
     /* console.log(images); */
     res.json({
@@ -68,9 +74,12 @@ router.get('/',  cors(), function(req, res, next) {
 });
   
   /* POST image. */
-  router.post('/handle', cors(), function(req, res, next) {
+  router.post('/handle', function(req, res, next) {
     console.log('in post');
-      console.log('got post request ', req.body);
+    var newImage = {
+      "name": req.body.name
+    }
+      /* console.log('got post request ', req.body);
       var newImage = {
         "name": req.body.name,
         "url": req.body.url,
@@ -78,10 +87,8 @@ router.get('/',  cors(), function(req, res, next) {
         "height": req.body.height,
         "box_count": req.body.boxCount
       };
-/*     images.push(newImage);
-    console.log(images); */
 
-    postImagesToDb(newImage);
+    postImagesToDb(newImage); */
   
     res.json({
       "code": 201,
@@ -89,7 +96,7 @@ router.get('/',  cors(), function(req, res, next) {
       "image": [newImage]
     });
     
-    getImagesFromDb();
+    /* getImagesFromDb(); */
   });
 
 module.exports = router;
