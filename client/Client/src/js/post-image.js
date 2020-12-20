@@ -14,7 +14,7 @@ function submitForm(event) {
   var data = new FormData();
   data.append( "json", JSON.stringify( payload ) );
 
-  alert('sending data ' + JSON.stringify( payload ));
+  console.log('sending data ' + JSON.stringify( payload ));
 
 fetch(`http://localhost:3000/images/handle`, 
 {
@@ -27,6 +27,7 @@ fetch(`http://localhost:3000/images/handle`,
   .then(jsonResponse => jsonResponse.json()
   .then(responseObject => {
       console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+      alert(JSON.stringify( responseObject.message ))
     })
     .catch(jsonParseError => {
       console.error(jsonParseError);

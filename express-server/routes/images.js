@@ -28,7 +28,15 @@ function getImagesFromDb() {
   }); 
 }
 
-function postImagesToDb(image) {
+function assertNewDbEntry(entry) {
+  if (entry.name==="" || entry.url==="" || entry.width==="" || entry.height==="" || entry.boxCount==="") {
+      console.log('empty string detected');
+      return 0;
+  }
+  return 1;
+}
+
+function postImageToDb(image) {
   mongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("meme-generator-db");
@@ -56,10 +64,6 @@ function getData(file){
     console.log(filepath);
     return readJsonFileSync(filepath);
 }
-
-
-/* var imagesJson = getData('imagesDatabase.json'); */
-// const images = imagesJson;
   
 getImagesFromDb();
 
@@ -73,30 +77,32 @@ router.get('/', function(req, res, next) {
     console.log('sent');
 });
   
-  /* POST image. */
-  router.post('/handle', function(req, res, next) {
-    console.log('in post');
-    var newImage = {
-      "name": req.body.name
-    }
-      /* console.log('got post request ', req.body);
-      var newImage = {
-        "name": req.body.name,
-        "url": req.body.url,
-        "width": req.body.width,
-        "height": req.body.height,
-        "box_count": req.body.boxCount
-      };
-
-    postImagesToDb(newImage); */
-  
+/* POST image. */
+router.post('/handle', function(req, res, next) {
+  console.log('got post request ', req.body);
+  var newImage = {
+    "name": req.body.name,
+    "url": req.body.url,
+    "width": req.body.width,
+    "height": req.body.height,
+    "box_count": req.body.boxCount
+  };
+  if (assertNewDbEntry(newImage) == 0) {
+    res.json({
+      "code": 401,
+      "message": "creation failed, no empty fields allowed!"
+    });
+  } else {
+    postImageToDb(newImage);
     res.json({
       "code": 201,
-      "message": "created image",
+      "message": "created image successfully, refresh page to see changes.",
       "image": [newImage]
     });
-    
-    /* getImagesFromDb(); */
-  });
+  }
+  
+  // update the data instantly
+  getImagesFromDb();
+});
 
 module.exports = router;
