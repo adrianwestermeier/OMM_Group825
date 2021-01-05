@@ -105,4 +105,27 @@ router.post('/handle', function(req, res, next) {
   getImagesFromDb();
 });
 
+router.post('/upload', function(req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    console.log('err1');
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  // The name of the input field (i.e. "userUploadFile") is used to retrieve the uploaded file
+  let sampleFile = req.files.userUploadFile;
+
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv('../../filename.jpg', function(err) {
+    if (err) {
+      console.log('error in upload 500');
+      return res.status(500).send(err);
+    }
+
+    res.json({
+      "code": 201,
+      "message": "created image successfully, refresh page to see changes.",
+    });
+  });
+});
+
 module.exports = router;
