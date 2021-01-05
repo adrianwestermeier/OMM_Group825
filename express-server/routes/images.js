@@ -115,7 +115,7 @@ router.post('/upload', function(req, res) {
   let sampleFile = req.files.userUploadFile;
 
   // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv('/home/adrian/Documents/Uni/master/WiSe-2020/OMM/projekt-neu/filename.jpg', function(err) {
+  sampleFile.mv('../../filename.jpg', function(err) {
     if (err) {
       console.log('error in upload 500');
       return res.status(500).send(err);
