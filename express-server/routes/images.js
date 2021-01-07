@@ -103,7 +103,8 @@ router.post('/handle', function(req, res, next) {
   
   // update the data instantly
   getImagesFromDb();
-});
+})
+
 
 router.post('/upload', function(req, res) {
   if (!req.files || Object.keys(req.files).length === 0) {

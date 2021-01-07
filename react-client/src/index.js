@@ -37,6 +37,17 @@ class InputsText extends React.Component {
         this.props.textSubmitHandle(top, bottom);
     }
 
+    saveOnServer() {
+        console.log("bild wird auf dem Server gespeichert");
+
+        fetch(`/generatedMemes/uploadGeneratedMeme`, 
+            {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              //body: JSON.stringify( payload ),
+            })
+    }
+
     render() {
         return(
             <div className="inputs-text">
@@ -49,6 +60,7 @@ class InputsText extends React.Component {
                   <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick}/>
                   <button type="submit">Submit</button>
                 </form>
+                <button className="saveButton" onClick={this.saveOnServer}>Save Meme on server</button>
             </div>
         )
     }
