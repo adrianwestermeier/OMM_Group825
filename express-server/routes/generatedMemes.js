@@ -18,8 +18,7 @@ let memes;
 function postMemeToDb(generatedMeme) {
     mongoClient.connect(url, function(err, db) {
         if (err) throw err;
-        var dbo = db.db("meme-generator-db");
-        // var query = { name: "Drake Hotline Bling" };
+        let dbo = db.db("meme-generator-db");
         dbo.collection("generatedMemes").insertOne(generatedMeme, function(err, res) {
             if (err) throw err;
             console.log("1 document inserted");
@@ -29,7 +28,7 @@ function postMemeToDb(generatedMeme) {
 }
 
 router.post( "/uploadGeneratedMeme", function (req, res) {
-    console.log('got post request ', req.body);
+    console.log('got post request (generatedMeme) ', req.body);
     let generatedMeme = {
         "name": "name",
         "url": "url",
@@ -41,7 +40,14 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
 
     };
 
-    // TODO: hier muss ich weiter machen
+    // TODO: evtl. hier auf leere Felder prüfen
+
+    postMemeToDb(generatedMeme);
+    res.json({
+        "code": 201,
+        "message": "saved meme successfully, refresh page to see changes.",
+        "image": [generatedMeme]
+    });
 
 })
 

@@ -40,12 +40,33 @@ class InputsText extends React.Component {
     saveOnServer() {
         console.log("bild wird auf dem Server gespeichert");
 
+        const payload = {
+            name: "name",
+            url: "url",
+            width: 100,
+            height: 100,
+            topCaption: "topCaption",
+            middleCaption: "middleCaption",
+            bottomCaption: "bottomCaption"
+        };
+
         fetch(`/generatedMemes/uploadGeneratedMeme`, 
             {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
-              //body: JSON.stringify( payload ),
+              body: JSON.stringify( payload ),
             })
+            .then(jsonResponse => jsonResponse.json()
+              .then(responseObject => {
+                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+                  alert(JSON.stringify( responseObject.message ))
+                })
+                .catch(jsonParseError => {
+                  console.error(jsonParseError);
+                })
+              ).catch(requestError => {
+                console.error(requestError);
+              });
     }
 
     render() {
