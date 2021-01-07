@@ -40,6 +40,7 @@ class InputsText extends React.Component {
     saveOnServer() {
         console.log("bild wird auf dem Server gespeichert");
 
+        // TODO: payload erstellen 
         const payload = {
             name: "name",
             url: "url",
