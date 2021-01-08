@@ -37,38 +37,7 @@ class InputsText extends React.Component {
         this.props.textSubmitHandle(top, bottom);
     }
 
-    saveOnServer() {
-        console.log("bild wird auf dem Server gespeichert");
-
-        // TODO: payload erstellen 
-        const payload = {
-            name: "name",
-            url: "url",
-            width: 100,
-            height: 100,
-            topCaption: "topCaption",
-            middleCaption: "middleCaption",
-            bottomCaption: "bottomCaption"
-        };
-
-        fetch(`/generatedMemes/uploadGeneratedMeme`, 
-            {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
-            })
-            .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
-                })
-                .catch(jsonParseError => {
-                  console.error(jsonParseError);
-                })
-              ).catch(requestError => {
-                console.error(requestError);
-              });
-    }
+    
 
     render() {
         return(
@@ -82,7 +51,7 @@ class InputsText extends React.Component {
                   <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick}/>
                   <button type="submit">Submit</button>
                 </form>
-                <button className="saveButton" onClick={this.saveOnServer}>Save Meme on server</button>
+                
             </div>
         )
     }
@@ -224,6 +193,49 @@ class SlideShow extends React.Component {
         }
     }
 
+    saveOnServer() {
+        console.log("bild wird auf dem Server gespeichert");
+
+        let index = this.state.currentIndex;
+        let image = this.state.pictures[index];
+        const topText = this.props.topText;
+        const bottomText = this.props.bottomText;
+
+        console.log("topCaption: " + topText);
+        console.log("image: " + bottomText);
+
+        
+
+        // TODO: payload erstellen 
+        const payload = {
+            name: image.name,
+            url: image.url,
+            width: image.width,
+            height: image.height,
+            top_caption: topText,
+            middle_caption: null,
+            bottom_caption: bottomText
+        };
+
+        fetch(`/generatedMemes/uploadGeneratedMeme`, 
+            {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify( payload ),
+            })
+            .then(jsonResponse => jsonResponse.json()
+              .then(responseObject => {
+                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+                  alert(JSON.stringify( responseObject.message ))
+                })
+                .catch(jsonParseError => {
+                  console.error(jsonParseError);
+                })
+              ).catch(requestError => {
+                console.error(requestError);
+              });
+    }
+
     render() {
         const currentIndex = this.state.currentIndex;
         const topText = this.props.topText;
@@ -248,6 +260,8 @@ class SlideShow extends React.Component {
                     <div className="topOut">{topText}</div>
                     <div className="bottomOut">{bottomText}</div>   
                 </div>
+
+                <button className="saveButton" onClick={() => {this.saveOnServer()}}>Save Meme on server</button>
 
             </div>
         );

@@ -30,13 +30,13 @@ function postMemeToDb(generatedMeme) {
 router.post( "/uploadGeneratedMeme", function (req, res) {
     console.log('got post request (generatedMeme) ', req.body);
     let generatedMeme = {
-        "name": "name",
-        "url": "url",
-        "width": 100,
-        "height": 100,
-        "top_caption": "topCaption",
-        "middle_caption": "middleCaption",
-        "bottom_caption": "bottomCaption"
+        "name": req.body.name,
+        "url": req.body.url,
+        "width": req.body.width,
+        "height": req.body.height,
+        "top_caption": req.body.top_caption,
+        "middle_caption": req.body.middle_caption,
+        "bottom_caption": req.body.bottom_caption
 
     };
 
