@@ -70,8 +70,8 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
 
 getMemesFromDb();
 
-router.get('/', function(req, res, next) {
-    console.log('in memes');
+router.get('/getMemes', function(req, res, next) {
+    console.log('router.get /getMemes');
 
     /* console.log(images); */
     res.json({

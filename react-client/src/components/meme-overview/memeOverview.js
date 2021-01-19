@@ -13,7 +13,7 @@ class MemeOverview extends React.Component {
 
   loadMemes = () => {
     console.log('load Memes');
-    fetch('/')
+    fetch('/getMemes')
             .then(res => {
                 console.log(res);
                 return res.json()
