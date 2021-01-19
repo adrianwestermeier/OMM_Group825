@@ -32,6 +32,7 @@ function getMemesFromDb(){
 
 
 function postMemeToDb(generatedMeme) {
+
     mongoClient.connect(url, function(err, db) {
         if (err) throw err;
         let dbo = db.db("meme-generator-db");
@@ -71,6 +72,7 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
 getMemesFromDb();
 
 router.get('/getMemes', function(req, res, next) {
+    console.log('hallo');
     console.log('router.get /getMemes');
 
     /* console.log(images); */
