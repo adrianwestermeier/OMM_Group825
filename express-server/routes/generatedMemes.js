@@ -14,6 +14,22 @@ let url = "mongodb://localhost:27017/";
 
 let memes;
 
+function getMemesFromDb(){
+    console.log('get memes from DB');
+    mongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("meme-generator-db");
+        // var query = { name: "Drake Hotline Bling" };
+        dbo.collection("generatedMemes").find().toArray(function(err, result) {
+            if (err) throw err;
+            /* console.log(result); */
+            memes = result;
+            db.close();
+        });
+    });
+    console.log('memes ' + memes);
+}
+
 
 function postMemeToDb(generatedMeme) {
     mongoClient.connect(url, function(err, db) {
@@ -25,6 +41,7 @@ function postMemeToDb(generatedMeme) {
             db.close();
         });
     });
+
 }
 
 router.post( "/uploadGeneratedMeme", function (req, res) {
@@ -50,5 +67,17 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
     });
 
 })
+
+getMemesFromDb();
+
+router.get('/', function(req, res, next) {
+    console.log('in memes');
+
+    /* console.log(images); */
+    res.json({
+        "memes": memes
+    });
+    console.log('sent');
+});
 
 module.exports = router;
