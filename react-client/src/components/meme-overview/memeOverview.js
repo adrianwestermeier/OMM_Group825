@@ -25,30 +25,20 @@ class MemeOverview extends React.Component {
             });
     }
 
-
-  loadMemes = () => {
-      const memes = this.state.memes
-    console.log('load Memes');
-      for (var i = 0; i < memes.length; i++) {
-          console.log(this.state.memes[i].url)
-      }
-
-  }
-
-
   render() {
 
       const items = [];
       let memes = this.state.memes
-      for (var i = 0; i < memes.length; i++) {
-          console.log(this.state.memes[i].url)
+      for (let i = 0; i < memes.length; i++) {
           let url = this.state.memes[i].url
-          items.push(<img src={url} />)
+          let id= this.state.memes[i]._id
+          items.push(<img key={id} src={url} />)
 
       }
     return (
       <div >
-        <button onClick={this.loadMemes}>Load</button>
+
+
           <div>
             {items}
           </div>

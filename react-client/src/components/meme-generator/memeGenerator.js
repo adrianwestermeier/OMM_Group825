@@ -4,6 +4,7 @@ import axios from 'axios';
 import arrowBack from './img/arrow_back-black-18dp.svg';
 import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
+import Meme from "../Meme/meme";
 import {
     BrowserRouter as Router,
     Switch,
@@ -261,11 +262,11 @@ class SlideShow extends React.Component {
 
                 <div><p>current Index: {currentIndex}</p></div>
 
-                <div className="image-wrapper">
-                    <img src={url} />
-                    <div className="topOut">{topText}</div>
-                    <div className="bottomOut">{bottomText}</div>   
-                </div>
+                <Meme
+                    url={url}
+                    topText={topText}
+                    bottomText={bottomText}
+                />
 
                 <button className="saveButton" onClick={() => {this.saveOnServer()}}>Save Meme on server</button>
 
