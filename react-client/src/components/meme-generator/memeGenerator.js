@@ -1,16 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 import arrowBack from './img/arrow_back-black-18dp.svg';
 import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
 import Meme from "../Meme/meme";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
 
 
 // Inputs for the top and bottom texts
@@ -26,39 +19,39 @@ class InputsText extends React.Component {
     handleTopClick = (event) => {
         event.preventDefault();
         let nam = event.target.value;
-        this.setState({topText: nam});
+        this.setState({ topText: nam });
     }
 
     handleBottomClick = (event) => {
         event.preventDefault();
         let nam = event.target.value;
-        this.setState({bottomText: nam});
+        this.setState({ bottomText: nam });
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
         let top = this.state.topText;
-        
+
         let bottom = this.state.bottomText;
-        
+
         this.props.textSubmitHandle(top, bottom);
     }
 
-    
+
 
     render() {
-        return(
+        return (
             <div className="inputs-text">
                 <h2 className="form-header">Write top and bottom caption</h2>
                 <form id="topForm" onSubmit={this.handleSubmit}>
-                  <input type="text" placeholder="top caption" name="topText" onChange={this.handleTopClick}/>
-                  <button type="submit">Submit</button>
-                </form>    
-                <form id="bottomForm" onSubmit={this.handleSubmit}>
-                  <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick}/>
-                  <button type="submit">Submit</button>
+                    <input type="text" placeholder="top caption" name="topText" onChange={this.handleTopClick} />
+                    <button type="submit">Submit</button>
                 </form>
-                
+                <form id="bottomForm" onSubmit={this.handleSubmit}>
+                    <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick} />
+                    <button type="submit">Submit</button>
+                </form>
+
             </div>
         )
     }
@@ -69,27 +62,25 @@ class InputsPost extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          name: null,
-          url: null,
-          width: null,
-          height: null,
-          boxCount: null,
+            name: null,
+            url: null,
+            width: null,
+            height: null,
+            boxCount: null,
         };
-      }
+    }
 
-      mySubmitHandler = (event) => {
+    mySubmitHandler = (event) => {
         event.preventDefault();
-        if ( !this.state.name || !this.state.url || !this.state.width || !this.state.height || !this.state.boxCount ) {
+        if (!this.state.name || !this.state.url || !this.state.width || !this.state.height || !this.state.boxCount) {
             alert("You must enter every field in the inputs!");
             return;
         }
-        const name = this.state.name;
-        const url = this.state.url;
         const inputWidth = this.state.width;
         const inputHeight = this.state.height;
         const inputBoxCount = this.state.boxCount;
-        if ( !Number(inputWidth) || !Number(inputHeight) || !Number(inputBoxCount) ) {
-          alert("You must enter numbers for width, height and box count!");
+        if (!Number(inputWidth) || !Number(inputHeight) || !Number(inputBoxCount)) {
+            alert("You must enter numbers for width, height and box count!");
         } else {
             console.log(this.state)
             const payload = {
@@ -100,98 +91,100 @@ class InputsPost extends React.Component {
                 boxCount: event.target.elements.boxCount.value
             };
 
-            console.log('sending data ' + JSON.stringify( payload ));
+            console.log('sending data ' + JSON.stringify(payload));
 
-            fetch(`/images/handle`, 
-            {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
-            })
-              .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
+            fetch(`/images/handle`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
                 })
-                .catch(jsonParseError => {
-                  console.error(jsonParseError);
-                })
-              ).catch(requestError => {
-                console.error(requestError);
-              });           
+                .then(jsonResponse => jsonResponse.json()
+                    .then(responseObject => {
+                        console.log('recieved answer for post request: ' + JSON.stringify(responseObject));
+                        alert(JSON.stringify(responseObject.message))
+                    })
+                    .catch(jsonParseError => {
+                        console.error(jsonParseError);
+                    })
+                ).catch(requestError => {
+                    console.error(requestError);
+                });
         }
-      }
+    }
 
-      myChangeHandler = (event) => {
+    myChangeHandler = (event) => {
         let nam = event.target.name;
         let val = event.target.value;
-        this.setState({[nam]: val});
-      }
+        this.setState({ [nam]: val });
+    }
 
     render() {
         return (
-            <div className="inputs-post"> 
+            <div className="inputs-post">
                 <h2 className="form-header">Post a new picture by existing url</h2>
                 <form className="postForm" onSubmit={this.mySubmitHandler}>
-                  <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="width" name="width" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="height" name="height" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="box count" name="boxCount" onChange={this.myChangeHandler}/>
-                  <button type="submit" className="postSubmit">Submit</button>
+                    <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler} /> <br />
+                    <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler} /> <br />
+                    <input type="text" placeholder="width" name="width" onChange={this.myChangeHandler} /> <br />
+                    <input type="text" placeholder="height" name="height" onChange={this.myChangeHandler} /> <br />
+                    <input type="text" placeholder="box count" name="boxCount" onChange={this.myChangeHandler} />
+                    <button type="submit" className="postSubmit">Submit</button>
                 </form>
             </div>
         );
-      }
+    }
 }
 
 
 // slide show for existing memes
 class SlideShow extends React.Component {
-   constructor(props){
-       super(props);
-       this.state = {
-           pictures: [],
-           currentIndex: 0,
+    constructor(props) {
+        super(props);
+        this.state = {
+            pictures: [],
+            currentIndex: 0,
         };
-   }
-   componentDidMount() {
+    }
+    componentDidMount() {
         fetch('/images')
             .then(res => {
                 console.log(res);
                 return res.json()
-             })
-            .then(images => { 
+            })
+            .then(images => {
                 console.log(images);
-                this.setState({ 
+                this.setState({
                     pictures: images.images,  // image array is wrapped in image json
                     currentIndex: 0,
                     topText: "",
                     bottomText: "",
                 })
-             });
+            });
     }
 
     onClickNext() {
         const nextIndex = this.state.currentIndex + 1;
-        if(nextIndex === this.state.pictures.length) {
-            this.setState({ 
+        if (nextIndex === this.state.pictures.length) {
+            this.setState({
                 pictures: this.state.pictures,
-                currentIndex: 0 })    
+                currentIndex: 0
+            })
         } else {
             this.setState({
                 pictures: this.state.pictures,
-                currentIndex: nextIndex 
+                currentIndex: nextIndex
             })
         }
     }
 
     onClickPrevious() {
         const previousIndex = this.state.currentIndex - 1;
-        if(previousIndex < 0) {
-            this.setState({ 
+        if (previousIndex < 0) {
+            this.setState({
                 pictures: this.state.pictures,
-                currentIndex: this.state.pictures.length - 1 })    
+                currentIndex: this.state.pictures.length - 1
+            })
         } else {
             this.setState({
                 pictures: this.state.pictures,
@@ -211,7 +204,7 @@ class SlideShow extends React.Component {
         console.log("topCaption: " + topText);
         console.log("image: " + bottomText);
 
-        
+
 
         // TODO: payload erstellen 
         const payload = {
@@ -224,23 +217,23 @@ class SlideShow extends React.Component {
             bottom_caption: bottomText
         };
 
-        fetch(`/generatedMemes/uploadGeneratedMeme`, 
+        fetch(`/generatedMemes/uploadGeneratedMeme`,
             {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
             })
             .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
+                .then(responseObject => {
+                    console.log('recieved answer for post request: ' + JSON.stringify(responseObject));
+                    alert(JSON.stringify(responseObject.message))
                 })
                 .catch(jsonParseError => {
-                  console.error(jsonParseError);
+                    console.error(jsonParseError);
                 })
-              ).catch(requestError => {
+            ).catch(requestError => {
                 console.error(requestError);
-              });
+            });
     }
 
     render() {
@@ -248,7 +241,7 @@ class SlideShow extends React.Component {
         const topText = this.props.topText;
         const bottomText = this.props.bottomText;
         let url;
-        if(this.state.pictures.length > 0) {
+        if (this.state.pictures.length > 0) {
             url = this.state.pictures[currentIndex].url;
         } else {
             url = ""
@@ -256,8 +249,8 @@ class SlideShow extends React.Component {
         return (
             <div className="main">
                 <div className="navigation-buttons">
-                  <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
-                  <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
+                    <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
+                    <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
                 </div>
 
                 <div><p>current Index: {currentIndex}</p></div>
@@ -268,7 +261,7 @@ class SlideShow extends React.Component {
                     bottomText={bottomText}
                 />
 
-                <button className="saveButton" onClick={() => {this.saveOnServer()}}>Save Meme on server</button>
+                <button className="saveButton" onClick={() => { this.saveOnServer() }}>Save Meme on server</button>
 
             </div>
         );
@@ -290,43 +283,43 @@ class FileUpload extends React.Component {
         this.setState({
             selectedFile: event.target.files[0],
             loaded: 0,
-          })
+        })
     }
 
     onClickHandler = () => {
         const file = this.state.selectedFile;
         const formData = new FormData();
         formData.append("userUploadFile", file);
-      
-        axios.post("http://localhost:3000/images/upload", formData,{headers:{"Content-Type" : 'multipart/form-data'}})
-        .then((res) => {
-            alert(res.data.message);
-          })
-          .catch((err) => alert("File Upload Error"));
-      
-          }
+
+        axios.post("http://localhost:3000/images/upload", formData, { headers: { "Content-Type": 'multipart/form-data' } })
+            .then((res) => {
+                alert(res.data.message);
+            })
+            .catch((err) => alert("File Upload Error"));
+
+    }
 
     render() {
-        return(   
+        return (
             <div className="file-upload">
                 <h2>Upload a file</h2>
-                <input type="file" name="sampleFile" onChange={this.onChangeHandler}/>
+                <input type="file" name="sampleFile" onChange={this.onChangeHandler} />
                 <button type="button" onClick={this.onClickHandler}>Upload</button>
             </div>
         )
     }
-    
+
 }
 
 // ========================================
 // overall class to handle everything
 export default class Generator extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             topText: "",
             bottomText: "",
-         };
+        };
     }
 
     handleTextSubmit = (top, bottom) => {
@@ -339,18 +332,18 @@ export default class Generator extends React.Component {
     }
 
     render() {
-      return (
-        <div className="home">
-            <div className="input-section">
-                <InputsText textSubmitHandle={this.handleTextSubmit}/>
-                <InputsPost/>
-                <FileUpload/>
+        return (
+            <div className="home">
+                <div className="input-section">
+                    <InputsText textSubmitHandle={this.handleTextSubmit} />
+                    <InputsPost />
+                    <FileUpload />
+                </div>
+                <div className="slide-show-section">
+                    <h2>Pictures</h2>
+                    <SlideShow topText={this.state.topText} bottomText={this.state.bottomText} />
+                </div>
             </div>
-            <div className="slide-show-section">
-                <h2>Pictures</h2>
-                <SlideShow topText={this.state.topText} bottomText={this.state.bottomText}/>
-            </div>
-        </div>
-      );
+        );
     }
 }

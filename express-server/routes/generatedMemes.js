@@ -66,7 +66,7 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
         "message": "saved meme successfully, refresh page to see changes.",
         "image": [generatedMeme]
     });
-
+    getMemesFromDb();
 })
 
 getMemesFromDb();
@@ -74,6 +74,7 @@ getMemesFromDb();
 router.get('/getMemes', function(req, res, next) {
     console.log('hallo');
     console.log('router.get /getMemes');
+
 
     /* console.log(images); */
     res.json({
