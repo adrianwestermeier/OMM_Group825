@@ -1,13 +1,12 @@
 import React from 'react';
-import { createRef, useState } from "react";
 import arrowBack from './img/arrow_back-black-18dp.svg';
 import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
-import { useScreenshot } from "use-react-screenshot";
 import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import * as htmlToImage from 'html-to-image';
 
 
+// Meme template with top and bottom caption
 class Meme extends React.Component {
     constructor(props){
         super(props);
@@ -23,7 +22,7 @@ class Meme extends React.Component {
     }
 }
 
-// slide show for existing memes
+// slide show for existing meme templates
 export default class SlideShow extends React.Component {
     constructor(props){
         super(props);
@@ -35,6 +34,8 @@ export default class SlideShow extends React.Component {
             png: "",
          };
     }
+
+    // get the meme templates from the express server
     componentDidMount() {
          fetch('/images')
              .then(res => {
@@ -52,6 +53,7 @@ export default class SlideShow extends React.Component {
               });
      }
  
+     // go to next meme template
      onClickNext() {
          const nextIndex = this.state.currentIndex + 1;
          if(nextIndex === this.state.pictures.length) {
@@ -66,6 +68,7 @@ export default class SlideShow extends React.Component {
          }
      }
  
+     // go to previous meme template
      onClickPrevious() {
          const previousIndex = this.state.currentIndex - 1;
          if(previousIndex < 0) {
@@ -80,8 +83,9 @@ export default class SlideShow extends React.Component {
          }
      }
  
+     // save current meme template to the express server
      saveOnServer() {
-         console.log("bild wird auf dem Server gespeichert");
+         console.log("image gets saved to server");
  
          let index = this.state.currentIndex;
          let image = this.state.pictures[index];
@@ -91,9 +95,6 @@ export default class SlideShow extends React.Component {
          console.log("topCaption: " + topText);
          console.log("image: " + bottomText);
  
-         
- 
-         // TODO: payload erstellen 
          const payload = {
              name: image.name,
              url: image.url,
@@ -123,6 +124,7 @@ export default class SlideShow extends React.Component {
                });
      }
 
+     // render the current meme template as an image on the website (does not get saved automatically on server)
      showImage = (() => {
         var node = document.getElementById('image-wrapper');
         var that = this
@@ -135,7 +137,6 @@ export default class SlideShow extends React.Component {
                 showPng: true,
                 png: dataUrl,
             })
-            // document.body.appendChild(img);
           })
           .catch(function (error) {
             console.error('oops, something went wrong!', error);
@@ -181,9 +182,9 @@ export default class SlideShow extends React.Component {
                  <button onClick={() => exportComponentAsPNG(this.componentRef)}>
                      Export As PNG
                  </button>
-                 <button onClick={this.showImage}>show as png</button>
+                 <button onClick={this.showImage}>Show current status</button>
                  <div>
-                    <h2>What it currently looks like</h2>
+                    <h2>What your meme currently looks like</h2>
                     <img src={createdImage} />
                  </div>
                  

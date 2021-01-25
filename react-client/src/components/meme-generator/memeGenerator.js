@@ -42,8 +42,6 @@ class InputsText extends React.Component {
         this.props.textSubmitHandle(top, bottom);
     }
 
-    
-
     render() {
         return(
             <div className="inputs-text">
@@ -62,7 +60,7 @@ class InputsText extends React.Component {
     }
 }
 
-// inputs for the url post feature
+// inputs for user-posted urls
 class InputsPost extends React.Component {
     constructor(props) {
         super(props);
@@ -186,8 +184,7 @@ class FileUpload extends React.Component {
     
 }
 
-// ========================================
-// overall class to handle everything
+// class that renders all the meme generation functions
 export default class Generator extends React.Component {
     constructor(props){
         super(props);
@@ -197,6 +194,7 @@ export default class Generator extends React.Component {
          };
     }
 
+    // create top and bottom text for a meme template
     handleTextSubmit = (top, bottom) => {
         console.log(top);
         console.log(bottom);
@@ -215,7 +213,7 @@ export default class Generator extends React.Component {
                 <FileUpload/>
             </div>
             <div className="slide-show-section">
-                <h2>Pictures</h2>               
+                <h2>Meme templates</h2>               
                 <SlideShow topText={this.state.topText} bottomText={this.state.bottomText}/>  
             </div>
         </div>

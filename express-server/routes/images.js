@@ -122,9 +122,10 @@ router.post('/upload', function(req, res) {
       return res.status(500).send(err);
     }
 
+    // TODO: load images from local files
     res.json({
       "code": 201,
-      "message": "created image successfully, refresh page to see changes.",
+      "message": "TODO in Backend: load from local files",
     });
   });
 });
