@@ -1,15 +1,14 @@
 import React from 'react';
+import { createRef, useState } from "react";
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import arrowBack from './img/arrow_back-black-18dp.svg';
 import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
+import { useScreenshot } from "use-react-screenshot";
+import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+import html2canvas from 'html2canvas';
+import SlideShow from "./slideShow";
 
 
 // Inputs for the top and bottom texts
@@ -145,136 +144,6 @@ class InputsPost extends React.Component {
 }
 
 
-// slide show for existing memes
-class SlideShow extends React.Component {
-   constructor(props){
-       super(props);
-       this.state = {
-           pictures: [],
-           currentIndex: 0,
-        };
-   }
-   componentDidMount() {
-        fetch('/images')
-            .then(res => {
-                console.log(res);
-                return res.json()
-             })
-            .then(images => { 
-                console.log(images);
-                this.setState({ 
-                    pictures: images.images,  // image array is wrapped in image json
-                    currentIndex: 0,
-                    topText: "",
-                    bottomText: "",
-                })
-             });
-    }
-
-    onClickNext() {
-        const nextIndex = this.state.currentIndex + 1;
-        if(nextIndex === this.state.pictures.length) {
-            this.setState({ 
-                pictures: this.state.pictures,
-                currentIndex: 0 })    
-        } else {
-            this.setState({
-                pictures: this.state.pictures,
-                currentIndex: nextIndex 
-            })
-        }
-    }
-
-    onClickPrevious() {
-        const previousIndex = this.state.currentIndex - 1;
-        if(previousIndex < 0) {
-            this.setState({ 
-                pictures: this.state.pictures,
-                currentIndex: this.state.pictures.length - 1 })    
-        } else {
-            this.setState({
-                pictures: this.state.pictures,
-                currentIndex: previousIndex
-            })
-        }
-    }
-
-    saveOnServer() {
-        console.log("bild wird auf dem Server gespeichert");
-
-        let index = this.state.currentIndex;
-        let image = this.state.pictures[index];
-        const topText = this.props.topText;
-        const bottomText = this.props.bottomText;
-
-        console.log("topCaption: " + topText);
-        console.log("image: " + bottomText);
-
-        
-
-        // TODO: payload erstellen 
-        const payload = {
-            name: image.name,
-            url: image.url,
-            width: image.width,
-            height: image.height,
-            top_caption: topText,
-            middle_caption: null,
-            bottom_caption: bottomText
-        };
-
-        fetch(`/generatedMemes/uploadGeneratedMeme`, 
-            {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
-            })
-            .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
-                })
-                .catch(jsonParseError => {
-                  console.error(jsonParseError);
-                })
-              ).catch(requestError => {
-                console.error(requestError);
-              });
-    }
-
-    render() {
-        const currentIndex = this.state.currentIndex;
-        const topText = this.props.topText;
-        const bottomText = this.props.bottomText;
-        let url;
-        if(this.state.pictures.length > 0) {
-            url = this.state.pictures[currentIndex].url;
-        } else {
-            url = ""
-        }
-        return (
-            <div className="main">
-                <div className="navigation-buttons">
-                  <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
-                  <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
-                </div>
-
-                <div><p>current Index: {currentIndex}</p></div>
-
-                <div className="image-wrapper">
-                    <img src={url} />
-                    <div className="topOut">{topText}</div>
-                    <div className="bottomOut">{bottomText}</div>   
-                </div>
-
-                <button className="saveButton" onClick={() => {this.saveOnServer()}}>Save Meme on server</button>
-
-            </div>
-        );
-    }
-}
-
-
 // user upload, file gets saved on local file system
 class FileUpload extends React.Component {
     constructor(props) {
@@ -346,8 +215,8 @@ export default class Generator extends React.Component {
                 <FileUpload/>
             </div>
             <div className="slide-show-section">
-                <h2>Pictures</h2>
-                <SlideShow topText={this.state.topText} bottomText={this.state.bottomText}/>
+                <h2>Pictures</h2>               
+                <SlideShow topText={this.state.topText} bottomText={this.state.bottomText}/>  
             </div>
         </div>
       );
