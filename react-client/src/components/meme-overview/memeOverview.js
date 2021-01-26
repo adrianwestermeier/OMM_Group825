@@ -3,6 +3,39 @@ import React from 'react';
 import './memeOverview.css';
 import Meme from "../Meme/meme";
 
+class OverviewElem extends React.Component{
+
+  upVote(){
+    console.log('UpVote')
+  }
+
+  downVote(){
+    console.log('DownVote')
+  }
+
+  render() {
+
+    const id = this.props.id
+    const url = this.props.url
+    const topCaption = this.props.topText
+    const bottomCaption = this.props.bottomText
+
+
+    return(
+        <div>
+          <Meme
+              key={id}
+              url={url}
+              topText={topCaption}
+              bottomText={bottomCaption}
+          />
+          <button onClick={this.upVote}>UpVote</button>
+          <button onClick={this.downVote}>DownVote</button>
+        </div>
+    )
+  }
+}
+
 class MemeOverview extends React.Component {
   constructor(props) {
     super(props);
@@ -44,8 +77,9 @@ class MemeOverview extends React.Component {
       let topCaption = memes[i].top_caption
       let bottomCaption = memes[i].bottom_caption
       //items.push(<img key={id} src={url} />)
-      items.push(<Meme className="gridItem"
-        key={id}
+      items.push(<OverviewElem className="gridItem"
+        key={id} // jedes Listenenlement braucht einen eindeutigen key
+        id={id}  // auf den key kann nicht über props.key zugegriffen werden
         url={url}
         topText={topCaption}
         bottomText={bottomCaption}

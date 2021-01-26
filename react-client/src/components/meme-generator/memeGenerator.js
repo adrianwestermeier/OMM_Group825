@@ -249,8 +249,8 @@ class SlideShow extends React.Component {
         return (
             <div className="main">
                 <div className="navigation-buttons">
-                    <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
-                    <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
+                    <img src={arrowBack} className="backButton" alt={'arrowBack'} onClick={() => this.onClickPrevious()}></img>
+                    <img src={arrowForward} className="nextButton" alt={'arrowForward'} onClick={() => this.onClickNext()}></img>
                 </div>
 
                 <div><p>current Index: {currentIndex}</p></div>
