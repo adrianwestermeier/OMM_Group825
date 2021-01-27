@@ -14,8 +14,25 @@ let url = "mongodb://localhost:27017/";
 
 let memes;
 
+function getMemesFromDb(){
+    console.log('get memes from DB');
+    mongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("meme-generator-db");
+        // var query = { name: "Drake Hotline Bling" };
+        dbo.collection("generatedMemes").find().toArray(function(err, result) {
+            if (err) throw err;
+            /* console.log(result); */
+            memes = result;
+            db.close();
+        });
+    });
+    console.log('memes ' + memes);
+}
+
 
 function postMemeToDb(generatedMeme) {
+
     mongoClient.connect(url, function(err, db) {
         if (err) throw err;
         let dbo = db.db("meme-generator-db");
@@ -25,6 +42,7 @@ function postMemeToDb(generatedMeme) {
             db.close();
         });
     });
+
 }
 
 router.post( "/uploadGeneratedMeme", function (req, res) {
@@ -36,7 +54,9 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
         "height": req.body.height,
         "top_caption": req.body.top_caption,
         "middle_caption": req.body.middle_caption,
-        "bottom_caption": req.body.bottom_caption
+        "bottom_caption": req.body.bottom_caption,
+        "upVotes": req.body.upVotes,
+        "downVotes": req.body.downVotes
 
     };
 
@@ -48,7 +68,48 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
         "message": "saved meme successfully, refresh page to see changes.",
         "image": [generatedMeme]
     });
-
+    getMemesFromDb();
 })
+
+getMemesFromDb();
+
+router.get('/getMemes', function(req, res, next) {
+    console.log('hallo');
+    console.log('router.get /getMemes');
+
+
+    /* console.log(images); */
+    res.json({
+        "memes": memes
+    });
+    console.log('sent');
+});
+
+router.put('/updateMeme', function (req, res){
+    console.log(req.body)
+    const id = "ObjectId(\"" + req.body.id + "\")"
+    //console.log(id)
+    memes.findOneAndUpdate(
+        {_id: id},
+        {
+            $set: {
+                "name": req.body.name,
+                "url": req.body.url,
+                "width": req.body.width,
+                "height": req.body.height,
+                "top_caption": req.body.top_caption,
+                "middle_caption": req.body.middle_caption,
+                "bottom_caption": req.body.bottom_caption,
+                "upVotes": req.body.upVotes,
+                "downVotes": req.body.downVotes
+            }
+        },
+        {upsert: false}
+    )
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.error(error))
+});
 
 module.exports = router;

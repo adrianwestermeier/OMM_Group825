@@ -1,103 +1,103 @@
 .home {
-    display: block;
-    margin: 25px 50px;
+  display: block;
+  margin: 25px 50px;
 }   
 
 .meme-generator-wrapper {
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 }
 
 .input-section {
-    width: 100%;
-    border: none;
+  width: 100%;
+  border: none;
 }
 
 .inputs-text {
-  margin-top: 70px;
+margin-top: 70px;
 }
 
 .inputs-text-button-group {
-  display: block;
+display: block;
 }
 
 .position-wrapper-whole {
-  display: flex;
-  margin-top: 20px;
+display: flex;
+margin-top: 20px;
 }
 
 .position-wrapper {
-  display: flex;
+display: flex;
 }
 
 .slide-show-section {
-    width: 100%;
+  width: 100%;
 }
 
 .input-form {
-  display: inline-flex;
+display: inline-flex;
 }
 
 input[type=text] {
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  border: none;
-  border-bottom: 2px solid black;
-  line-height: 2em;
+margin-bottom: 20px;
+box-sizing: border-box;
+border: none;
+border-bottom: 2px solid black;
+line-height: 2em;
 }
 
 button[type=submit] {
-  background-color: white;
-  color: black;
-  width: 30%;
-  /* padding: 10px 18px; */
-  margin-left: 30px;
-  border: 2px solid #555555;
-  cursor: pointer;
+background-color: white;
+color: black;
+width: 30%;
+/* padding: 10px 18px; */
+margin-left: 30px;
+border: 2px solid #555555;
+cursor: pointer;
 }
 
 .title-submit {
-  height: 35px;
+height: 35px;
 }
 
 button[type=button] {
-  background-color: white;
-  color: black;
-  width: 30px;
-  height: 20px;
-  padding: 2px 5px;
-  margin-left: 10px;
-  border: 2px solid #555555;
-  cursor: pointer;
+background-color: white;
+color: black;
+width: 30px;
+height: 20px;
+padding: 2px 5px;
+margin-left: 10px;
+border: 2px solid #555555;
+cursor: pointer;
 }
 
 .buttons {
-  display:flex;
-  flex-direction:column;
-  justify-content: space-around;
+display:flex;
+flex-direction:column;
+justify-content: space-around;
 }
 
 .position-text {
-  margin-left: 20px;
+margin-left: 20px;
 }
 
 .upload-button {
-  width: 100px !important;
+width: 100px !important;
 }
 
 .postSubmit {
-  width: 30% !important;
-  display: block;
-  margin-left: 0px !important;
+width: 30% !important;
+display: block;
+margin-left: 0px !important;
 }
 
 .image-wrapper {
-    position: relative;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 h2 {
-  margin: 0px;
+margin: 0px;
 }

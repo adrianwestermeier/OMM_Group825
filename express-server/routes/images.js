@@ -15,6 +15,7 @@ var url = "mongodb://localhost:27017/";
 var images;
 
 function getImagesFromDb() {
+  console.log('get Image from Db');
   mongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("meme-generator-db");
