@@ -5,8 +5,28 @@ import Meme from "../Meme/meme";
 
 class OverviewElem extends React.Component{
 
-  upVote(){
+  upVote(meme){
     console.log('UpVote')
+
+    const payload = {
+      id: meme._id,
+      name: meme.name,
+      url: meme.url,
+      width: meme.width,
+      height: meme.height,
+      top_caption: meme.top_caption,
+      middle_caption: null,
+      bottom_caption: meme.bottom_caption,
+      upVotes: meme.upVotes + 1,
+      downVotes: meme.downVotes
+    };
+
+    fetch(`/generatedMemes/updateMeme`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
   }
 
   downVote(){
@@ -15,10 +35,12 @@ class OverviewElem extends React.Component{
 
   render() {
 
-    const id = this.props.id
-    const url = this.props.url
-    const topCaption = this.props.topText
-    const bottomCaption = this.props.bottomText
+    const meme = this.props.meme
+    const id = meme.id
+    const url = meme.url
+    const topCaption = meme.top_caption
+    const bottomCaption = meme.bottom_caption
+
 
 
     return(
@@ -29,8 +51,8 @@ class OverviewElem extends React.Component{
               topText={topCaption}
               bottomText={bottomCaption}
           />
-          <button onClick={this.upVote}>UpVote</button>
-          <button onClick={this.downVote}>DownVote</button>
+          <button onClick={() => this.upVote(meme)}>UpVote</button>
+          <button onClick={() => this.downVote(meme)}>DownVote</button>
         </div>
     )
   }
@@ -72,17 +94,11 @@ class MemeOverview extends React.Component {
     const items = [];
     let memes = this.state.memes
     for (let i = 0; i < memes.length; i++) {
-      let url = memes[i].url
       let id = memes[i]._id
-      let topCaption = memes[i].top_caption
-      let bottomCaption = memes[i].bottom_caption
-      //items.push(<img key={id} src={url} />)
+
       items.push(<OverviewElem className="gridItem"
-        key={id} // jedes Listenenlement braucht einen eindeutigen key
-        id={id}  // auf den key kann nicht über props.key zugegriffen werden
-        url={url}
-        topText={topCaption}
-        bottomText={bottomCaption}
+        key={id}
+        meme={memes[i]}
       />)
 
 

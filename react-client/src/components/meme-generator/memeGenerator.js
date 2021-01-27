@@ -206,7 +206,7 @@ class SlideShow extends React.Component {
 
 
 
-        // TODO: payload erstellen 
+
         const payload = {
             name: image.name,
             url: image.url,
@@ -214,7 +214,9 @@ class SlideShow extends React.Component {
             height: image.height,
             top_caption: topText,
             middle_caption: null,
-            bottom_caption: bottomText
+            bottom_caption: bottomText,
+            upVotes: 0,
+            downVotes: 0
         };
 
         fetch(`/generatedMemes/uploadGeneratedMeme`,

@@ -54,7 +54,9 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
         "height": req.body.height,
         "top_caption": req.body.top_caption,
         "middle_caption": req.body.middle_caption,
-        "bottom_caption": req.body.bottom_caption
+        "bottom_caption": req.body.bottom_caption,
+        "upVotes": req.body.upVotes,
+        "downVotes": req.body.downVotes
 
     };
 
@@ -81,6 +83,33 @@ router.get('/getMemes', function(req, res, next) {
         "memes": memes
     });
     console.log('sent');
+});
+
+router.put('/updateMeme', function (req, res){
+    console.log(req.body)
+    const id = "ObjectId(\"" + req.body.id + "\")"
+    //console.log(id)
+    memes.findOneAndUpdate(
+        {_id: id},
+        {
+            $set: {
+                "name": req.body.name,
+                "url": req.body.url,
+                "width": req.body.width,
+                "height": req.body.height,
+                "top_caption": req.body.top_caption,
+                "middle_caption": req.body.middle_caption,
+                "bottom_caption": req.body.bottom_caption,
+                "upVotes": req.body.upVotes,
+                "downVotes": req.body.downVotes
+            }
+        },
+        {upsert: false}
+    )
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.error(error))
 });
 
 module.exports = router;
