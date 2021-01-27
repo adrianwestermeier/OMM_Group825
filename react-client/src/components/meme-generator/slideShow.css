@@ -1,0 +1,46 @@
+/* arrows */
+img.backButton {
+    width: 50px;
+    height: 50px;
+  }
+  
+  img.backButton:hover {
+    cursor: pointer;
+  }
+  
+  img.nextButton {
+    width: 50px;
+    height: 50px;
+  }
+    
+  img.nextButton:hover {
+    cursor: pointer;
+  }
+
+.meme-wrapper {
+    width: 600px;
+    border: 1px solid black;
+    padding: 5px;
+  }
+  
+  img {
+      max-width: 100%;
+  }
+  
+  .topOut {
+      position: absolute;
+      
+      
+      font-size: 18px;
+      color: white;
+      text-shadow: 0 0 2px rgb(8, 8, 8);
+  }
+  
+  .bottomOut {
+      position: absolute;
+  
+      transform: translateX(-100%);
+      font-size: 18px;
+      color: white;
+      text-shadow: 0 0 2px rgb(8, 8, 8);
+  }

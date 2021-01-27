@@ -1,13 +1,5 @@
 import React from 'react';
-import { createRef, useState } from "react";
-import ReactDOM from 'react-dom';
-import axios from 'axios';
-import arrowBack from './img/arrow_back-black-18dp.svg';
-import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
-import { useScreenshot } from "use-react-screenshot";
-import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
-import html2canvas from 'html2canvas';
 import SlideShow from "./slideShow";
 
 
@@ -42,146 +34,81 @@ class InputsText extends React.Component {
         this.props.textSubmitHandle(top, bottom);
     }
 
+    increaseVerticalPositionTop = (event) => {
+      this.props.increaseVerticalPosition("top");
+    }
+
+    increaseVerticalPositionBottom = (event) => {
+      this.props.increaseVerticalPosition("bottom");
+    }
+
+    increaseHorizontalPositionTop = (event) => {
+      this.props.increaseHorizontalPosition("top");
+    }
+
+    increaseHorizontalPositionBottom = (event) => {
+      this.props.increaseHorizontalPosition("bottom");
+    }
+
+    decreaseVerticalPositionTop = (event) => {
+      this.props.decreaseVerticalPosition("top");
+    }
+
+    decreaseVerticalPositionBottom = (event) => {
+      this.props.decreaseVerticalPosition("bottom");
+    }
+
+    decreaseHorizontalPositionTop = (event) => {
+      this.props.decreaseHorizontalPosition("top");
+    }
+
+    decreaseHorizontalPositionBottom = (event) => {
+      this.props.decreaseHorizontalPosition("bottom");
+    }
+
     render() {
         return(
             <div className="inputs-text">
-                <h2 className="form-header">Write top and bottom caption</h2>
-                <form id="topForm" onSubmit={this.handleSubmit}>
-                  <input type="text" placeholder="top caption" name="topText" onChange={this.handleTopClick}/>
-                  <button type="submit">Submit</button>
-                </form>    
-                <form id="bottomForm" onSubmit={this.handleSubmit}>
-                  <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick}/>
-                  <button type="submit">Submit</button>
-                </form>
-                
+                <div className="inputs-text-button-group">
+                  <h2 className="form-header">Write top caption</h2>
+                  <form id="topForm" onSubmit={this.handleSubmit}>
+                    {/* <input type="text" placeholder="top caption" name="topText" onChange={this.handleTopClick}/> */}
+                    <textarea placeholder="top caption" name="topText" onChange={this.handleTopClick} rows="2" cols="50"></textarea>
+                    <button type="submit">Submit</button>
+                  </form>   
+                  <p className="position-text">vertical Position</p>
+                  <div className="buttons">
+                    <button type="button" onClick={this.increaseVerticalPositionTop}>+</button> 
+                    <button type="button" onClick={this.decreaseVerticalPositionTop}>-</button>
+                  </div>
+                  <p className="position-text">horizontal Position</p>
+                  <div className="buttons">
+                    <button type="button" onClick={this.increaseHorizontalPositionTop}>+</button> 
+                    <button type="button" onClick={this.decreaseHorizontalPositionTop}>-</button>
+                  </div>
+                </div>
+                <div className="inputs-text-button-group">
+                  <h3 className="form-header">Write bottom caption</h3>
+                  <form id="bottomForm" onSubmit={this.handleSubmit}>
+                    {/* <input type="text" placeholder="bootom caption" name="bottomText" onChange={this.handleBottomClick}/> */}
+                    <textarea placeholder="bottom caption" name="bottomText" onChange={this.handleTopClick} rows="2" cols="50"></textarea>
+                    <button type="submit">Submit</button>
+                  </form>
+                  <h3 className="form-header">Position text</h3>
+                  <p className="position-text">vertical Position</p>
+                  <div className="buttons">
+                    <button type="button" onClick={this.increaseVerticalPositionBottom}>+</button> 
+                    <button type="button" onClick={this.decreaseVerticalPositionBottom}>-</button>
+                  </div>
+                  <p className="position-text">horizontal Position</p>
+                  <div className="buttons">
+                    <button type="button" onClick={this.increaseHorizontalPositionBottom}>+</button> 
+                    <button type="button" onClick={this.decreaseHorizontalPositionBottom}>-</button>
+                  </div>
+                </div>
             </div>
         )
     }
-}
-
-// inputs for user-posted urls
-class InputsPost extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          name: null,
-          url: null,
-          width: null,
-          height: null,
-          boxCount: null,
-        };
-      }
-
-      mySubmitHandler = (event) => {
-        event.preventDefault();
-        if ( !this.state.name || !this.state.url || !this.state.width || !this.state.height || !this.state.boxCount ) {
-            alert("You must enter every field in the inputs!");
-            return;
-        }
-        const name = this.state.name;
-        const url = this.state.url;
-        const inputWidth = this.state.width;
-        const inputHeight = this.state.height;
-        const inputBoxCount = this.state.boxCount;
-        if ( !Number(inputWidth) || !Number(inputHeight) || !Number(inputBoxCount) ) {
-          alert("You must enter numbers for width, height and box count!");
-        } else {
-            console.log(this.state)
-            const payload = {
-                name: event.target.elements.name.value,
-                url: event.target.elements.url.value,
-                width: event.target.elements.width.value,
-                height: event.target.elements.height.value,
-                boxCount: event.target.elements.boxCount.value
-            };
-
-            console.log('sending data ' + JSON.stringify( payload ));
-
-            fetch(`/images/handle`, 
-            {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
-            })
-              .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
-                })
-                .catch(jsonParseError => {
-                  console.error(jsonParseError);
-                })
-              ).catch(requestError => {
-                console.error(requestError);
-              });           
-        }
-      }
-
-      myChangeHandler = (event) => {
-        let nam = event.target.name;
-        let val = event.target.value;
-        this.setState({[nam]: val});
-      }
-
-    render() {
-        return (
-            <div className="inputs-post"> 
-                <h2 className="form-header">Post a new picture by existing url</h2>
-                <form className="postForm" onSubmit={this.mySubmitHandler}>
-                  <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="width" name="width" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="height" name="height" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="box count" name="boxCount" onChange={this.myChangeHandler}/>
-                  <button type="submit" className="postSubmit">Submit</button>
-                </form>
-            </div>
-        );
-      }
-}
-
-
-// user upload, file gets saved on local file system
-class FileUpload extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedFile: null,
-        }
-    }
-
-    onChangeHandler = (event) => {
-        console.log(event.target.files[0])
-        this.setState({
-            selectedFile: event.target.files[0],
-            loaded: 0,
-          })
-    }
-
-    onClickHandler = () => {
-        const file = this.state.selectedFile;
-        const formData = new FormData();
-        formData.append("userUploadFile", file);
-      
-        axios.post("http://localhost:3000/images/upload", formData,{headers:{"Content-Type" : 'multipart/form-data'}})
-        .then((res) => {
-            alert(res.data.message);
-          })
-          .catch((err) => alert("File Upload Error"));
-      
-          }
-
-    render() {
-        return(   
-            <div className="file-upload">
-                <h2>Upload a file</h2>
-                <input type="file" name="sampleFile" onChange={this.onChangeHandler}/>
-                <button type="button" onClick={this.onClickHandler}>Upload</button>
-            </div>
-        )
-    }
-    
 }
 
 // class that renders all the meme generation functions
@@ -191,6 +118,10 @@ export default class Generator extends React.Component {
         this.state = {
             topText: "",
             bottomText: "",
+            topTextVerticalPosition: 5,
+            topTextHorizontalPosition: 100,
+            bottomTextVerticalPosition: 0,
+            bottomTextHorizontalPosition: 100,
          };
     }
 
@@ -204,18 +135,97 @@ export default class Generator extends React.Component {
         });
     }
 
+
+    // TODO: calculate if text is inside frame
+    increaseHorizontalPosition = (pos) => {
+      if(pos=="top") {
+        let newPositionValue = this.state.topTextHorizontalPosition
+        newPositionValue += 5;
+        this.setState({
+          topTextHorizontalPosition: newPositionValue,
+        })
+      } else {
+        let newPositionValue = this.state.bottomTextHorizontalPosition
+        newPositionValue += 5;
+        this.setState({
+          bottomTextHorizontalPosition: newPositionValue,
+        })
+      }
+    }
+
+    decreaseHorizontalPosition = (pos) => {
+      if(pos=="top") {
+        let newPositionValue = this.state.topTextHorizontalPosition
+        newPositionValue -= 5;
+        this.setState({
+          topTextHorizontalPosition: newPositionValue,
+        })
+      } else {
+        let newPositionValue = this.state.bottomTextHorizontalPosition
+        newPositionValue -= 5;
+        this.setState({
+          bottomTextHorizontalPosition: newPositionValue,
+        })
+      }
+    }
+
+    increaseVerticalPosition = (pos) => {
+      if(pos=="top") {
+        let newPositionValue = this.state.topTextVerticalPosition
+        newPositionValue -= 5;
+        this.setState({
+          topTextVerticalPosition: newPositionValue,
+        })
+      } else {
+        let newPositionValue = this.state.bottomTextVerticalPosition
+        newPositionValue += 5;
+        this.setState({
+          bottomTextVerticalPosition: newPositionValue,
+        })
+      }
+    }
+
+    decreaseVerticalPosition = (pos) => {
+      if(pos=="top") {
+        let newPositionValue = this.state.topTextVerticalPosition
+        newPositionValue += 5;
+        this.setState({
+          topTextVerticalPosition: newPositionValue,
+        })
+      } else {
+        let newPositionValue = this.state.bottomTextVerticalPosition
+        newPositionValue -= 5;
+        this.setState({
+          bottomTextVerticalPosition: newPositionValue,
+        })
+      }
+    }
+
     render() {
       return (
         <div className="home">
+          <h2>Create new meme from template</h2>
+          <div className="meme-generator-wrapper">
+            <div className="slide-show-section">              
+                <SlideShow 
+                  topText={this.state.topText} 
+                  bottomText={this.state.bottomText}
+                  topTextVerticalPosition={this.state.topTextVerticalPosition}
+                  topTextHorizontalPosition={this.state.topTextHorizontalPosition}
+                  bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
+                  bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
+                />  
+            </div>
             <div className="input-section">
-                <InputsText textSubmitHandle={this.handleTextSubmit}/>
-                <InputsPost/>
-                <FileUpload/>
+                <InputsText 
+                  textSubmitHandle={this.handleTextSubmit}
+                  increaseHorizontalPosition={this.increaseHorizontalPosition}
+                  decreaseHorizontalPosition={this.decreaseHorizontalPosition}
+                  increaseVerticalPosition={this.increaseVerticalPosition}
+                  decreaseVerticalPosition={this.decreaseVerticalPosition}
+                />
             </div>
-            <div className="slide-show-section">
-                <h2>Meme templates</h2>               
-                <SlideShow topText={this.state.topText} bottomText={this.state.bottomText}/>  
-            </div>
+          </div>
         </div>
       );
     }

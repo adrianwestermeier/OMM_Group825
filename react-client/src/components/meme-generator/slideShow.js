@@ -4,6 +4,7 @@ import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
 import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import * as htmlToImage from 'html-to-image';
+import './slideShow.css';
 
 
 // Meme template with top and bottom caption
@@ -12,11 +13,23 @@ class Meme extends React.Component {
         super(props);
     }
     render() {
+        const topStyle = {
+            top: this.props.topTextVerticalPosition + "%", 
+            left: this.props.topTextHorizontalPosition + "%"
+        };
+        const bottomStyle = {
+            bottom: this.props.bottomTextVerticalPosition + "%", 
+            left: this.props.bottomTextHorizontalPosition + "%"
+        };
         return(
             <div className="image-wrapper" id="image-wrapper">
                 <img src={this.props.url} id="actual-image"/>
-                <div className="topOut">{this.props.topText}</div>
-                <div className="bottomOut">{this.props.bottomText}</div>   
+                <div className="topOut" style={topStyle}>
+                    {this.props.topText}
+                </div>
+                <div className="bottomOut" style={bottomStyle}>
+                    {this.props.bottomText}
+                </div>   
             </div>
         )
     }
@@ -147,6 +160,10 @@ export default class SlideShow extends React.Component {
          const currentIndex = this.state.currentIndex;
          const topText = this.props.topText;
          const bottomText = this.props.bottomText;
+         const topTextVerticalPosition= this.props.topTextVerticalPosition
+         const topTextHorizontalPosition= this.props.topTextHorizontalPosition
+         const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
+         const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
  
          let url;
          if(this.state.pictures.length > 0) {
@@ -170,7 +187,17 @@ export default class SlideShow extends React.Component {
                  <div><p>current Index: {currentIndex}</p></div>
  
                  <React.Fragment>
-                   <Meme url={url} topText={topText} bottomText={bottomText} ref={this.componentRef} />
+                <div className="meme-wrapper">
+                   <Meme 
+                    url={url} 
+                    topText={topText} 
+                    bottomText={bottomText} 
+                    topTextHorizontalPosition={topTextHorizontalPosition}
+                    topTextVerticalPosition={topTextVerticalPosition}
+                    bottomTextHorizontalPosition={bottomTextHorizontalPosition}
+                    bottomTextVerticalPosition={bottomTextVerticalPosition}
+                    ref={this.componentRef} />
+                </div>
                  </React.Fragment>
  
                  <button className="saveButton" onClick={() => {this.saveOnServer()}}>
@@ -182,9 +209,9 @@ export default class SlideShow extends React.Component {
                  <button onClick={() => exportComponentAsPNG(this.componentRef)}>
                      Export As PNG
                  </button>
-                 <button onClick={this.showImage}>Show current status</button>
+                 {/* <button onClick={this.showImage}>Show current status</button> */}
                  <div>
-                    <h2>What your meme currently looks like</h2>
+                    <h2>Click <button onClick={this.showImage}>here</button> to see what your meme currently looks like</h2>
                     <img src={createdImage} />
                  </div>
                  

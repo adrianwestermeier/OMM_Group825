@@ -1,0 +1,23 @@
+.heading {
+    text-align: center;
+}
+
+ul {
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 50px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid black;
+}
+
+a {
+    text-decoration: none;
+    font-size: 24px;
+    color: black;
+}
+
+li {
+    list-style-type: none;
+}
