@@ -13,14 +13,29 @@
     border: none;
 }
 
+.inputs-text {
+  margin-top: 70px;
+}
+
 .inputs-text-button-group {
+  display: block;
+}
+
+.position-wrapper-whole {
   display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.position-wrapper {
+  display: flex;
 }
 
 .slide-show-section {
     width: 100%;
+}
+
+.input-form {
+  display: inline-flex;
 }
 
 input[type=text] {
@@ -35,10 +50,14 @@ button[type=submit] {
   background-color: white;
   color: black;
   width: 30%;
-  padding: 10px 18px;
-  margin-left: 20px;
+  /* padding: 10px 18px; */
+  margin-left: 30px;
   border: 2px solid #555555;
   cursor: pointer;
+}
+
+.title-submit {
+  height: 35px;
 }
 
 button[type=button] {
@@ -79,3 +98,6 @@ button[type=button] {
     box-sizing: border-box;
 }
 
+h2 {
+  margin: 0px;
+}

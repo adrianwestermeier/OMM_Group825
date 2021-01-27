@@ -5,6 +5,7 @@ import './memeGenerator.css';
 import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import * as htmlToImage from 'html-to-image';
 import './slideShow.css';
+import DrawApp from './drawMeme';
 
 
 // Meme template with top and bottom caption
@@ -23,13 +24,18 @@ class Meme extends React.Component {
         };
         return(
             <div className="image-wrapper" id="image-wrapper">
-                <img src={this.props.url} id="actual-image"/>
-                <div className="topOut" style={topStyle}>
-                    {this.props.topText}
-                </div>
-                <div className="bottomOut" style={bottomStyle}>
-                    {this.props.bottomText}
-                </div>   
+                <figure>
+                    <figcaption>{this.props.title}</figcaption>
+                    <div className="top-and-bottom-wrapper">
+                        <img src={this.props.url} id="actual-image"/>
+                        <div className="topOut" style={topStyle}>
+                            {this.props.topText}
+                        </div>
+                        <div className="bottomOut" style={bottomStyle}>
+                            {this.props.bottomText}
+                        </div>   
+                    </div>
+                </figure>
             </div>
         )
     }
@@ -43,6 +49,11 @@ export default class SlideShow extends React.Component {
         this.state = {
             pictures: [],
             currentIndex: 0,
+            heading: "Choose a template",
+            headingButton: "DRAW",
+            buttonText: "Create Meme",
+            createMode: true,
+            drawMode: false,
             showPng: false,
             png: "",
          };
@@ -139,21 +150,104 @@ export default class SlideShow extends React.Component {
 
      // render the current meme template as an image on the website (does not get saved automatically on server)
      showImage = (() => {
-        var node = document.getElementById('image-wrapper');
-        var that = this
+         if(this.state.createMode) {
+            let node;
+            if(this.state.drawMode) {
+                node = document.getElementById('draw-panel-canvas');
+                node.style.border = "none";
+                const that = this
+             
+                htmlToImage.toPng(node)
+                .then(function (dataUrl) {
+                    var img = new Image();
+                    img.src = dataUrl;
+                    that.setState({
+                        showPng: true,
+                        png: dataUrl,
+                        buttonText: "Edit Again",
+                        createMode: false,
+                       })
+                       document.getElementById('draw-panel').style.display = "none";
+                       document.getElementById('button-group').style.display = "inline";
+                       node.style.border = "1px solid black";
 
-        htmlToImage.toPng(node)
-          .then(function (dataUrl) {
-            var img = new Image();
-            img.src = dataUrl;
-            that.setState({
-                showPng: true,
-                png: dataUrl,
+                   })
+                   .catch(function (error) {
+                       console.error('oops, something went wrong!', error);
+                   });
+            } else {
+                node = document.getElementById('image-wrapper');
+                const that = this
+             
+                htmlToImage.toPng(node)
+                .then(function (dataUrl) {
+                    var img = new Image();
+                    img.src = dataUrl;
+                    that.setState({
+                        showPng: true,
+                        png: dataUrl,
+                        buttonText: "Edit Again",
+                        createMode: false,
+                       })
+                       document.getElementById('meme-wrapper').style.display = "none";
+                       document.getElementById('arrows').style.display = "none";
+                       document.getElementById('button-group').style.display = "inline";
+
+                   })
+                   .catch(function (error) {
+                       console.error('oops, something went wrong!', error);
+                   });
+            }   
+        } else {
+            if(this.state.drawMode){
+                document.getElementById('draw-panel').style.display = "inline-block";
+                document.getElementById('button-group').style.display = "none";
+                this.setState({
+                    showPng: false,
+                    png: "",
+                    buttonText:"Create Meme",
+                    createMode: true,
+                })
+            } else {
+                document.getElementById('meme-wrapper').style.display = "block";
+                document.getElementById('arrows').style.display = "block";
+                document.getElementById('button-group').style.display = "none";
+                this.setState({
+                    showPng: false,
+                    png: "",
+                    buttonText:"Create Meme",
+                    createMode: true,
+                })
+            }
+        }
+     })
+
+     changeToDraw = (() => {
+         if(!this.state.createMode) {
+             alert("first switch to editing again!");
+             return;
+         }
+        if(!this.state.drawMode){
+            document.getElementById('draw-panel').style.display = "inline-block";
+            document.getElementById('meme-wrapper').style.display = "none";
+            document.getElementById('arrows').style.display = "none";
+            
+            this.setState({
+                heading: "Draw",
+                headingButton: "choose template",
+                drawMode: true,
             })
-          })
-          .catch(function (error) {
-            console.error('oops, something went wrong!', error);
-          });
+        } else {
+            document.getElementById('draw-panel').style.display = "none";
+            document.getElementById('meme-wrapper').style.display = "block";
+            document.getElementById('arrows').style.display = "block";
+            
+            this.setState({
+                heading: "Choose a template",
+                headingButton: "DRAW",
+                drawMode: false,
+            }) 
+        }
      })
  
      render() {
@@ -179,42 +273,51 @@ export default class SlideShow extends React.Component {
  
          return (
              <div className="main">
+                 <div className="slide-show-heading">
+                    <h2>{this.state.heading} or </h2>
+                    <button className="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
+                 </div>
                  <div className="navigation-buttons">
-                   <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
-                   <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
+                    <div className="arrows" id="arrows">
+                        <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
+                        <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
+                    </div>
+                   <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
  
-                 <div><p>current Index: {currentIndex}</p></div>
+                 {/* <div><p>current Index: {currentIndex}</p></div> */}
  
-                 <React.Fragment>
-                <div className="meme-wrapper">
-                   <Meme 
-                    url={url} 
-                    topText={topText} 
-                    bottomText={bottomText} 
-                    topTextHorizontalPosition={topTextHorizontalPosition}
-                    topTextVerticalPosition={topTextVerticalPosition}
-                    bottomTextHorizontalPosition={bottomTextHorizontalPosition}
-                    bottomTextVerticalPosition={bottomTextVerticalPosition}
-                    ref={this.componentRef} />
+                <React.Fragment>
+                    <div className="draw-panel" id="draw-panel">
+                        <DrawApp title={this.props.title} />
+                    </div>
+                    <div className="meme-wrapper" id="meme-wrapper">
+                       <Meme 
+                        url={url} 
+                        title={this.props.title}
+                        topText={topText} 
+                        bottomText={bottomText} 
+                        topTextHorizontalPosition={topTextHorizontalPosition}
+                        topTextVerticalPosition={topTextVerticalPosition}
+                        bottomTextHorizontalPosition={bottomTextHorizontalPosition}
+                        bottomTextVerticalPosition={bottomTextVerticalPosition}
+                         />
+                    </div>
+                </React.Fragment>
+                <div className="button-group" id="button-group">
+                   <button className="saveButton" onClick={() => {this.saveOnServer()}}>
+                     Save Meme on server
+                   </button>
+                   <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
+                       Export As JPEG
+                   </button>
+                   <button onClick={() => exportComponentAsPNG(this.componentRef)}>
+                       Export As PNG
+                   </button>
                 </div>
-                 </React.Fragment>
- 
-                 <button className="saveButton" onClick={() => {this.saveOnServer()}}>
-                   Save Meme on server
-                 </button>
-                 <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
-                     Export As JPEG
-                 </button>
-                 <button onClick={() => exportComponentAsPNG(this.componentRef)}>
-                     Export As PNG
-                 </button>
-                 {/* <button onClick={this.showImage}>Show current status</button> */}
-                 <div>
-                    <h2>Click <button onClick={this.showImage}>here</button> to see what your meme currently looks like</h2>
-                    <img src={createdImage} />
-                 </div>
-                 
+                <div>
+                   <img src={createdImage} ref={this.componentRef}/>
+                </div>
              </div>
          );
      }

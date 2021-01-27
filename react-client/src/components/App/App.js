@@ -11,7 +11,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="wrapper">
-        <h1 className="heading">10gag</h1>
+        <h1 className="heading">Group825</h1>
         <BrowserRouter>
         <nav>
           <ul>
