@@ -100,7 +100,7 @@ export default class Generator extends React.Component {
     }
 
 
-    // TODO: calculate if text is inside frame
+    // update text positionss
     increaseHorizontalPosition = (pos) => {
       if(pos==="top") {
         let newPositionValue = this.state.topTextHorizontalPosition

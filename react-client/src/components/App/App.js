@@ -7,6 +7,7 @@ import Overview from '../meme-overview/memeOverview';
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
+import Imago from '../local-images-test/imageTest';
 
 class App extends React.Component {
   render() {
@@ -19,9 +20,13 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
+            <li><Link to="/local" className="menu-link">local image</Link></li>
           </ul>
         </nav>
           <Switch>
+            <Route path="/local">
+              <Imago />
+            </Route>
             <Route path="/overview">
               <Overview />
             </Route>
