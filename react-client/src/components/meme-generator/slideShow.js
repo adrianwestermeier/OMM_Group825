@@ -310,6 +310,7 @@ export default class SlideShow extends React.Component {
                 this.setState({
                     pictures: newPictures,
                 });
+                document.getElementById('get-imgflip-button').style.display = "none";
             });
             /* this.setState({ 
                 pictures: images.images,  // image array is wrapped in image json
@@ -401,7 +402,9 @@ export default class SlideShow extends React.Component {
                         <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
                         <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
                     </div>
-                    <button className="create-meme-button" onClick={this.getImgFlip}>Get ImgFlip Meme Templates</button>
+                    <button className="create-meme-button" id="get-imgflip-button" onClick={this.getImgFlip}>
+                        Get ImgFlip Meme Templates
+                    </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
  
