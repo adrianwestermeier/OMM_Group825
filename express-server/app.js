@@ -9,6 +9,7 @@ const fileUpload = require('express-fileupload');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var apiRouter = require('./routes/api');
 var imagesRouter = require('./routes/images');
 let generatedMemesRouter = require('./routes/generatedMemes')
 
@@ -47,8 +48,9 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api', apiRouter);
 app.use('/images', imagesRouter);
-app.use('/generatedMemes', generatedMemesRouter),
+app.use('/generatedMemes', generatedMemesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
