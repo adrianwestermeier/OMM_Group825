@@ -1,12 +1,24 @@
 import React from 'react';
+import { IoIosThumbsUp, IoIosThumbsDown } from 'react-icons/io';
 
 import './memeOverview.css';
 import Meme from "../Meme/meme";
 
 class OverviewElem extends React.Component {
 
-    upVote(meme) {
-        console.log('UpVote')
+    vote(meme, isUpvote) {
+        let upVotes = meme.upVotes
+        let downVotes = meme.downVotes
+
+        if(isUpvote){
+            console.log('upVote')
+            upVotes = upVotes + 1
+        } else if(!isUpvote){
+            console.log('downVote')
+            downVotes = downVotes + 1
+        } else {
+            console.log('Fehler: weder up noch downvote')
+        }
 
         const payload = {
             id: meme._id,
@@ -17,8 +29,8 @@ class OverviewElem extends React.Component {
             top_caption: meme.top_caption,
             middle_caption: null,
             bottom_caption: meme.bottom_caption,
-            upVotes: meme.upVotes + 1,
-            downVotes: meme.downVotes
+            upVotes: upVotes,
+            downVotes: downVotes
         };
 
         fetch(`/generatedMemes/updateMeme`,
@@ -28,23 +40,10 @@ class OverviewElem extends React.Component {
                 body: JSON.stringify(payload),
             })
             .then(() => {
-                console.log('THEN')
                 this.getMemesFromDb()
             })
 
 
-    }
-
-
-    downVote() {
-        console.log('DownVote')
-        this.testPrint()
-        this.getMemesFromDb()
-
-    }
-
-    testPrint = () => {
-        this.props.testPrint();
     }
 
     getMemesFromDb = () => {
@@ -71,10 +70,10 @@ class OverviewElem extends React.Component {
                     topText={topCaption}
                     bottomText={bottomCaption}
                 />
-                <button onClick={() => this.upVote(meme)}>UpVote</button>
-                <button onClick={() => this.downVote(meme)}>DownVote</button>
-                <p>Upvotes: {upVotes}</p>
-                <p>Downvotes: {downVotes}</p>
+                <button onClick={() => this.vote(meme, true)}><IoIosThumbsUp /></button>
+                <button onClick={() => this.vote(meme, false)}><IoIosThumbsDown/></button>
+                <p><IoIosThumbsUp />: {upVotes}</p>
+                <p><IoIosThumbsDown/>: {downVotes}</p>
             </div>
         )
     }
@@ -93,13 +92,7 @@ class MemeOverview extends React.Component {
         this.getMemesFromDb(this.state)
     }
 
-    testPrint() {
-        console.log('TestPrint');
-        console.log(this.state)
-    }
-
     getMemesFromDb(state) {
-        console.log('get memes from db')
 
         fetch('/generatedMemes/getMemes')
             .then(res => {
