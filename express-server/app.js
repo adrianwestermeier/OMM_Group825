@@ -9,6 +9,7 @@ const fileUpload = require('express-fileupload');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var apiRouter = require('./routes/api');
 var imagesRouter = require('./routes/images');
 let generatedMemesRouter = require('./routes/generatedMemes')
 
@@ -22,9 +23,16 @@ app.use(fileUpload());
 
 /* app.use(bodyParser.json()); */
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json({limit: '50mb'}));
+// app.use(express.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
 app.use(cookieParser());
+app.use(cors())
+app.options('*', cors())
 app.use(express.static(path.join(__dirname, 'public')));
 /* 
 app.use(function(req, res, next) {
@@ -33,16 +41,16 @@ app.use(function(req, res, next) {
   next();
 }); */
 
-app.use(cors())
-app.options('*', cors())
+
 /* app.options('/images/handle', cors()) // enable pre-flight request for DELETE request */
  
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api', apiRouter);
 app.use('/images', imagesRouter);
-app.use('/generatedMemes', generatedMemesRouter),
+app.use('/generatedMemes', generatedMemesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

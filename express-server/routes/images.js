@@ -3,6 +3,7 @@ var fs = require("fs"), json;
 var router = express.Router();
 var cors = require('cors');
 var mongoClient = require('mongodb').MongoClient;
+var jimp = require('jimp');
 
 var corsOptions = {
   origin: 'http://localhost:8080',
@@ -77,6 +78,42 @@ router.get('/', function(req, res, next) {
     });
     console.log('sent');
 });
+
+/* GET local images. */
+router.get('/localfiles', function (req, res, next) {
+  mongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("meme-generator-db");
+    // var query = { name: "Drake Hotline Bling" };
+    dbo.collection("localImages").find().toArray(function(err, result) {
+      if (err) throw err;
+      /* console.log(result); */
+      result.forEach((item) => {
+        console.log(item);
+        var options = {
+          root: path.join(__dirname, 'public'),
+          dotfiles: 'deny',
+          headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+          }
+        }
+      
+        var fileName = item.name;
+        console.log(fileName);
+        res.sendFile(fileName, options, function (err) {
+          if (err) {
+            next(err)
+          } else {
+            console.log('Sent:', fileName)
+          }
+        })
+      })
+      db.close();
+    });
+  }); 
+  
+})
   
 /* POST image. */
 router.post('/handle', function(req, res, next) {
@@ -104,6 +141,25 @@ router.post('/handle', function(req, res, next) {
   
   // update the data instantly
   getImagesFromDb();
+})
+
+
+router.post('/saveCreatedMeme', function(req, res) {
+  var base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
+  console.log(base64Data);
+
+  fs.writeFile("./public/memes/out.png", base64Data, 'base64', function(err) {
+    if (err) {
+      console.log('error in saving');
+      return res.status(500).send(err);
+    }
+
+    // TODO: load images from local files
+    res.json({
+      "code": 201,
+      "message": "saved image on server",
+    });
+  });
 })
 
 

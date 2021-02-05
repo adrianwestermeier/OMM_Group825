@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import arrowBack from './img/arrow_back-black-18dp.svg';
 import arrowForward from './img/arrow_forward-black-18dp.svg';
 import './memeGenerator.css';
@@ -47,6 +48,7 @@ export default class SlideShow extends React.Component {
         super(props);
         this.componentRef = React.createRef();
         this.state = {
+            localPictureNames: ['horse.jpg', 'guy.jpg', 'dog.jpg'],
             pictures: [],
             currentIndex: 0,
             heading: "Choose a template",
@@ -61,20 +63,52 @@ export default class SlideShow extends React.Component {
 
     // get the meme templates from the express server
     componentDidMount() {
-         fetch('/images')
-             .then(res => {
-                 console.log(res);
-                 return res.json()
-              })
-             .then(images => { 
-                 console.log(images);
-                 this.setState({ 
-                     pictures: images.images,  // image array is wrapped in image json
-                     currentIndex: 0,
-                     topText: "",
-                     bottomText: "",
-                 })
-              });
+        //  fetch('/images')
+        //      .then(res => {
+        //          console.log(res);
+        //          return res.json()
+        //       })
+        //      .then(images => { 
+        //          console.log(images);
+        //          this.setState({ 
+        //              pictures: images.images,  // image array is wrapped in image json
+        //              currentIndex: 0,
+        //              topText: "",
+        //              bottomText: "",
+        //          })
+        //       });
+        this.state.localPictureNames.forEach(element => {
+            let url = 'http://localhost:3005/images/' + element;
+            console.log(url)
+            axios.get(url, { responseType: 'arraybuffer' },
+                ).then(response => {
+                    const base64 = btoa(
+                      new Uint8Array(response.data).reduce(
+                          (data, byte) => data + String.fromCharCode(byte),
+                          '',
+                          ),
+                    );
+                      
+                    let newPictures = this.state.pictures;
+                    const newImage = {
+                        url: "data:;base64," + base64,
+                        imgflip: false,
+                        topText: "",
+                        bottomText: "",
+                        title: "",
+                    };
+                    newPictures = newPictures.concat(newImage);
+                    this.setState({
+                        pictures: newPictures,
+                    });
+                    
+                      /* let newSourceArray = this.state.sources;
+                      newSourceArray = newSourceArray.concat("data:;base64," + base64)
+                      this.setState({ sources: newSourceArray });
+                      console.log("data:;base64," + base64);
+                      }); */
+          });
+        });
      }
  
      // go to next meme template
@@ -161,11 +195,13 @@ export default class SlideShow extends React.Component {
                 .then(function (dataUrl) {
                     var img = new Image();
                     img.src = dataUrl;
+                    console.log(img);
                     that.setState({
                         showPng: true,
                         png: dataUrl,
                         buttonText: "Edit Again",
                         createMode: false,
+                        createdImage: img,
                        })
                        document.getElementById('draw-panel').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
@@ -183,11 +219,13 @@ export default class SlideShow extends React.Component {
                 .then(function (dataUrl) {
                     var img = new Image();
                     img.src = dataUrl;
+                    console.log(img);
                     that.setState({
                         showPng: true,
                         png: dataUrl,
                         buttonText: "Edit Again",
                         createMode: false,
+                        createdImage: img,
                        })
                        document.getElementById('meme-wrapper').style.display = "none";
                        document.getElementById('arrows').style.display = "none";
@@ -222,6 +260,7 @@ export default class SlideShow extends React.Component {
         }
      })
 
+     // switch the template creation mode to drawing (drawing canvas will be shown)
      changeToDraw = (() => {
          if(!this.state.createMode) {
              alert("first switch to editing again!");
@@ -249,27 +288,108 @@ export default class SlideShow extends React.Component {
             }) 
         }
      })
+
+     // get memes from the ImgFlip url as templates
+     getImgFlip = (() => {
+        fetch('https://api.imgflip.com/get_memes')
+        .then(res => {
+            return res.json()
+         })
+        .then(memeData => { 
+            console.log(memeData.data.memes.length);
+            memeData.data.memes.forEach(element => {
+                let newPictures = this.state.pictures;
+                const newImage = {
+                    url: element.url,
+                    imgflip: true,
+                    topText: "",
+                    bottomText: "",
+                    title: "",
+                };
+                newPictures = newPictures.concat(newImage);
+                this.setState({
+                    pictures: newPictures,
+                });
+                document.getElementById('get-imgflip-button').style.display = "none";
+            });
+            /* this.setState({ 
+                pictures: images.images,  // image array is wrapped in image json
+                currentIndex: 0,
+                topText: "",
+                bottomText: "",
+            }) */
+         });
+     })
+
+     saveMemeOnServer = () => {
+        const image = this.state.png;
+
+        fetch(`/images/saveCreatedMeme`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              img: image
+            })
+          }).then(jsonResponse => jsonResponse.json()
+                .then(responseObject => {
+                    console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+                    alert(JSON.stringify( responseObject.message ))
+                  })
+                  .catch(jsonParseError => {
+                    console.error(jsonParseError);
+                  })
+                ).catch(requestError => {
+                  console.error(requestError);
+                });
+        // fetch(`/upload`, 
+        //     {
+        //       method: 'POST',
+        //       headers: {'Content-Type': 'application/json'},
+        //       body: JSON.stringify( payload ),
+        //     })
+        //     .then(jsonResponse => jsonResponse.json()
+        //       .then(responseObject => {
+        //           console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+        //           alert(JSON.stringify( responseObject.message ))
+        //         })
+        //         .catch(jsonParseError => {
+        //           console.error(jsonParseError);
+        //         })
+        //       ).catch(requestError => {
+        //         console.error(requestError);
+        //       });
+        }
  
      render() {
-         const currentIndex = this.state.currentIndex;
-         const topText = this.props.topText;
-         const bottomText = this.props.bottomText;
-         const topTextVerticalPosition= this.props.topTextVerticalPosition
-         const topTextHorizontalPosition= this.props.topTextHorizontalPosition
-         const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
-         const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
- 
-         let url;
-         if(this.state.pictures.length > 0) {
-             url = this.state.pictures[currentIndex].url;
-         } else {
-             url = ""
-         }
+        const currentIndex = this.state.currentIndex;
+        const topText = this.props.topText;
+        const bottomText = this.props.bottomText;
+        const topTextVerticalPosition= this.props.topTextVerticalPosition
+        const topTextHorizontalPosition= this.props.topTextHorizontalPosition
+        const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
+        const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
 
-         let createdImage;
-         if(this.state.showPng) {
-            createdImage = this.state.png;
-         }
+        let url;
+        let isImageFlip;
+        if(this.state.pictures.length > currentIndex) {
+            url = this.state.pictures[currentIndex].url;
+            isImageFlip = this.state.pictures[currentIndex].imgflip;
+        } else {
+            url = ""
+        }
+
+        let createdImage;
+        if(this.state.showPng) {
+           createdImage = this.state.png;
+        }
+
+        let counter;
+        if(!this.state.drawMode){
+           counter = <div><p>Template {currentIndex+1} of {this.state.pictures.length}</p></div>
+        }
  
          return (
              <div className="main">
@@ -282,10 +402,13 @@ export default class SlideShow extends React.Component {
                         <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
                         <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
                     </div>
-                   <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
+                    <button className="create-meme-button" id="get-imgflip-button" onClick={this.getImgFlip}>
+                        Get ImgFlip Meme Templates
+                    </button>
+                    <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
  
-                 {/* <div><p>current Index: {currentIndex}</p></div> */}
+                {counter}
  
                 <React.Fragment>
                     <div className="draw-panel" id="draw-panel">
@@ -294,6 +417,7 @@ export default class SlideShow extends React.Component {
                     <div className="meme-wrapper" id="meme-wrapper">
                        <Meme 
                         url={url} 
+                        isImageFlip={isImageFlip}
                         title={this.props.title}
                         topText={topText} 
                         bottomText={bottomText} 
@@ -305,7 +429,10 @@ export default class SlideShow extends React.Component {
                     </div>
                 </React.Fragment>
                 <div className="button-group" id="button-group">
-                   <button className="saveButton" onClick={() => {this.saveOnServer()}}>
+                   {/* <button className="saveButton" onClick={() => {this.saveOnServer()}}>
+                     Save Meme on server
+                   </button> */}
+                   <button className="saveButton" onClick={() => {this.saveMemeOnServer()}}>
                      Save Meme on server
                    </button>
                    <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
