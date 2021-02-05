@@ -140,11 +140,16 @@ router.put('/updateMeme', function (req, res){
             {upsert: false}
         )
             .then(result => {
+                getMemesFromDb()
                 console.log(result)
+                res.json({
+                    "code": 201,
+                    "message": "updated meme successfully, refresh page to see changes.",
+                });
             })
             .catch(error => console.error(error))
     })
-    getMemesFromDb()
+
 });
 
 module.exports = router;

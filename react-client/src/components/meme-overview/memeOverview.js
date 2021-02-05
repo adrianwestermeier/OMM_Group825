@@ -29,7 +29,7 @@ class OverviewElem extends React.Component {
             })
             .then(() => {
                 console.log('THEN')
-                //() => {this.getMemesFromDb()}
+                this.getMemesFromDb()
             })
 
 
