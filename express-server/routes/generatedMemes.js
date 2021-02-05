@@ -30,6 +30,42 @@ function getMemesFromDb(){
     console.log('memes ' + memes);
 }
 
+function updateMeme(reqBody){
+    /*mongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        let dbo = db.db("meme-generator-db");
+        dbo.collection("generatedMemes").findOneAndUpdate(
+            {_id: req.body.id},
+            {
+                $set: {
+                    "upVotes": req.body.upVotes,
+                    "downVotes": req.body.downVotes
+                }
+            },
+            {upsert: false}
+        )
+            .then(result => {
+                console.log(result)
+            })
+            .catch(error => console.error(error))
+    });*/
+
+    /*memesCollection.findOneAndUpdate(
+                {_id: req.body.id},
+                {
+                    $set: {
+                        "upVotes": req.body.upVotes,
+                        "downVotes": req.body.downVotes
+                    }
+                },
+                {upsert: false}
+            )
+                .then(result => {
+                    console.log(result)
+                })
+                .catch(error => console.error(error))*/
+}
+
 
 function postMemeToDb(generatedMeme) {
 
@@ -85,31 +121,30 @@ router.get('/getMemes', function(req, res, next) {
     console.log('sent');
 });
 
+// das Update funktioniert gerade nur über die Namen. ich kann nciht auf _id zugreifen. Wir bauchen also eine Möglichkeit Memes eindeutig zu identifizieren.
 router.put('/updateMeme', function (req, res){
-    console.log(req.body)
-    const id = "ObjectId(\"" + req.body.id + "\")"
-    //console.log(id)
-    memes.findOneAndUpdate(
-        {_id: id},
-        {
-            $set: {
-                "name": req.body.name,
-                "url": req.body.url,
-                "width": req.body.width,
-                "height": req.body.height,
-                "top_caption": req.body.top_caption,
-                "middle_caption": req.body.middle_caption,
-                "bottom_caption": req.body.bottom_caption,
-                "upVotes": req.body.upVotes,
-                "downVotes": req.body.downVotes
-            }
-        },
-        {upsert: false}
-    )
-        .then(result => {
-            console.log(result)
-        })
-        .catch(error => console.error(error))
+    mongoClient.connect(url, function(err, db) {
+        console.log('Verbindung aufgebaut')
+        if (err) throw err;
+        //let id = "ObjectId(\"" + req.body.id + "\")"
+        //console.log(id)
+        let dbo = db.db("meme-generator-db");
+        dbo.collection("generatedMemes").findOneAndUpdate(
+            {name: req.body.name},
+            {
+                $set: {
+                    "upVotes": req.body.upVotes,
+                    "downVotes": req.body.downVotes
+                }
+            },
+            {upsert: false}
+        )
+            .then(result => {
+                console.log(result)
+            })
+            .catch(error => console.error(error))
+    })
+    getMemesFromDb()
 });
 
 module.exports = router;
