@@ -1,5 +1,8 @@
 import React from 'react';
 import {IoIosThumbsUp, IoIosThumbsDown} from 'react-icons/io';
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import './memeOverview.css';
 import Meme from "../Meme/meme";
@@ -126,6 +129,10 @@ class SingleView extends React.Component{
         };
     }
 
+    getMemesFromDb = () => {
+        this.props.getMemes();
+    }
+
     previous(){
         let memes = this.props.memes
         let i = this.state.i
@@ -181,14 +188,8 @@ class SingleView extends React.Component{
 
         }
 
-
-
-
-
-
         return(
             <div>
-                <h1>Die coolste Single View aller Zeiten</h1>
                 <div>
                     <button onClick={() => this.previous()}>previous</button>
                     {items[this.state.i]}
@@ -199,11 +200,32 @@ class SingleView extends React.Component{
     }
 }
 
+function SwitchView(props) {
+    const isSingleView = props.isSingleView;
+
+    const memes = props.memes
+    console.log(memes)
+
+
+
+    if (isSingleView) {
+        return <SingleView
+            memes={props.memes}
+            getMemes={() => {props.getMemesFromDb()}}
+        />
+    }
+    return <Grid
+        memes={props.memes}
+        getMemes={() => {props.getMemesFromDb()}}
+    />;
+}
+
 class MemeOverview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            memes: []
+            memes: [],
+            isSingleView: true
         };
     }
 
@@ -227,13 +249,28 @@ class MemeOverview extends React.Component {
     }
 
     render(){
+
+        const checked = true
+        let setChecked = this.state.isSingleView
+
+        const toggleChecked = () => {
+            console.log(setChecked)
+            setChecked = !setChecked
+            this.setState({
+                isSingleView: setChecked
+            })
+        };
+
+
         return(
             <div>
-                <Grid
-                    memes={this.state.memes}
-                    getMemes={() => {this.getMemesFromDb()}}
+                <p className={'switch'}>Grind Overview</p>
+                <FormControlLabel className={'switch'}
+                    control={<Switch checked={this.state.isSingleView} onChange={toggleChecked} />}
+                    label="Single View"
                 />
-                <SingleView
+                <SwitchView
+                    isSingleView={this.state.isSingleView}
                     memes={this.state.memes}
                     getMemes={() => {this.getMemesFromDb()}}
                 />
