@@ -37,7 +37,7 @@ class InputsPost extends React.Component {
                 boxCount: event.target.elements.boxCount.value
             };
 
-            console.log('sending data ' + JSON.stringify( payload ));
+            console.log('[template expantion] sending data ' + JSON.stringify( payload ));
 
             fetch(`/images/handle`, 
             {
@@ -47,7 +47,7 @@ class InputsPost extends React.Component {
             })
               .then(jsonResponse => jsonResponse.json()
               .then(responseObject => {
-                  console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
+                  console.log('[template expantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
                   alert(JSON.stringify( responseObject.message ))
                 })
                 .catch(jsonParseError => {
@@ -68,7 +68,7 @@ class InputsPost extends React.Component {
     render() {
         return (
             <div className="inputs-post"> 
-                <h2 className="form-header">Post a new picture by existing url</h2>
+                <h2 className="form-header">Post a new picture by an existing image URL</h2>
                 <form className="postForm" onSubmit={this.mySubmitHandler}>
                   <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
                   <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
@@ -92,7 +92,7 @@ class FileUpload extends React.Component {
         }
     }
 
-    onChangeHandler = (event) => {
+    onFileChangeHandler = (event) => {
         console.log(event.target.files[0])
         this.setState({
             selectedFile: event.target.files[0],
@@ -102,22 +102,32 @@ class FileUpload extends React.Component {
 
     onClickHandler = () => {
         const file = this.state.selectedFile;
+        const name = this.state.selectedFile.name;
+        console.log("[template expantion] name = " + name);
+        if(!name) {
+          alert("Please specify a template name!")
+          return;
+        }
         const formData = new FormData();
         formData.append("userUploadFile", file);
+        // formData.append("fileName", name);
       
-        axios.post("http://localhost:3000/images/upload", formData,{headers:{"Content-Type" : 'multipart/form-data'}})
-        .then((res) => {
+        axios.post(
+          "http://localhost:3000/images/uploadTemplate", 
+          formData,
+          {headers:{"Content-Type" : 'multipart/form-data'}}
+        ).then((res) => {
             alert(res.data.message);
           })
           .catch((err) => alert("File Upload Error"));
       
-          }
+    }
 
     render() {
         return(   
             <div className="file-upload">
-                <h2>Upload a file</h2>
-                <input type="file" name="sampleFile" onChange={this.onChangeHandler}/>
+                <h2>Upload an image template</h2>
+                <input type="file" name="sampleFile" onChange={this.onFileChangeHandler}/>
                 <button className="upload-button" type="button" onClick={this.onClickHandler}>Upload</button>
             </div>
         )
