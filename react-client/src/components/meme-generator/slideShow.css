@@ -10,6 +10,12 @@
     margin-bottom: 50px;
 }
 
+.slide-show-heading > h2 {
+  background-color: black;
+  color: white;
+  padding: 0px 10px;
+}
+
 .draw-button {
     height: 30px;  
     margin-left: 20px; 

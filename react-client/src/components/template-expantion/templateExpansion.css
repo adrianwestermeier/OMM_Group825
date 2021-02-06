@@ -1,0 +1,29 @@
+.template-expansion {
+    margin: 50px;
+}
+
+.file-upload-inputs {
+    display: none;
+}
+
+.post-form {
+    display: none;
+}
+
+.header-button-group {
+    display: flex;
+    margin: 40px 0px 20px;
+}
+
+.header-button-group > h2 {
+    background-color: black;
+    color: white;
+    padding: 0px 10px;
+}
+
+.header-button-group > button {
+    border: none;
+    background-color: inherit;
+    width: 50px;
+    font-size: 20px;
+}

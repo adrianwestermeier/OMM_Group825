@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import './templateExpansion.css';
+import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 
 // inputs for user-posted urls
 class InputsPost extends React.Component {
@@ -8,55 +10,44 @@ class InputsPost extends React.Component {
         this.state = {
           name: null,
           url: null,
-          width: null,
-          height: null,
-          boxCount: null,
+          icon: <BsChevronRight/>,
+          expanded: false,
         };
       }
 
       mySubmitHandler = (event) => {
         event.preventDefault();
-        if ( !this.state.name || !this.state.url || !this.state.width || !this.state.height || !this.state.boxCount ) {
-            alert("You must enter every field in the inputs!");
+        if ( !this.state.name || !this.state.url) {
+            alert("Please enter an existing url and a template name!");
             return;
         }
-        const name = this.state.name;
-        const url = this.state.url;
-        const inputWidth = this.state.width;
-        const inputHeight = this.state.height;
-        const inputBoxCount = this.state.boxCount;
-        if ( !Number(inputWidth) || !Number(inputHeight) || !Number(inputBoxCount) ) {
-          alert("You must enter numbers for width, height and box count!");
-        } else {
-            console.log(this.state)
-            const payload = {
-                name: event.target.elements.name.value,
-                url: event.target.elements.url.value,
-                width: event.target.elements.width.value,
-                height: event.target.elements.height.value,
-                boxCount: event.target.elements.boxCount.value
-            };
-
-            console.log('[template expantion] sending data ' + JSON.stringify( payload ));
-
-            fetch(`/images/handle`, 
-            {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify( payload ),
-            })
-              .then(jsonResponse => jsonResponse.json()
-              .then(responseObject => {
-                  console.log('[template expantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
-                  alert(JSON.stringify( responseObject.message ))
-                })
-                .catch(jsonParseError => {
-                  console.error(jsonParseError);
-                })
-              ).catch(requestError => {
-                console.error(requestError);
-              });           
+        // const name = this.state.name;
+        // const url = this.state.url;
+       
+        console.log(this.state)
+        const payload = {
+            name: event.target.elements.name.value,
+            url: event.target.elements.url.value,
         }
+        console.log('[template expantion] sending data ' + JSON.stringify( payload ))
+        fetch(`/images/createByUrl`,
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify( payload ),
+        })
+        .then(jsonResponse => jsonResponse.json()
+        .then(responseObject => {
+            console.log('[template expantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
+            alert(JSON.stringify( responseObject.message ))
+          })
+          .catch(jsonParseError => {
+            console.error(jsonParseError);
+          })
+        ).catch(requestError => {
+          console.error(requestError);
+        });           
+        
       }
 
       myChangeHandler = (event) => {
@@ -65,16 +56,33 @@ class InputsPost extends React.Component {
         this.setState({[nam]: val});
       }
 
+      expand = () => {
+        if(!this.state.expanded) {
+  
+          document.getElementById("post-form").style.display = "inline";
+          this.setState({
+            icon: <BsChevronDown/>,
+            expanded: true,
+          })
+        } else {
+          document.getElementById("post-form").style.display = "none";
+          this.setState({
+            icon: <BsChevronRight/>,
+            expanded: false,
+          })
+        }
+      }
+
     render() {
         return (
             <div className="inputs-post"> 
-                <h2 className="form-header">Post a new picture by an existing image URL</h2>
-                <form className="postForm" onSubmit={this.mySubmitHandler}>
+              <div className="header-button-group">
+                <h2>Add a new template by an existing image URL</h2>
+                <button onClick={this.expand}>{this.state.icon}</button>
+              </div>
+                <form className="post-form" id="post-form" onSubmit={this.mySubmitHandler}>
                   <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
                   <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="width" name="width" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="height" name="height" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="box count" name="boxCount" onChange={this.myChangeHandler}/>
                   <button type="submit" className="postSubmit">Submit</button>
                 </form>
             </div>
@@ -89,6 +97,8 @@ class FileUpload extends React.Component {
         super(props);
         this.state = {
             selectedFile: null,
+            icon: <BsChevronRight/>,
+            expanded: false,
         }
     }
 
@@ -120,15 +130,36 @@ class FileUpload extends React.Component {
             alert(res.data.message);
           })
           .catch((err) => alert("File Upload Error"));
-      
+    }
+
+    expand = () => {
+      if(!this.state.expanded) {
+
+        document.getElementById("file-upload-inputs").style.display = "inline";
+        this.setState({
+          icon: <BsChevronDown/>,
+          expanded: true,
+        })
+      } else {
+        document.getElementById("file-upload-inputs").style.display = "none";
+        this.setState({
+          icon: <BsChevronRight/>,
+          expanded: false,
+        })
+      }
     }
 
     render() {
         return(   
             <div className="file-upload">
-                <h2>Upload an image template</h2>
-                <input type="file" name="sampleFile" onChange={this.onFileChangeHandler}/>
-                <button className="upload-button" type="button" onClick={this.onClickHandler}>Upload</button>
+              <div className="header-button-group">
+                <h2>Upload a custom image template</h2>
+                <button onClick={this.expand}>{this.state.icon}</button>
+              </div>
+                <div className="file-upload-inputs" id="file-upload-inputs">
+                  <input type="file" name="sampleFile" onChange={this.onFileChangeHandler}/>
+                  <button className="upload-button" type="button" onClick={this.onClickHandler}>Upload</button>
+                </div>
             </div>
         )
     }
@@ -144,7 +175,7 @@ export default class Expander extends React.Component {
 
     render() {
       return (
-        <div className="template-expantion">
+        <div className="template-expansion">
             <InputsPost/>
             <FileUpload/>
         </div>

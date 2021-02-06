@@ -1,6 +1,7 @@
 var express = require('express');
 var fs = require("fs"), json;
 var router = express.Router();
+const axios = require('axios');
 var cors = require('cors');
 var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
@@ -163,33 +164,69 @@ router.get('/localfiles', function (req, res, next) {
   }); 
   
 })
+
+/* helper for downloading by url */
+const download_image = (url, image_path) =>
+  axios({
+    url,
+    responseType: 'stream',
+  }).then(
+    response =>
+      new Promise((resolve, reject) => {
+        response.data
+          .pipe(fs.createWriteStream(image_path))
+          .on('finish', () => resolve())
+          .on('error', e => reject(e));
+      }),
+  );
   
 /* TODO: download image and create a new db entry */
-router.post('/handle', function(req, res, next) {
-  console.log('got post request ', req.body);
-  var newImage = {
-    "name": req.body.name,
-    "url": req.body.url,
-    "width": req.body.width,
-    "height": req.body.height,
-    "box_count": req.body.boxCount
-  };
-  if (assertNewDbEntry(newImage) == 0) {
-    res.json({
-      "code": 401,
-      "message": "creation failed, no empty fields allowed!"
-    });
-  } else {
-    postImageToDb(newImage);
-    res.json({
-      "code": 201,
-      "message": "created image successfully, refresh page to see changes.",
-      "image": [newImage]
-    });
-  }
+router.post('/createByUrl', function(req, res, next) {
+  console.log('[images] create by url ', req.body);
   
-  // update the data instantly
-  getImagesFromDb();
+  // e.g. https://i.imgflip.com/24y43o.jpg
+  const name = req.body.name;
+  const templateUrl = req.body.url;
+
+  let format;
+  if(templateUrl.includes("jpg")) {
+    format = ".jpg";
+  } else if(templateUrl.includes("png")) {
+    format = ".png";
+  } else {
+    return;
+  }
+
+  const path = './public/templates/' + name + format;
+
+  getEntry(name).then((entry) => {
+    if(entry) {
+      console.log("[images] entry: " + entry);
+      res.json({
+        "code": 501,
+        "message": "template with name \"" + name + "\" already exists! Please rename your file.",
+      });
+    } else {
+      console.log("[images] no entry yet");
+
+      download_image(templateUrl, path).then(() => {
+        console.log("[images] downloaded by url");
+        var newTemplate = {
+          "name": name + format,
+        };
+      
+        postTemplateToDb(newTemplate).then(() => {
+          console.log("[images] wrote new template to DB");
+          res.json({
+            "code": 201,
+            "message": "Added template successfully!",
+          });
+        });
+      })
+      
+    }
+  })
+ 
 })
 
 
@@ -204,7 +241,7 @@ router.post('/saveCreatedMeme', function(req, res) {
       return res.status(500).send(err);
     }
 
-    // TODO: load images from local files
+    // TODO: add meme name to meme database and load memes from static hosted files
     res.json({
       "code": 201,
       "message": "saved image on server",
@@ -271,7 +308,7 @@ router.post('/uploadTemplate', function(req, res) {
         };
       
         postTemplateToDb(newTemplate).then(() => {
-          console.log("[images] writing new template to DB");
+          console.log("[images] wrote new template to DB");
           res.json({
             "code": 201,
             "message": "Added template successfully!",

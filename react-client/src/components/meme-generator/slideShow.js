@@ -461,13 +461,13 @@ export default class SlideShow extends React.Component {
                      Save Meme on server
                    </button> */}
                    <button className="saveButton" onClick={() => {this.saveMemeOnServer()}}>
-                     Save Meme on server
+                     Share
                    </button>
-                   <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
-                       Export As JPEG
-                   </button>
+{/*                    <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
+                       Download As JPEG
+                   </button> */}
                    <button onClick={() => exportComponentAsPNG(this.componentRef)}>
-                       Export As PNG
+                       Download As PNG
                    </button>
                 </div>
                 <div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import './memeGenerator.css';
 import SlideShow from "./slideShow";
+import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillCaretUpFill } from "react-icons/bs";
 
 
 // Inputs for the top and bottom texts
@@ -51,19 +52,16 @@ class InputsText extends React.Component {
                   </form>
                   <div className="position-wrapper-whole">
                     <div className="position-wrapper">
-                      <p className="position-text">vertical Position</p>
+                      <p className="position-text">Position (text should stay within in frame.)</p>
                       <div className="buttons">
-                        <button type="button" onClick={this.increaseVerticalPosition}>+</button> 
-                        <button type="button" onClick={this.decreaseVerticalPosition}>-</button>
+                        <button className="position-button" onClick={this.decreaseHorizontalPosition}><BsFillCaretLeftFill/></button>
+                        <div class="up-down-buttons">
+                          <button className="position-button" onClick={this.increaseVerticalPosition}><BsFillCaretUpFill/></button>
+                          <button className="position-button" onClick={this.decreaseVerticalPosition}><BsFillCaretDownFill/></button>
+                        </div>
+                        <button className="position-button" onClick={this.increaseHorizontalPosition}><BsFillCaretRightFill/></button>
                       </div>
                     </div> 
-                    <div className="position-wrapper">
-                      <p className="position-text">horizontal Position</p>
-                      <div className="buttons">
-                        <button type="button" onClick={this.increaseHorizontalPosition}>+</button> 
-                        <button type="button" onClick={this.decreaseHorizontalPosition}>-</button>
-                      </div>
-                    </div>  
                   </div>
                 </div>
             </div>
@@ -105,19 +103,19 @@ export default class Generator extends React.Component {
       if(pos==="top") {
         let newPositionValue = this.state.topTextHorizontalPosition
         newPositionValue += 5;
-        if(newPositionValue <= 100) {
+        
           this.setState({
             topTextHorizontalPosition: newPositionValue,
           })
-        }
+        
       } else {
         let newPositionValue = this.state.bottomTextHorizontalPosition
         newPositionValue += 5;
-        if(newPositionValue <= 100) {
+        
           this.setState({
             bottomTextHorizontalPosition: newPositionValue,
           })
-        }
+        
       }
     }
 
@@ -125,19 +123,19 @@ export default class Generator extends React.Component {
       if(pos==="top") {
         let newPositionValue = this.state.topTextHorizontalPosition
         newPositionValue -= 5;
-        if((newPositionValue - this.state.topText.length*1.2) >= 0) {
+        
           this.setState({
             topTextHorizontalPosition: newPositionValue,
           })
-        }
+        
       } else {
         let newPositionValue = this.state.bottomTextHorizontalPosition
         newPositionValue -= 5;
-        if((newPositionValue - this.state.bottomText.length*1.2) >= 0) {
+        
           this.setState({
             bottomTextHorizontalPosition: newPositionValue,
           })
-        }
+        
       }
     }
 
@@ -145,19 +143,19 @@ export default class Generator extends React.Component {
       if(pos==="top") {
         let newPositionValue = this.state.topTextVerticalPosition
         newPositionValue -= 5;
-        if(newPositionValue > 0) {
+        
           this.setState({
             topTextVerticalPosition: newPositionValue,
           })
-        }
+        
       } else {
         let newPositionValue = this.state.bottomTextVerticalPosition
         newPositionValue += 5;
-        if(newPositionValue < 100) {
+        
           this.setState({
             bottomTextVerticalPosition: newPositionValue,
           })
-        }
+        
       }
     }
 
@@ -165,19 +163,19 @@ export default class Generator extends React.Component {
       if(pos==="top") {
         let newPositionValue = this.state.topTextVerticalPosition
         newPositionValue += 5;
-        if(newPositionValue < 100) {
+        
           this.setState({
             topTextVerticalPosition: newPositionValue,
           })
-        }
+        
       } else {
         let newPositionValue = this.state.bottomTextVerticalPosition
         newPositionValue -= 5;
-        if(newPositionValue > 0){
+        
           this.setState({
             bottomTextVerticalPosition: newPositionValue,
           })
-        }
+        
       }
     }
 
@@ -212,11 +210,16 @@ export default class Generator extends React.Component {
             </div>
             <div className="input-section">
               <h2>Add and style text</h2>
-                <h3>Add title</h3>
-                <form className="input-form" onSubmit={this.handleTitleSubmit}>
-                    <input type="text" placeholder="meme title" name="title" onChange={this.handleTitleChange}></input>
-                    <button className="title-submit" type="submit">Submit</button>
-                </form>
+                <div className="inputs-text">
+                  <h3>Add title</h3>
+                  <div>
+
+                  <form className="input-form" onSubmit={this.handleTitleSubmit}>
+                      <input type="text" placeholder="meme title" name="title" onChange={this.handleTitleChange}></input>
+                      <button className="title-submit" type="submit">Submit</button>
+                  </form>
+                  </div>
+                </div>
                 <InputsText 
                   captionType="top"
                   heading="Style top text"
