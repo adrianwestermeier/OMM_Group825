@@ -14,10 +14,8 @@ class OverviewElem extends React.Component {
         let downVotes = meme.downVotes
 
         if (isUpvote) {
-            console.log('upVote')
             upVotes = upVotes + 1
         } else if (!isUpvote) {
-            console.log('downVote')
             downVotes = downVotes + 1
         } else {
             console.log('Fehler: weder up noch downvote')
@@ -153,7 +151,6 @@ class SingleView extends React.Component{
     next(){
         let memes = this.props.memes
         let i = this.state.i
-        console.log('nächstes Bild')
         if( i < memes.length-1){
             i = i+1
         } else {
@@ -204,8 +201,6 @@ function SwitchView(props) {
     const isSingleView = props.isSingleView;
 
     const memes = props.memes
-    console.log(memes)
-
 
 
     if (isSingleView) {
@@ -254,7 +249,6 @@ class MemeOverview extends React.Component {
         let setChecked = this.state.isSingleView
 
         const toggleChecked = () => {
-            console.log(setChecked)
             setChecked = !setChecked
             this.setState({
                 isSingleView: setChecked
