@@ -48,7 +48,7 @@ export default class SlideShow extends React.Component {
         super(props);
         this.componentRef = React.createRef();
         this.state = {
-            localPictureNames: ['horse.jpg', 'guy.jpg', 'dog.jpg'],
+            localPictureNames: [],
             pictures: [],
             currentIndex: 0,
             heading: "Choose a template",
@@ -59,6 +59,20 @@ export default class SlideShow extends React.Component {
             showPng: false,
             png: "",
          };
+    }
+
+    getTemplateNames() {
+         fetch('/getTemplateNames')
+             .then(res => {
+                 console.log(res);
+                 return res.json()
+              })
+             .then(images => { 
+                 console.log(images);
+                 this.setState({ 
+                     localPictureNames: images.images,  // image array is wrapped in image json
+                 })
+              });
     }
 
     // get the meme templates from the express server
@@ -77,38 +91,52 @@ export default class SlideShow extends React.Component {
         //              bottomText: "",
         //          })
         //       });
-        this.state.localPictureNames.forEach(element => {
-            let url = 'http://localhost:3005/images/' + element;
-            console.log(url)
-            axios.get(url, { responseType: 'arraybuffer' },
-                ).then(response => {
-                    const base64 = btoa(
-                      new Uint8Array(response.data).reduce(
-                          (data, byte) => data + String.fromCharCode(byte),
-                          '',
-                          ),
-                    );
-                      
-                    let newPictures = this.state.pictures;
-                    const newImage = {
-                        url: "data:;base64," + base64,
-                        imgflip: false,
-                        topText: "",
-                        bottomText: "",
-                        title: "",
-                    };
-                    newPictures = newPictures.concat(newImage);
-                    this.setState({
-                        pictures: newPictures,
-                    });
-                    
-                      /* let newSourceArray = this.state.sources;
-                      newSourceArray = newSourceArray.concat("data:;base64," + base64)
-                      this.setState({ sources: newSourceArray });
-                      console.log("data:;base64," + base64);
-                      }); */
-          });
-        });
+
+        fetch('/images/getTemplateNames')
+             .then(res => {
+                 console.log(res);
+                 return res.json()
+              })
+             .then(templates => { 
+                 console.log(templates);
+                 this.setState({ 
+                     localPictureNames: templates.templates,  // image array is wrapped in image json
+                 })
+                 console.log("after get template names")
+                 this.state.localPictureNames.forEach(element => {
+                     let url = 'http://localhost:3005/templates/' + element;
+                     console.log(url)
+                     axios.get(url, { responseType: 'arraybuffer' },
+                     ).then(response => {
+                         const base64 = btoa(
+                             new Uint8Array(response.data).reduce(
+                                 (data, byte) => data + String.fromCharCode(byte),
+                                 '',
+                                 ),
+                                 );
+                                 
+                                 let newPictures = this.state.pictures;
+                                 const newImage = {
+                                     url: "data:;base64," + base64,
+                                     imgflip: false,
+                                     topText: "",
+                                     bottomText: "",
+                                     title: "",
+                                    };
+                                    newPictures = newPictures.concat(newImage);
+                                    this.setState({
+                                        pictures: newPictures,
+                                    });
+                                    
+                                    /* let newSourceArray = this.state.sources;
+                                    newSourceArray = newSourceArray.concat("data:;base64," + base64)
+                                    this.setState({ sources: newSourceArray });
+                                    console.log("data:;base64," + base64);
+                                }); */
+                            });
+                        });
+                    })
+            
      }
  
      // go to next meme template
