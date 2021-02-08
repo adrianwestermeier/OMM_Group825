@@ -206,12 +206,12 @@ function SwitchView(props) {
     if (isSingleView) {
         return <SingleView
             memes={props.memes}
-            getMemes={() => {props.getMemesFromDb()}}
+            getMemes={() => {props.getMemes()}}
         />
     }
     return <Grid
         memes={props.memes}
-        getMemes={() => {props.getMemesFromDb()}}
+        getMemes={() => {props.getMemes()}}
     />;
 }
 
@@ -258,7 +258,7 @@ class MemeOverview extends React.Component {
 
         return(
             <div>
-                <p className={'switch'}>Grind Overview</p>
+                <p className={'switch'}>Grid Overview</p>
                 <FormControlLabel className={'switch'}
                     control={<Switch checked={this.state.isSingleView} onChange={toggleChecked} />}
                     label="Single View"
