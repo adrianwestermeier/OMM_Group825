@@ -1,6 +1,6 @@
-.meme-overview-wrapper {
+.meme {
     position: relative;
-    width: 300px;
+    width: 600px;
     text-align: center;
     box-sizing: border-box;
 }
@@ -8,23 +8,3 @@
 img {
     max-width: 100%;
 }
-
-/* .topOut {
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    color: white;
-    text-shadow: 0 0 2px rgb(8, 8, 8);
-}
-
-.bottomOut {
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    color: white;
-    text-shadow: 0 0 2px rgb(8, 8, 8);
-} */

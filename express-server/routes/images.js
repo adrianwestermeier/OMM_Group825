@@ -5,6 +5,7 @@ const axios = require('axios');
 var cors = require('cors');
 var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
+const { title } = require('process');
 
 var corsOptions = {
   origin: 'http://localhost:8080',
@@ -75,8 +76,8 @@ async function postTemplateToDb(template) {
   }
 }
 
-/* gets an entry from the template collection with the name "name" */
-async function getEntry(name) {
+/* posts a new meme to the generatedMemes collection */
+async function postNewMemeToDb(template) {
   const client = await mongoClient.connect(url, { useNewUrlParser: true })
         .catch(err => { console.log(err); });
 
@@ -86,7 +87,28 @@ async function getEntry(name) {
 
   try {
     const db = client.db("meme-generator-db");
-    let collection = db.collection('templates');
+    let collection = db.collection('generatedMemes');
+    await collection.insertOne(template);
+  } catch (err) {
+      console.log(err);
+  } finally {
+      client.close();
+      return "success"
+  }
+}
+
+/* gets an entry from the template collection with the name "name" */
+async function getEntry(name, collectionName) {
+  const client = await mongoClient.connect(url, { useNewUrlParser: true })
+        .catch(err => { console.log(err); });
+
+  if (!client) {
+      return;
+  }
+
+  try {
+    const db = client.db("meme-generator-db");
+    let collection = db.collection(collectionName);
     const entry = await collection.findOne(
       { name: name },
       { _id: 0, 'name': 1}
@@ -199,7 +221,7 @@ router.post('/createByUrl', function(req, res, next) {
 
   const path = './public/templates/' + name + format;
 
-  getEntry(name).then((entry) => {
+  getEntry(name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({
@@ -232,21 +254,46 @@ router.post('/createByUrl', function(req, res, next) {
 
 /* save a created meme, TODO: save it to DB! */
 router.post('/saveCreatedMeme', function(req, res) {
-  var base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
-  console.log(base64Data);
+  const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
+  // console.log(base64Data);
+  const name = req.body.name + '.png';
+  const title = req.body.title;
+  const dir = "./public/memes/" + name;
 
-  fs.writeFile("./public/memes/out.png", base64Data, 'base64', function(err) {
-    if (err) {
-      console.log('error in saving');
-      return res.status(500).send(err);
+  getEntry(name, 'generatedMemes').then((entry) => {
+    if(entry) {
+      console.log("[images] entry: " + entry);
+      res.json({
+        "code": 501,
+        "message": "meme with name \"" + name + "\" already exists! Please rename your meme.",
+      });
+    } else {
+      console.log("[images] no entry");
+      
+      fs.writeFile(dir, base64Data, 'base64', function(err) {
+        if (err) {
+          console.log('error in saving');
+          return res.status(500).send(err);
+        }
+
+        const newMeme = {
+          "name": name,
+          "title": title,
+          "upVotes": 0,
+          "downVotes": 0,
+        };
+      
+        postNewMemeToDb(newMeme).then(() => {
+          console.log("[images] wrote new meme to DB");
+          res.json({
+            "code": 201,
+            "message": "saved meme on server",
+          });
+        });
+      });
     }
-
-    // TODO: add meme name to meme database and load memes from static hosted files
-    res.json({
-      "code": 201,
-      "message": "saved image on server",
-    });
   });
+
 })
 
 
@@ -286,7 +333,7 @@ router.post('/uploadTemplate', function(req, res) {
   let name = req.files.userUploadFile.name;
   console.log("[images] name = " + name);
 
-  getEntry(name).then((entry) => {
+  getEntry(name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({

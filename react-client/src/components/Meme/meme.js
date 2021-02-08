@@ -5,10 +5,13 @@ import './meme.css'
 export default class Meme extends React.Component{
     render(){
         return(
-            <div className="meme-overview-wrapper">
-                <img src={this.props.url} alt={'Meme'}/>
-                <div className="topOut">{this.props.topText}</div>
-                <div className="bottomOut">{this.props.bottomText}</div>
+            <div className="meme">
+            <figure>
+                <figcaption>{this.props.title}</figcaption>
+                <div className="top-and-bottom-wrapper">
+                    <img src={this.props.url} alt={'Meme'}/>
+                </div>
+            </figure>
             </div>
         )
     }

@@ -109,16 +109,58 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
 
 getMemesFromDb();
 
+
+/* Function to retrieve names of existing memes which are hosted static*/
 router.get('/getMemes', function(req, res, next) {
-    console.log('hallo');
-    console.log('router.get /getMemes');
+    console.log('[generatedMemes] getMemes');
 
+    let memes = [];
+    console.log('get meme name from Db');
+    mongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("meme-generator-db");
+      dbo.collection("generatedMemes").find().toArray(function(err, result) {
+        if (err) throw err;
+        
+        result.forEach(el => {
+          memes.push(el.name);
+        })
+        console.log('data to send from db: ' + memes);
+        res.json({
+          "memes": memes
+        });
+        db.close();
+      });
+    }); 
+    console.log('sent memes');
+});
 
-    /* console.log(images); */
-    res.json({
-        "memes": memes
-    });
-    console.log('sent');
+/* GET meme data. */
+router.get('/getMemeData', function(req, res, next) {
+    let memes = [];
+    console.log('[generatedMemes] get meme data from Db');
+    mongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("meme-generator-db");
+      dbo.collection("generatedMemes").find().toArray(function(err, result) {
+        if (err) throw err;
+        result.forEach(el => {
+            const nextMeme = {
+                name: el.name,
+                title: el.title,
+                upVotes: el.upVotes,
+                downVotes: el.downVotes
+            }
+          memes.push(nextMeme);
+        })
+        console.log('data to send from db: ' + memes);
+        res.json({
+          "memes": memes
+        });
+        db.close();
+      });
+    }); 
+    console.log('sent memes');
 });
 
 // das Update funktioniert gerade nur über die Namen. ich kann nciht auf _id zugreifen. Wir bauchen also eine Möglichkeit Memes eindeutig zu identifizieren.
@@ -126,8 +168,7 @@ router.put('/updateMeme', function (req, res){
     mongoClient.connect(url, function(err, db) {
         console.log('Verbindung aufgebaut')
         if (err) throw err;
-        //let id = "ObjectId(\"" + req.body.id + "\")"
-        //console.log(id)
+
         let dbo = db.db("meme-generator-db");
         dbo.collection("generatedMemes").findOneAndUpdate(
             {name: req.body.name},
@@ -140,7 +181,6 @@ router.put('/updateMeme', function (req, res){
             {upsert: false}
         )
             .then(result => {
-                getMemesFromDb()
                 console.log(result)
                 res.json({
                     "code": 201,

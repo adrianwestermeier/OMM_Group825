@@ -187,10 +187,19 @@ export default class Generator extends React.Component {
 
     handleTitleChange = (event) => {
       event.preventDefault();
-      console.log(event.target.name);
+      console.log("[memeGenerator]" + event.target.name);
       let nam = event.target.name;
       let val = event.target.value;
       this.setState({[nam]: val});
+    }
+
+    onMemeCreated = (memeWasCreated) => {
+      if(memeWasCreated) {
+        console.log("[memeGenerator] meme was created");
+        document.getElementById("input-section").style.display = "none";
+      } else {
+        document.getElementById("input-section").style.display = "block";
+      }
     }
 
     render() {
@@ -206,9 +215,10 @@ export default class Generator extends React.Component {
                   topTextHorizontalPosition={this.state.topTextHorizontalPosition}
                   bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
                   bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
+                  onMemeCreated={this.onMemeCreated}
                 />  
             </div>
-            <div className="input-section">
+            <div className="input-section" id="input-section">
               <h2>Add and style text</h2>
                 <div className="inputs-text">
                   <h3>Add title</h3>

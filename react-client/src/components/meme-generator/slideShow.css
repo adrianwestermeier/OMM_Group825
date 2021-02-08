@@ -16,6 +16,13 @@
   padding: 0px 10px;
 }
 
+.warning {
+  background-color: black;
+  color: white;
+  padding: 0px 10px;
+  display: inline-block;
+}
+
 .draw-button {
     height: 30px;  
     margin-left: 20px; 

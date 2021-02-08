@@ -1,10 +1,15 @@
-.MemeOverview{
+.meme-overview {
+    margin: 100px;
+}
+
+.meme-wrapper {
+    margin-right: 30px;
+}
+
+.overview-element {
     display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-
+    padding: 50px 0px;
+    border-bottom: 2px solid grey;
 }
 
 .switch{
