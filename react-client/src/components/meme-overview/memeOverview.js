@@ -4,7 +4,6 @@ import arrowBack from '../img/arrow_back-black-18dp.svg';
 import arrowForward from '../img/arrow_forward-black-18dp.svg';
 import {IoIosThumbsUp, IoIosThumbsDown} from 'react-icons/io';
 import Switch from '@material-ui/core/Switch';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import './memeOverview.css';
@@ -92,7 +91,7 @@ class Grid extends React.Component{
         const items = [];
         let memes = this.props.memes
         for (let i = 0; i < memes.length; i++) {
-            let id = memes[i]._id
+
 
             items.push(<OverviewElem
                 className="gridItem"
@@ -153,6 +152,17 @@ class SingleView extends React.Component{
         })
     }
 
+    // generates a random Number between 0 and memes.length to show a random Meme
+    randomMeme(){
+        let memes = this.props.memes
+        const i = Math.floor(Math.random() * Math.floor(memes.length));;
+        this.setState({
+            i: i
+        })
+
+
+    }
+
     render(){
         const items = [];
         let memes = this.props.memes
@@ -171,14 +181,13 @@ class SingleView extends React.Component{
 
         return(
             <div>
+                <button onClick={() => {this.randomMeme()}}>Random</button>
                 <div>
                     <div className="arrows" id="arrows">
                         <img src={arrowBack} className="backButton" onClick={() => this.previous()}></img>
                         <img src={arrowForward} className="nextButton" onClick={() => this.next()}></img>
                     </div>
-                    {/* <button onClick={() => this.previous()}>previous</button> */}
                     {items[this.state.i]}
-                    {/* <button onClick={() => this.next()}>next</button> */}
                 </div>
             </div>
         )
@@ -226,11 +235,11 @@ class MemeOverview extends React.Component {
         // get the memes from the express server
         fetch('/generatedMemes/getMemeData')
             .then(res => {
-                console.log("[memeOverview]" + res);
+                //console.log("[memeOverview]" + res);
                 return res.json()
             })
             .then(memes => {
-                console.log("[memeOverview]" + memes);
+                //console.log("[memeOverview]" + memes);
                 this.setState({ 
                     memes: memes.memes,
                 })
