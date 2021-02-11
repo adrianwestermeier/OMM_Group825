@@ -89,6 +89,13 @@ or for bottom text:
 curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
 ```
 
+### Example create a set of memes
+Create a set of memes provided as a zip file. Choose an image and add different texts to it. As before you can use your own image or an extisting meme template like in this example:
+```
+curl -H "Content-Type: application/json" -d '{"text": ["YOUR_TEXT_1", "YOUR_TEXT_2", "YOUR_TEXT_3"], "name": "NAME_OF_ZIP", "place": "top", "template": "dog"}'  http://localhost:3005/api/createZip
+```
+where NAME_OF_ZIP is the name under which you want to save the zip file. Also it is the name for each image inside the zip file additionally with a number in brackets.
+
 ## launch react client app
 npm install (including axios)
 in command line: npm start
