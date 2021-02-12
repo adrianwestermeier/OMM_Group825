@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import axios from 'axios';
 import arrowBack from '../img/arrow_back-black-18dp.svg';
 import arrowForward from '../img/arrow_forward-black-18dp.svg';
 import {IoIosThumbsUp, IoIosThumbsDown} from 'react-icons/io';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 
 import './memeOverview.css';
 import Meme from "../Meme/meme";
-import * as constants from "constants";
 
 class OverviewElem extends React.Component {
 
@@ -34,12 +32,7 @@ class OverviewElem extends React.Component {
         const payload = {
             id: meme._id,
             name: meme.name,
-            url: meme.url,
-            width: meme.width,
-            height: meme.height,
-            top_caption: meme.top_caption,
-            middle_caption: null,
-            bottom_caption: meme.bottom_caption,
+            title: meme.title,
             upVotes: upVotes,
             downVotes: downVotes
         };
@@ -290,11 +283,10 @@ class MemeOverview extends React.Component {
         // get the memes from the express server
         fetch('/generatedMemes/getMemeData')
             .then(res => {
-                //console.log("[memeOverview]" + res);
+
                 return res.json()
             })
             .then(memes => {
-                //console.log("[memeOverview]" + memes);
                 this.setState({ 
                     memes: memes.memes,
                 })
@@ -332,7 +324,6 @@ class MemeOverview extends React.Component {
     }
 
     render(){
-        const checked = true
         let setChecked = this.state.isSingleView
 
         const toggleChecked = () => {
