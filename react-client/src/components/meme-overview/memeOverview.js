@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import arrowBack from '../img/arrow_back-black-18dp.svg';
 import arrowForward from '../img/arrow_forward-black-18dp.svg';
 import {IoIosThumbsUp, IoIosThumbsDown} from 'react-icons/io';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import './memeOverview.css';
 import Meme from "../Meme/meme";
+import * as constants from "constants";
 
 class OverviewElem extends React.Component {
 
+    /*
+    * depending on which button was pressed this function performs an up- or downVote, that means updating the corresponding value locally
+    * after that ist sends an update request to the sever to save the corresponding values on the db
+    * after that it reloads all memes to get and render the new information
+    * */
     vote(meme, isUpvote) {
         let upVotes = meme.upVotes
         let downVotes = meme.downVotes
@@ -111,18 +118,27 @@ class Grid extends React.Component{
     }
 }
 
+
+
 class SingleView extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            i: 0
+            i: 0,               // index which meme is to be rendered
+            autoPlay: false,    // is autoPlay activated or not
         };
+        this.makeTimer()
     }
+
+
 
     getMemesFromDb = () => {
         this.props.getMemes();
     }
 
+    /*when clicking the 'previous' button this functions redefines the index this.state.i to render the previous image
+    * when the index gets smaller than 0 the index is redefined to the length of the memes list -1
+    * */
     previous(){
         let memes = this.props.memes
         let i = this.state.i
@@ -138,6 +154,9 @@ class SingleView extends React.Component{
 
     }
 
+    /*when clicking the 'next' button this functions redefines the index this.state.i to render the next image
+    * when the index gets larger than the length of the memes list ist redefines the index to 0
+    * */
     next(){
         let memes = this.props.memes
         let i = this.state.i
@@ -159,17 +178,47 @@ class SingleView extends React.Component{
         this.setState({
             i: i
         })
-
-
     }
+
+    // when the button is clicked it redefines this.state.autoplay to true or false depending on which value ist hade before
+    autoPlayMemes(){
+        this.setState({
+            autoPlay: !this.state.autoPlay
+        })
+    }
+
+    // This function creates the timer for the auto play method. It sets a new i every five seconds and if this.state.autoPlay == true it redefines this.state.i to render the next meme
+    makeTimer(){
+            setInterval(() => {
+                let memes = this.props.memes
+                let i = this.state.i
+                if( i < memes.length-1){
+                    i = i+1
+                } else {
+                    i = 0
+                }
+                if(this.state.autoPlay){
+                    this.setState({i: i})
+                }
+
+            }, 5000)
+    }
+
 
     render(){
         const items = [];
         let memes = this.props.memes
+        let autoPlayLabel = ''
+        if(!this.state.autoPlay){
+            autoPlayLabel = 'start auto play'
+        }else{
+            autoPlayLabel = 'stop auto play'
+        }
         for (let i = 0; i < memes.length; i++) {
             let id = memes[i]._id
 
             items.push(<OverviewElem
+                key={id}
                 className="gridItem"
                 meme={memes[i]}
                 getMemes={() => {this.getMemesFromDb()}}
@@ -179,9 +228,12 @@ class SingleView extends React.Component{
 
         }
 
+
+
         return(
             <div>
                 <button onClick={() => {this.randomMeme()}}>Random</button>
+                <button onClick={() => {this.autoPlayMemes()}}>{autoPlayLabel}</button>
                 <div>
                     <div className="arrows" id="arrows">
                         <img src={arrowBack} className="backButton" onClick={() => this.previous()}></img>
@@ -231,6 +283,9 @@ class MemeOverview extends React.Component {
         this.getMemesFromDb()
     }
 
+    /*
+    * this function fetches all memes from the Database every time it's called
+    * */
     getMemesFromDb() {
         // get the memes from the express server
         fetch('/generatedMemes/getMemeData')

@@ -181,7 +181,7 @@ router.put('/updateMeme', function (req, res){
             {upsert: false}
         )
             .then(result => {
-                console.log(result)
+                 console.log(result)
                 res.json({
                     "code": 201,
                     "message": "updated meme successfully, refresh page to see changes.",
