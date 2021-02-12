@@ -118,7 +118,8 @@ class SingleView extends React.Component{
         super(props);
         this.state = {
             i: 0,               // index which meme is to be rendered
-            autoPlay: false,    // is autoPlay activated or not
+            autoPlayOrdered: false,    // is autoPlayOrdered activated or not
+            autoPlayRandom: false   //is autoPlayRandom activated or not
         };
         this.makeTimer()
     }
@@ -173,14 +174,25 @@ class SingleView extends React.Component{
         })
     }
 
-    // when the button is clicked it redefines this.state.autoplay to true or false depending on which value ist hade before
-    autoPlayMemes(){
-        this.setState({
-            autoPlay: !this.state.autoPlay
-        })
+    // when the button is clicked it redefines this.state.autoPlayOrdered to true or false depending on which value ist hade before
+    autoPlayMemes(isOrdered){
+        if(isOrdered){
+            console.log('ordered')
+            this.setState({
+                autoPlayOrdered: !this.state.autoPlayOrdered
+            })
+        }else if(!isOrdered){
+            console.log('random')
+            this.setState({
+                autoPlayRandom: !this.state.autoPlayRandom
+            })
+        }else{
+            console.log('error: weder ordered noch random')
+        }
+
     }
 
-    // This function creates the timer for the auto play method. It sets a new i every five seconds and if this.state.autoPlay == true it redefines this.state.i to render the next meme
+    // This function creates the timer for the auto play method. It sets a new i every five seconds and if this.state.autoPlayOrdered == true it redefines this.state.i to render the next meme
     makeTimer(){
             setInterval(() => {
                 let memes = this.props.memes
@@ -190,8 +202,15 @@ class SingleView extends React.Component{
                 } else {
                     i = 0
                 }
-                if(this.state.autoPlay){
+                if(this.state.autoPlayOrdered){
                     this.setState({i: i})
+                }
+                if(this.state.autoPlayRandom){
+                    i = Math.floor(Math.random() * Math.floor(memes.length));
+                    console.log(i)
+                    this.setState({
+                        i: i
+                    })
                 }
 
             }, 5000)
@@ -201,12 +220,20 @@ class SingleView extends React.Component{
     render(){
         const items = [];
         let memes = this.props.memes
-        let autoPlayLabel = ''
-        if(!this.state.autoPlay){
-            autoPlayLabel = 'start auto play'
+        let autoPlayOrderedLabel = ''
+        let autoPlayRandomLabel = ''
+        if(!this.state.autoPlayOrdered){
+            autoPlayOrderedLabel = 'start auto play'
         }else{
-            autoPlayLabel = 'stop auto play'
+            autoPlayOrderedLabel = 'stop auto play'
         }
+
+        if(!this.state.autoPlayRandom){
+            autoPlayRandomLabel = 'start auto play'
+        }else{
+            autoPlayRandomLabel = 'stop auto play'
+        }
+
         for (let i = 0; i < memes.length; i++) {
             let id = memes[i]._id
 
@@ -226,10 +253,11 @@ class SingleView extends React.Component{
         return(
             <div>
                 <button onClick={() => {this.randomMeme()}}>Random</button>
-                <button onClick={() => {this.autoPlayMemes()}}>{autoPlayLabel}</button>
+                <button disabled={this.state.autoPlayRandom} onClick={() => {this.autoPlayMemes(true)}}>{autoPlayOrderedLabel} ordered</button>
+                <button disabled={this.state.autoPlayOrdered} onClick={() => {this.autoPlayMemes(false)}}>{autoPlayRandomLabel} random</button>
                 <div>
                     <div className="arrows" id="arrows">
-                        <img src={arrowBack} className="backButton" onClick={() => this.previous()}></img>
+                        <img src={arrowBack} className="backButton"  onClick={() => this.previous()}></img>
                         <img src={arrowForward} className="nextButton" onClick={() => this.next()}></img>
                     </div>
                     {items[this.state.i]}
