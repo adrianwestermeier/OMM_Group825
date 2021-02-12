@@ -168,7 +168,7 @@ class SingleView extends React.Component{
     // generates a random Number between 0 and memes.length to show a random Meme
     randomMeme(){
         let memes = this.props.memes
-        const i = Math.floor(Math.random() * Math.floor(memes.length));;
+        const i = Math.floor(Math.random() * Math.floor(memes.length));
         this.setState({
             i: i
         })
@@ -177,12 +177,10 @@ class SingleView extends React.Component{
     // when the button is clicked it redefines this.state.autoPlayOrdered to true or false depending on which value ist hade before
     autoPlayMemes(isOrdered){
         if(isOrdered){
-            console.log('ordered')
             this.setState({
                 autoPlayOrdered: !this.state.autoPlayOrdered
             })
         }else if(!isOrdered){
-            console.log('random')
             this.setState({
                 autoPlayRandom: !this.state.autoPlayRandom
             })
@@ -207,7 +205,6 @@ class SingleView extends React.Component{
                 }
                 if(this.state.autoPlayRandom){
                     i = Math.floor(Math.random() * Math.floor(memes.length));
-                    console.log(i)
                     this.setState({
                         i: i
                     })
