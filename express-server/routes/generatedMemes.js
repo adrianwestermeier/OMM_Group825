@@ -15,57 +15,17 @@ let url = "mongodb://localhost:27017/";
 let memes;
 
 function getMemesFromDb(){
-    console.log('get memes from DB');
     mongoClient.connect(url, function(err, db) {
         if (err) throw err;
-        var dbo = db.db("meme-generator-db");
-        // var query = { name: "Drake Hotline Bling" };
+        const dbo = db.db("meme-generator-db");
         dbo.collection("generatedMemes").find().toArray(function(err, result) {
             if (err) throw err;
-            /* console.log(result); */
             memes = result;
             db.close();
         });
     });
     console.log('memes ' + memes);
 }
-
-function updateMeme(reqBody){
-    /*mongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        let dbo = db.db("meme-generator-db");
-        dbo.collection("generatedMemes").findOneAndUpdate(
-            {_id: req.body.id},
-            {
-                $set: {
-                    "upVotes": req.body.upVotes,
-                    "downVotes": req.body.downVotes
-                }
-            },
-            {upsert: false}
-        )
-            .then(result => {
-                console.log(result)
-            })
-            .catch(error => console.error(error))
-    });*/
-
-    /*memesCollection.findOneAndUpdate(
-                {_id: req.body.id},
-                {
-                    $set: {
-                        "upVotes": req.body.upVotes,
-                        "downVotes": req.body.downVotes
-                    }
-                },
-                {upsert: false}
-            )
-                .then(result => {
-                    console.log(result)
-                })
-                .catch(error => console.error(error))*/
-}
-
 
 function postMemeToDb(generatedMeme) {
 
@@ -81,6 +41,7 @@ function postMemeToDb(generatedMeme) {
 
 }
 
+// TODO: Adrian, das stimmt so nicht mehr oder? wo wird das das meme gespeichert so wie es jetzt ausscheut und was müssen wir hier noch ändern?
 router.post( "/uploadGeneratedMeme", function (req, res) {
     console.log('got post request (generatedMeme) ', req.body);
     let generatedMeme = {
@@ -95,8 +56,6 @@ router.post( "/uploadGeneratedMeme", function (req, res) {
         "downVotes": req.body.downVotes
 
     };
-
-    // TODO: evtl. hier auf leere Felder prüfen
 
     postMemeToDb(generatedMeme);
     res.json({
@@ -118,7 +77,7 @@ router.get('/getMemes', function(req, res, next) {
     console.log('get meme name from Db');
     mongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      var dbo = db.db("meme-generator-db");
+      const dbo = db.db("meme-generator-db");
       dbo.collection("generatedMemes").find().toArray(function(err, result) {
         if (err) throw err;
         
@@ -141,7 +100,7 @@ router.get('/getMemeData', function(req, res, next) {
     console.log('[generatedMemes] get meme data from Db');
     mongoClient.connect(url, function(err, db) {
       if (err) throw err;
-      var dbo = db.db("meme-generator-db");
+      const dbo = db.db("meme-generator-db");
       dbo.collection("generatedMemes").find().toArray(function(err, result) {
         if (err) throw err;
         result.forEach(el => {
@@ -181,7 +140,7 @@ router.put('/updateMeme', function (req, res){
             {upsert: false}
         )
             .then(result => {
-                console.log(result)
+                 console.log(result)
                 res.json({
                     "code": 201,
                     "message": "updated meme successfully, refresh page to see changes.",
