@@ -13,12 +13,16 @@
     "express": "~4.16.1",
     "express-fileupload": "^1.2.0",
     "html2canvas": "^1.0.0-rc.7",
-    "http-errors": "~1.6.3",
+    "http-errors": "^1.8.0",
     "jade": "~1.11.0",
     "jimp": "^0.16.1",
     "mongodb": "^3.6.3",
     "morgan": "~1.9.1",
     "use-react-screenshot": "^1.0.2",
+    "webshot-node": "^0.18.2",
     "zip-folder": "^1.0.0"
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
   }
 }
