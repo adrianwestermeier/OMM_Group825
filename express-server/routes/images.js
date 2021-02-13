@@ -252,7 +252,7 @@ router.post('/createByUrl', function(req, res, next) {
 })
 
 
-/* save a created meme, TODO: save it to DB! */
+/* save a created meme */
 router.post('/saveCreatedMeme', function(req, res) {
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
   // console.log(base64Data);
@@ -293,7 +293,45 @@ router.post('/saveCreatedMeme', function(req, res) {
       });
     }
   });
+})
 
+/* save a created meme */
+router.post('/saveTemplateSnapshot', function(req, res) {
+  const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
+  console.log(base64Data);
+  const name = req.body.name + '.png';
+  const dir = "./public/templates/" + name;
+
+  getEntry(name, 'templates').then((entry) => {
+    if(entry) {
+      console.log("[images] entry: " + entry);
+      res.json({
+        "code": 501,
+        "message": "template with name \"" + name + "\" already exists! Please rename your template.",
+      });
+    } else {
+      console.log("[images] no entry");
+      
+      fs.writeFile(dir, base64Data, 'base64', function(err) {
+        if (err) {
+          console.log('error in saving');
+          return res.status(500).send(err);
+        }
+
+        var newTemplate = {
+          "name": name,
+        };
+      
+        postTemplateToDb(newTemplate).then(() => {
+          console.log("[images] wrote new template to DB");
+          res.json({
+            "code": 201,
+            "message": "Added template successfully!",
+          });
+        });
+      });
+    }
+  });
 })
 
 
