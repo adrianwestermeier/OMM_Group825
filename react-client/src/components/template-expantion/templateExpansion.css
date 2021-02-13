@@ -10,6 +10,10 @@
     display: none;
 }
 
+.video-snapshot-group {
+    display: none;
+}
+
 .header-button-group {
     display: flex;
     margin: 40px 0px 20px;
