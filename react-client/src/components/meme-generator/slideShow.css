@@ -70,7 +70,7 @@ img.backButton {
       transform: translateX(-100%);
       font-size: 18px;
       color: white;
-      text-shadow: 0 0 2px rgb(8, 8, 8);
+      text-shadow: none;
   }
   
   .bottomOut {
@@ -78,7 +78,7 @@ img.backButton {
       transform: translateX(-100%);
       font-size: 18px;
       color: white;
-      text-shadow: 0 0 2px rgb(8, 8, 8);
+      text-shadow: none;
   }
 
 .button-group {

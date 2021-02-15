@@ -21,6 +21,7 @@ class Meme extends React.Component {
             fontStyle: this.props.topItalic,
             fontWeight: this.props.topBold,
             fontSize: this.props.topSize + "px",
+            color: this.props.topColor,
         };
         const bottomStyle = {
             bottom: this.props.bottomTextVerticalPosition + "%", 
@@ -28,6 +29,7 @@ class Meme extends React.Component {
             fontStyle: this.props.bottomItalic,
             fontWeight: this.props.bottomBold,
             fontSize: this.props.bottomSize + "px",
+            color: this.props.bottomColor,
         };
 
         console.log(topStyle.fontSize);
@@ -443,6 +445,8 @@ export default class SlideShow extends React.Component {
         const bottomBold = this.props.bottomBold
         const topSize = this.props.topSize
         const bottomSize = this.props.bottomSize
+        const topColor = this.props.topColor
+        const bottomColor = this.props.bottomColor
 
         let url;
         let isImageFlip;
@@ -503,6 +507,8 @@ export default class SlideShow extends React.Component {
                         bottomBold={bottomBold}
                         topSize={topSize}
                         bottomSize={bottomSize}
+                        topColor={topColor} 
+                        bottomColor={bottomColor}
                          />
                     </div>
                 </React.Fragment>

@@ -30,11 +30,11 @@ display: block;
 
 .position-wrapper-whole {
 display: flex;
-margin-top: 20px;
 }
 
 .position-wrapper {
-display: flex;
+  display: flex;
+  margin-left: 20px;
 }
 
 .slide-show-section {
@@ -134,4 +134,15 @@ h3 {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 20px;
+}
+
+.text-styling-wrapper > button {
+  margin-left: 20px;
+}
+
+.color-pos-group {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
 }

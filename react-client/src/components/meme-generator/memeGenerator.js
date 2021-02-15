@@ -2,7 +2,7 @@ import React from 'react';
 import './memeGenerator.css';
 import SlideShow from "./slideShow";
 import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillCaretUpFill } from "react-icons/bs";
-
+import { SketchPicker, CompactPicker } from 'react-color';
 
 // Inputs for the top and bottom texts
 class InputsText extends React.Component {
@@ -14,6 +14,7 @@ class InputsText extends React.Component {
             bold: false,
             textSize: 12,
             textColor: "black",
+            background: '#fff',
         };
     }
 
@@ -84,6 +85,12 @@ class InputsText extends React.Component {
       }
     }
 
+    handleChangeComplete = (color) => {
+      // this.setState({ background: color.hex });
+      console.log(color.hex);
+      this.props.changedColor(this.props.captionType, color.hex);
+    };
+
     render() {
         return(
             <div className="inputs-text">
@@ -94,24 +101,16 @@ class InputsText extends React.Component {
                     <button type="submit">Submit</button>
                   </form>
                   <div className="text-styling-wrapper">
-                    <p>Style text</p>
-                    <form>
-                      <select name="color" id="color" onChange={this.colorSelectEvent}>
-                        <option value="black">black</option>
-                        <option value="red">red</option>
-                        <option value="blue">blue</option>
-                        <option value="green">green</option>
-                      </select>
-                    </form>
                     <form>
                       <input type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
                     </form>
                     <button onClick={this.clickBoldEvent}>bold</button>
                     <button onClick={this.clickItalicEvent}>italic</button>
                   </div>
+                  <div className="color-pos-group">
+                  <CompactPicker onChangeComplete={this.handleChangeComplete}/>
                   <div className="position-wrapper-whole">
                     <div className="position-wrapper">
-                      <p className="position-text">Position (text should stay within frame.)</p>
                       <div className="buttons">
                         <button className="position-button" onClick={this.decreaseHorizontalPosition}><BsFillCaretLeftFill/></button>
                         <div class="up-down-buttons">
@@ -122,6 +121,7 @@ class InputsText extends React.Component {
                       </div>
                     </div> 
                   </div>
+                </div>
                 </div>
             </div>
         )
@@ -141,6 +141,8 @@ export default class Generator extends React.Component {
             bottomTextHorizontalPosition: 100,
             topSize: 18,
             bottomSize: 18,
+            topColor: "black",
+            bottomColor: "black",
          };
     }
 
@@ -276,6 +278,18 @@ export default class Generator extends React.Component {
       }
     }
 
+    changedColor = (captionType, val) => {
+      if(captionType==="top") {
+        this.setState({
+          topColor: val,
+        });
+      } else {
+        this.setState({
+          bottomColor: val,
+        });
+      }
+    }
+
     handleTitleSubmit = (event) => {
       event.preventDefault();
       let submitTitle = this.state.title;
@@ -314,6 +328,8 @@ export default class Generator extends React.Component {
                   bottomBold={this.state.bottomBold}
                   topSize={this.state.topSize}
                   bottomSize={this.state.bottomSize}
+                  topColor={this.state.topColor}
+                  bottomColor={this.state.bottomColor}
                   topTextVerticalPosition={this.state.topTextVerticalPosition}
                   topTextHorizontalPosition={this.state.topTextHorizontalPosition}
                   bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
@@ -345,6 +361,7 @@ export default class Generator extends React.Component {
                   clickedItalic={this.clickedItalic}
                   clickedBold={this.clickedBold}
                   changedSize={this.changedSize}
+                  changedColor={this.changedColor}
                 />
                 <InputsText 
                   captionType="bottom"
@@ -358,6 +375,7 @@ export default class Generator extends React.Component {
                   clickedItalic={this.clickedItalic}
                   clickedBold={this.clickedBold}
                   changedSize={this.changedSize}
+                  changedColor={this.changedColor}
                 />
             </div>
           </div>
