@@ -112,9 +112,14 @@ Send this json to http://localhost:3005/api/createMemeMultipleTexts
 #### Example creation of meme with multiple texts
 For top text:
 ```
-curl -H "Content-Type: application/json" 
--d '{"name": "cool_name", "title":"some_title", "template": "horse", 
-"texts": [{"text":"first_text", "posX":100, "posY":100, "color":"black", "size":32},{"text": "second_text", "posX":600, "posY":1600, "color": "white", "size":64}]}'  
+curl    
+    -H "Content-Type: application/json" 
+    -d '{
+            "name": "cool_name", "title":"some_title", "template": "horse", 
+            "texts": [
+                    {"text":"first_text", "posX":100, "posY":100, "color":"black", "size":32},
+                    {"text": "second_text", "posX":600, "posY":1600, "color": "white", "size":64}
+                ]}'  
 http://localhost:3005/api/createMemeMultipleTexts
 ```
 
