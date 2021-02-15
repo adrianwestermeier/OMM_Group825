@@ -17,12 +17,20 @@ class Meme extends React.Component {
     render() {
         const topStyle = {
             top: this.props.topTextVerticalPosition + "%", 
-            left: this.props.topTextHorizontalPosition + "%"
+            left: this.props.topTextHorizontalPosition + "%",
+            fontStyle: this.props.topItalic,
+            fontWeight: this.props.topBold,
+            fontSize: this.props.topSize + "px",
         };
         const bottomStyle = {
             bottom: this.props.bottomTextVerticalPosition + "%", 
-            left: this.props.bottomTextHorizontalPosition + "%"
+            left: this.props.bottomTextHorizontalPosition + "%",
+            fontStyle: this.props.bottomItalic,
+            fontWeight: this.props.bottomBold,
+            fontSize: this.props.bottomSize + "px",
         };
+
+        console.log(topStyle.fontSize);
         return(
             <div className="image-wrapper" id="image-wrapper">
                 <figure>
@@ -429,6 +437,12 @@ export default class SlideShow extends React.Component {
         const topTextHorizontalPosition= this.props.topTextHorizontalPosition
         const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
         const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
+        const topItalic = this.props.topItalic
+        const bottomItalic = this.props.bottomItalic
+        const topBold = this.props.topBold
+        const bottomBold = this.props.bottomBold
+        const topSize = this.props.topSize
+        const bottomSize = this.props.bottomSize
 
         let url;
         let isImageFlip;
@@ -483,6 +497,12 @@ export default class SlideShow extends React.Component {
                         topTextVerticalPosition={topTextVerticalPosition}
                         bottomTextHorizontalPosition={bottomTextHorizontalPosition}
                         bottomTextVerticalPosition={bottomTextVerticalPosition}
+                        topItalic={topItalic}
+                        bottomItalic={bottomItalic}
+                        topBold={topBold}
+                        bottomBold={bottomBold}
+                        topSize={topSize}
+                        bottomSize={bottomSize}
                          />
                     </div>
                 </React.Fragment>

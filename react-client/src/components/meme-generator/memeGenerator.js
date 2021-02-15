@@ -10,6 +10,10 @@ class InputsText extends React.Component {
         super(props);
         this.state = {
             text: "",
+            italic: false,
+            bold: false,
+            textSize: 12,
+            textColor: "black",
         };
     }
 
@@ -41,6 +45,45 @@ class InputsText extends React.Component {
       this.props.decreaseHorizontalPosition(this.props.captionType);
     }
 
+    colorSelectEvent = (event) => {
+      console.log(event.target.value);
+    }
+
+    changedSize = (event) => {
+      event.preventDefault();
+      this.props.changedSize(this.props.captionType, event.target.value);
+    }
+
+    clickItalicEvent = (event) => {
+      event.preventDefault();
+      if(this.state.italic) {
+        this.props.clickedItalic(this.props.captionType, "normal");
+        this.setState({
+          italic: false
+        })
+      } else {
+        this.props.clickedItalic(this.props.captionType, "italic");
+        this.setState({
+          italic: true
+        })
+      }
+    }
+
+    clickBoldEvent = (event) => {
+      event.preventDefault();
+      if(this.state.bold) {
+        this.props.clickedBold(this.props.captionType, "normal");
+        this.setState({
+          bold: false
+        })
+      } else {
+        this.props.clickedBold(this.props.captionType, "bold");
+        this.setState({
+          bold: true
+        })
+      }
+    }
+
     render() {
         return(
             <div className="inputs-text">
@@ -50,9 +93,25 @@ class InputsText extends React.Component {
                     <textarea placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
                     <button type="submit">Submit</button>
                   </form>
+                  <div className="text-styling-wrapper">
+                    <p>Style text</p>
+                    <form>
+                      <select name="color" id="color" onChange={this.colorSelectEvent}>
+                        <option value="black">black</option>
+                        <option value="red">red</option>
+                        <option value="blue">blue</option>
+                        <option value="green">green</option>
+                      </select>
+                    </form>
+                    <form>
+                      <input type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
+                    </form>
+                    <button onClick={this.clickBoldEvent}>bold</button>
+                    <button onClick={this.clickItalicEvent}>italic</button>
+                  </div>
                   <div className="position-wrapper-whole">
                     <div className="position-wrapper">
-                      <p className="position-text">Position (text should stay within in frame.)</p>
+                      <p className="position-text">Position (text should stay within frame.)</p>
                       <div className="buttons">
                         <button className="position-button" onClick={this.decreaseHorizontalPosition}><BsFillCaretLeftFill/></button>
                         <div class="up-down-buttons">
@@ -80,6 +139,8 @@ export default class Generator extends React.Component {
             topTextHorizontalPosition: 100,
             bottomTextVerticalPosition: 0,
             bottomTextHorizontalPosition: 100,
+            topSize: 18,
+            bottomSize: 18,
          };
     }
 
@@ -179,6 +240,42 @@ export default class Generator extends React.Component {
       }
     }
 
+    clickedItalic = (captionType, val) => {
+      if(captionType==="top") {
+        this.setState({
+          topItalic: val,
+        });
+      } else {
+        this.setState({
+          bottomItalic: val,
+        });
+      }
+    }
+
+    clickedBold = (captionType, val) => {
+      if(captionType==="top") {
+        this.setState({
+          topBold: val,
+        });
+      } else {
+        this.setState({
+          bottomBold: val,
+        });
+      }
+    }
+
+    changedSize = (captionType, val) => {
+      if(captionType==="top") {
+        this.setState({
+          topSize: val,
+        });
+      } else {
+        this.setState({
+          bottomSize: val,
+        });
+      }
+    }
+
     handleTitleSubmit = (event) => {
       event.preventDefault();
       let submitTitle = this.state.title;
@@ -211,6 +308,12 @@ export default class Generator extends React.Component {
                   title={this.state.submitTitle}
                   topText={this.state.topText} 
                   bottomText={this.state.bottomText}
+                  topItalic={this.state.topItalic}
+                  bottomItalic={this.state.bottomItalic}
+                  topBold={this.state.topBold}
+                  bottomBold={this.state.bottomBold}
+                  topSize={this.state.topSize}
+                  bottomSize={this.state.bottomSize}
                   topTextVerticalPosition={this.state.topTextVerticalPosition}
                   topTextHorizontalPosition={this.state.topTextHorizontalPosition}
                   bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
@@ -239,6 +342,9 @@ export default class Generator extends React.Component {
                   decreaseHorizontalPosition={this.decreaseHorizontalPosition}
                   increaseVerticalPosition={this.increaseVerticalPosition}
                   decreaseVerticalPosition={this.decreaseVerticalPosition}
+                  clickedItalic={this.clickedItalic}
+                  clickedBold={this.clickedBold}
+                  changedSize={this.changedSize}
                 />
                 <InputsText 
                   captionType="bottom"
@@ -249,6 +355,9 @@ export default class Generator extends React.Component {
                   decreaseHorizontalPosition={this.decreaseHorizontalPosition}
                   increaseVerticalPosition={this.increaseVerticalPosition}
                   decreaseVerticalPosition={this.decreaseVerticalPosition}
+                  clickedItalic={this.clickedItalic}
+                  clickedBold={this.clickedBold}
+                  changedSize={this.changedSize}
                 />
             </div>
           </div>
