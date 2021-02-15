@@ -6,6 +6,7 @@ var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
 var zipFolder = require('zip-folder');
 var path = require('path');
+const { text } = require('express');
 
 // helper function for printing one text to image
 async function jimper(data, text, top, path, hasImage) {
@@ -71,19 +72,73 @@ async function jimper(data, text, top, path, hasImage) {
 	
 }
 
-// TODO: helper function for printing multiple texts to image
-async function jimperExtended(data, topText, bottomText, topX, topY, bottomX, bottomY) {
-	// Read the image
-  const image = await jimp.read( Buffer.from(data, 'base64') );
+// helper function for printing multiple texts to image
+async function jimperExtended(data, texts, path, hasImage) {
+  // load or read image from buffer
+  let image;
+  if(hasImage) {
+      image = await jimp.read( Buffer.from(data, 'base64') );
+  } else {
+      image = await jimp.read('./public/templates/' + data + '.jpg');
+  }
 
-  // Load the font
-  const font = await jimp.loadFont(jimp.FONT_SANS_32_BLACK);
+  for (const text of texts) {
+    // Load the font
+    let font;
 
-  await image.print(font, topX, topY, topText);
-  await image.print(font, bottomX, bottomY, bottomText);
+    if(text.color === "black") {
+      switch (text.size)
+      {
+        case 8:
+          font = await jimp.loadFont(jimp.FONT_SANS_8_BLACK);
+          break;
+        case 16:
+          font = await jimp.loadFont(jimp.FONT_SANS_16_BLACK);
+          break;
+        case 32: 
+          font = await jimp.loadFont(jimp.FONT_SANS_32_BLACK);
+          break;
+        case 64:
+          font = await jimp.loadFont(jimp.FONT_SANS_64_BLACK);
+          break;
+        default: 
+          font = await jimp.loadFont(jimp.FONT_SANS_16_BLACK);
+      }
+    } else {
+      switch (text.size)
+      {
+        case 8:
+          font = await jimp.loadFont(jimp.FONT_SANS_8_WHITE);
+          break;
+        case 16:
+          font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE);
+          break;
+        case 32: 
+          font = await jimp.loadFont(jimp.FONT_SANS_32_WHITE);
+          break;
+        case 64:
+          font = await jimp.loadFont(jimp.FONT_SANS_64_WHITE);
+          break;
+        default: 
+          font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE);
+      }
+    }
+    await image.print(font, text.posX, text.posY, text.text);
+  }
+ 
   
 	// Save the image
-	await image.writeAsync('./public/memes/image.png');
+  try {
+    if (fs.existsSync(path)) {
+      console.log("file exists");
+      return "fail";
+    } else {
+      await image.writeAsync(path);
+      return "success";
+    }
+  } catch(err) {
+    console.error(err)
+  }
 }
 
 router.post('/createMeme', function(req, res) {
@@ -102,8 +157,6 @@ router.post('/createMeme', function(req, res) {
     if(req.body.image) {
         hasImage = true;
         data = req.body.image.replace(/^data:image\/png;base64,/, "");
-        // let imageBuffer = Buffer.from(data);
-        // console.log(imageBuffer);
     } else {
         hasImage = false;
         data = req.body.template;
@@ -123,40 +176,60 @@ router.post('/createMeme', function(req, res) {
     })
 })
 
-
-// TODO: create meme with an array of texts 
-router.post('/createMemeMultipleTexts', function(req, res) {
-//   {
-//     "name": NAME,
-//     "title": TITEL,
-//     "template": NAME_OF_TEMPLATE,
-//     "texts": [
-//         {
-//             "text": YOUR_TEXT,    
-//             "place": PLACE,  
-//             "color": COLOR,
-//             "size": SIZE,
-//         },
-//         ...
-//     ]
-// }
-  var base64Data = req.body.image.replace(/^data:image\/png;base64,/, "");
-  const text = req.body.text;
-  let posX;
-  let posY;
-  if(req.body.positionX && req.body.positionY) {
-    posX = req.body.positionX;
-    posY = req.body.positionY;
+/*
+* create a meme with multiple texts at specified position and with custom style
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "name": NAME,
+    "title": TITEL,
+    "template": NAME_OF_TEMPLATE,
+    "texts": [
+        {
+            "text": TEXT,
+            "posX": POSITION_X,
+            "posY": POSITION_Y,  
+            "color": COLOR,
+            "size": SIZE,
+        },
+        ...
+    ]
   }
-  
-  let imageBuffer = Buffer.from(base64Data);
-  console.log(imageBuffer);
+  responds with the url under which the meme can be downloaded or with an error message
+*/
+router.post('/createMemeMultipleTexts', function(req, res) {
 
-  jimper(base64Data, text, posX, posY).then(()=>{
-    res.json({
-          "code": 201,
-          "message": "saved image on server",
-    });
+  const texts = req.body.texts;
+  const name = req.body.name;
+  const title = req.body.title;
+  const path = './public/memes/' + name + '.png';
+
+  console.log("[api] texts: " + texts);
+  console.log("[api] name: " + name);
+  console.log("[api] path: " + path);
+  
+  let data;
+  let hasImage;
+  
+  if(req.body.image) {
+      hasImage = true;
+      data = req.body.image.replace(/^data:image\/png;base64,/, "");
+  } else {
+      hasImage = false;
+      data = req.body.template;
+  }
+
+  jimperExtended(data, texts, path, hasImage).then((result)=>{
+      if(result === "success") {
+          res.json({
+              "code": 201,
+              "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
+          });
+      } else {
+          res.json({
+              "code": 501,
+              "message": "A meme with this name already exists",
+          });
+      }
   })
 })
 

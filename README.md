@@ -88,6 +88,7 @@ curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME
 ```
 
 ### Create a meme with multiple texts
+You can also create a meme with multiple texts and styles based on a template. As above you can use a json like this
 ```
 {
     "name": NAME,
@@ -96,13 +97,22 @@ curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME
     "texts": [
         {
             "text": YOUR_TEXT,    
-            "place": PLACE,  
+            "posX": POSITION_X,
+            "posY": POSITION_Y,  
             "color": COLOR,
             "size": SIZE,
         },
         ...
     ]
 }
+```
+to create a meme. YOUR_TEXT is the text you want to write, POSITION_X is the horizontal position and POSITION_Y the vertical position of the text respectively. COLOR is the color of the text (black or white), SIZE is the size of the text (one of 8, 16, 32, 64, 128).
+Send this json to http://localhost:3005/api/createMemeMultipleTexts
+
+#### Example creation of meme with multiple texts
+For top text:
+```
+curl -H "Content-Type: application/json" -d '{"name": "cool_name", "title":"some_title", "template": "horse", "texts": [{"text":"first_text", "posX":100, "posY":100, "color":"black", "size":32},{"text": "second_text", "posX":600, "posY":1600, "color": "white", "size":64}]}'  http://localhost:3005/api/createMemeMultipleTexts
 ```
 
 ### Example create a set of memes
