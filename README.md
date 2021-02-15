@@ -53,8 +53,6 @@ To create a meme with your custom image (which you have saved under ROOT_TO_FILE
 where NAME is the name under which you want to save the meme (must not exist yet!) and PLACE is either "top" or "bottom".
 Send this json to http://localhost:3005/api/createMeme
 
-TODO: multiple texts with format + describe just by json
-
 #### alternatively
 Instead of using your own image you can use the name of an extisting meme template (currently one of ['horse','dog','guy'])
 In this case your json should look like this
@@ -87,6 +85,24 @@ curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME
 or for bottom text:
 ```
 curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
+```
+
+### Create a meme with multiple texts
+```
+{
+    "name": NAME,
+    "title": TITEL,
+    "template": NAME_OF_TEMPLATE,
+    "texts": [
+        {
+            "text": YOUR_TEXT,    
+            "place": PLACE,  
+            "color": COLOR,
+            "size": SIZE,
+        },
+        ...
+    ]
+}
 ```
 
 ### Example create a set of memes

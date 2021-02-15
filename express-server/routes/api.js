@@ -124,8 +124,22 @@ router.post('/createMeme', function(req, res) {
 })
 
 
-// TODO: create texts from an array of texts 
-router.post('/createMemeTopBottom', function(req, res) {
+// TODO: create meme with an array of texts 
+router.post('/createMemeMultipleTexts', function(req, res) {
+//   {
+//     "name": NAME,
+//     "title": TITEL,
+//     "template": NAME_OF_TEMPLATE,
+//     "texts": [
+//         {
+//             "text": YOUR_TEXT,    
+//             "place": PLACE,  
+//             "color": COLOR,
+//             "size": SIZE,
+//         },
+//         ...
+//     ]
+// }
   var base64Data = req.body.image.replace(/^data:image\/png;base64,/, "");
   const text = req.body.text;
   let posX;
