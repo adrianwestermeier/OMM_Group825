@@ -179,6 +179,21 @@ export default class SlideShow extends React.Component {
              })
          }
      }
+
+     onClickChooseTemplate(index){
+
+        document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('meme-wrapper').style.display = "block";
+        document.getElementById('arrows').style.display = "block";
+
+         this.setState({
+             currentIndex: index,
+             heading: "Choose a template",
+             headingButton: "DRAW",
+             drawMode: false,
+
+         })
+     }
  
      // save current meme template to the express server
      saveOnServer() {
@@ -250,6 +265,7 @@ export default class SlideShow extends React.Component {
                        document.getElementById('draw-panel').style.display = "none";
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
+                       document.getElementById('template-overview').style.display= "none";
                        node.style.border = "1px solid black";
                        that.onMemeCreated(true);
                    })
@@ -276,6 +292,7 @@ export default class SlideShow extends React.Component {
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('arrows').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
+                       document.getElementById('template-overview').style.display= "none";
                        that.onMemeCreated(true);
                    })
                    .catch(function (error) {
@@ -289,6 +306,7 @@ export default class SlideShow extends React.Component {
             if(this.state.drawMode){
                 document.getElementById('draw-panel').style.display = "inline-block";
                 document.getElementById('button-group').style.display = "none";
+                document.getElementById('template-overview').style.display= "block";
                 this.setState({
                     showPng: false,
                     png: "",
@@ -300,6 +318,7 @@ export default class SlideShow extends React.Component {
                 document.getElementById('meme-wrapper').style.display = "block";
                 document.getElementById('arrows').style.display = "block";
                 document.getElementById('button-group').style.display = "none";
+                document.getElementById('template-overview').style.display= "none";
                 this.setState({
                     showPng: false,
                     png: "",
@@ -321,6 +340,7 @@ export default class SlideShow extends React.Component {
             document.getElementById('draw-panel').style.display = "inline-block";
             document.getElementById('meme-wrapper').style.display = "none";
             document.getElementById('arrows').style.display = "none";
+            document.getElementById('template-overview').style.display= "none";
             
             this.setState({
                 heading: "Draw",
@@ -331,6 +351,7 @@ export default class SlideShow extends React.Component {
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('meme-wrapper').style.display = "block";
             document.getElementById('arrows').style.display = "block";
+            document.getElementById('template-overview').style.display= "block";
             
             this.setState({
                 heading: "Choose a template",
@@ -466,6 +487,9 @@ export default class SlideShow extends React.Component {
         if(!this.state.drawMode){
            counter = <div><p>Template {currentIndex+1} of {this.state.pictures.length}</p></div>
         }
+
+        const templates = this.state.pictures
+        const allTemplates = templates.map((t, index) => <img src={t.url} class="flex-img" onClick={() => this.onClickChooseTemplate(index)}></img>)
  
          return (
              <div className="main">
@@ -512,6 +536,14 @@ export default class SlideShow extends React.Component {
                          />
                     </div>
                 </React.Fragment>
+
+                <div className="template-overview" id="template-overview">
+                    <p>Click template to edit:</p>
+                    <div className="flex-overview">
+                        {allTemplates}  
+                    </div>
+                </div>
+
                 <div className="button-group" id="button-group">
                     <div>
                         <p className="warning">Make sure you have added a title and a meme name before you share ;)</p>
