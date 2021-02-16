@@ -3,11 +3,30 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 import Generator from '../meme-generator/memeGenerator';
 import Overview from '../meme-overview/memeOverview';
+import LogInForm from "../LogInForm/LogInForm";
 
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
 import Imago from '../local-images-test/imageTest';
+import Register from "../LogInForm/register";
+
+class LogInPage extends React.Component{
+  logIn = () => {
+    this.props.logIn();
+  }
+
+  render() {
+    return(
+        <div>
+          <LogInForm
+              logIn={() => {this.logIn()}}
+          />
+
+        </div>
+    )
+  }
+}
 
 class App extends React.Component {
   render() {
@@ -20,6 +39,7 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
+            <li><Link to="/register" className="menu-link">register</Link></li>
             {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
           </ul>
         </nav>
@@ -36,6 +56,7 @@ class App extends React.Component {
             <Route path="/">
               <Generator />
             </Route>
+
           </Switch>
         </BrowserRouter>
       </div>
@@ -43,4 +64,39 @@ class App extends React.Component {
   }
 }
 
-export default App;
+class Application extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: false
+    };
+  }
+
+  logIn(){
+    this.setState({
+      loggedIn: true,
+    })
+  }
+
+  render(){
+    if(!this.state.loggedIn){
+      return (
+          <LogInPage
+              logIn={() => {this.logIn()}}
+          />
+      )
+    } else if(this.state.loggedIn){
+      return (
+          <App/>
+      )
+    }else {
+      return(
+          <div>Das hat nicht geklappt</div>
+      )
+    }
+
+
+  }
+}
+
+export default Application;
