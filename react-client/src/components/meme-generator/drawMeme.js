@@ -36,7 +36,8 @@ const styles = {
 export default class DrawApp extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
+        this.componentRef = React.createRef();
     }
 
     componentDidMount() {
@@ -121,7 +122,11 @@ export default class DrawApp extends React.Component {
             penColor : 'black'
         })
 
-        this.ctx = this.refs.canvas.getContext('2d')
+
+        //const canvasRef = useRef(null)
+        const canvas = this.componentRef.current
+        const context = canvas.getContext('2d')
+        this.ctx = context
         this.ctx.fillStyle="white"
         this.ctx.fillRect(0,0,800,600)
         this.ctx.lineWidth = 10
@@ -133,7 +138,7 @@ export default class DrawApp extends React.Component {
                 <div className="draw-panel-canvas" id="draw-panel-canvas">
                     <figure>
                     <figcaption>{this.props.title}</figcaption>
-                    <canvas ref="canvas" width="588px" height="600px" style={styles.canvas} 
+                    <canvas ref="canvas" width="588px" height="600px" style={styles.canvas} ref={this.componentRef}
                         onMouseMove={(e)=>this.drawing(e)} 
                         onMouseDown={(e)=>this.penDown(e)} 
                         onMouseUp={(e)=>this.penUp(e)}>
