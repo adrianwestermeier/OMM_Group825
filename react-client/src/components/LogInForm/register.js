@@ -9,12 +9,35 @@ class RegisterDialog extends React.Component{
             password: "",
             repeatedPassword: "",
             open: false,
+            users: this.props.users,
+            usernames: []
         };
     }
 
+    componentDidMount() {
+        let usernames = []
+        let users = this.state.users
+
+        console.log('usernames' + usernames)
+
+        for(let i = 0; i<users.length; i++){
+            usernames.push(users[i].username)
+            this.setState({
+                usernames: usernames
+            })
+            console.log(usernames)
+        }
+    }
+
     handleRegister(){
+
+
         if(this.state.username === ''){
             alert('please enter a username')
+            return;
+        }
+        if(this.state.usernames.includes(this.state.username)){
+            alert('this username is already taken')
             return;
         }
         if(this.state.password === ''){

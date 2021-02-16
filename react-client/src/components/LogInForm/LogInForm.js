@@ -1,6 +1,5 @@
 import React from 'react';
 import RegisterDialog from "./register";
-import axios from "axios";
 
 class LogInForm extends React.Component{
     constructor(props) {
@@ -40,9 +39,10 @@ class LogInForm extends React.Component{
         return(
             <div>
                 <h1>neues Log In Form</h1>
-                <RegisterDialog/>
+                <RegisterDialog
+                    users={this.state.users}
+                />
                 <button onClick={this.logIn}>Log In</button>
-                <button onClick={() => {this.getUsers()}}>getUsers</button>
             </div>
         )
     }
