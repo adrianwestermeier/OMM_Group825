@@ -281,6 +281,7 @@ router.post('/saveCreatedMeme', function(req, res) {
           "title": title,
           "upVotes": 0,
           "downVotes": 0,
+          "upMinusDownVotes": [0]
         };
       
         postNewMemeToDb(newMeme).then(() => {

@@ -108,7 +108,8 @@ router.get('/getMemeData', function(req, res, next) {
                 name: el.name,
                 title: el.title,
                 upVotes: el.upVotes,
-                downVotes: el.downVotes
+                downVotes: el.downVotes,
+                upMinusDownVotes: el.upMinusDownVotes
             }
           memes.push(nextMeme);
         })
@@ -134,7 +135,8 @@ router.put('/updateMeme', function (req, res){
             {
                 $set: {
                     "upVotes": req.body.upVotes,
-                    "downVotes": req.body.downVotes
+                    "downVotes": req.body.downVotes,
+                    "upMinusDownVotes": req.body.upMinusDownVotes
                 }
             },
             {upsert: false}

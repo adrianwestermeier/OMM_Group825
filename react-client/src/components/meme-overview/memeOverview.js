@@ -5,6 +5,7 @@ import arrowForward from '../img/arrow_forward-black-18dp.svg';
 import {IoIosThumbsUp, IoIosThumbsDown} from 'react-icons/io';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Chart from "react-google-charts";
 
 import './memeOverview.css';
 import Meme from "../Meme/meme";
@@ -19,6 +20,7 @@ class OverviewElem extends React.Component {
     vote(meme, isUpvote) {
         let upVotes = meme.upVotes
         let downVotes = meme.downVotes
+        let upMinusDown = meme.upMinusDownVotes
 
         if (isUpvote) {
             upVotes = upVotes + 1
@@ -28,13 +30,19 @@ class OverviewElem extends React.Component {
             console.log('Fehler: weder up noch downvote')
         }
 
+        let upDown = upVotes - downVotes
+
+        upMinusDown = upMinusDown.concat(upDown)
+
         // TODO: change this to new meme
         const payload = {
             id: meme._id,
             name: meme.name,
             title: meme.title,
             upVotes: upVotes,
-            downVotes: downVotes
+            downVotes: downVotes,
+            upMinusDownVotes: upMinusDown
+
         };
 
         fetch(`/generatedMemes/updateMeme`,
@@ -110,6 +118,56 @@ class Grid extends React.Component{
         )
     }
 }
+
+
+// ich würde das VoteChart gerne noch extra machen, wenn ich nicht immer undefined memes bekommen würde
+/*class VoteChart extends React.Component{
+
+    render(){
+        const memes = this.props.memes
+
+        let data = [
+            ['x', 'votes'],
+            [0,0]
+        ]
+
+        let elem = []
+
+        if(this.props.i){
+            if(memes[this.props.i]){
+                let upAndDown = memes[this.state.i].upMinusDownVotes
+                for(let i=1; i<upAndDown.length; i++){
+                    elem = [i, upAndDown[i]]
+                    data.push(elem)
+
+                }
+
+            }
+        }
+
+
+        return(
+            <div>
+                <Chart
+                    width={'600px'}
+                    height={'400px'}
+                    chartType="LineChart"
+                    loader={<div>Loading Chart</div>}
+                    data={data}
+                    options={{
+                        hAxis: {
+                            title: 'Time',
+                        },
+                        vAxis: {
+                            title: 'Up- minus DownVotes',
+                        },
+                    }}
+
+                />
+            </div>
+        )
+    }
+}*/
 
 
 
@@ -215,6 +273,8 @@ class SingleView extends React.Component{
 
 
     render(){
+
+
         const items = [];
         let memes = this.props.memes
         let autoPlayOrderedLabel = ''
@@ -245,7 +305,22 @@ class SingleView extends React.Component{
 
         }
 
+        let data = [
+            ['x', 'votes'],
+            [0,0]
+        ]
 
+        let elem = []
+
+        if(memes[this.state.i]){
+            let upAndDown = memes[this.state.i].upMinusDownVotes
+            for(let i=1; i<upAndDown.length; i++){
+                elem = [i, upAndDown[i]]
+                data.push(elem)
+
+            }
+
+        }
 
         return(
             <div>
@@ -259,6 +334,22 @@ class SingleView extends React.Component{
                     </div>
                     {items[this.state.i]}
                 </div>
+                <Chart
+                    width={'600px'}
+                    height={'400px'}
+                    chartType="LineChart"
+                    loader={<div>Loading Chart</div>}
+                    data={data}
+                    options={{
+                        hAxis: {
+                            title: 'Time',
+                        },
+                        vAxis: {
+                            title: 'Up- minus DownVotes',
+                        },
+                    }}
+
+                />
             </div>
         )
     }
