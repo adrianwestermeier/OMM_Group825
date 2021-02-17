@@ -8,8 +8,6 @@ import LogInForm from "../LogInForm/LogInForm";
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
-import Imago from '../local-images-test/imageTest';
-import Register from "../LogInForm/register";
 
 class LogInPage extends React.Component{
   logIn = () => {

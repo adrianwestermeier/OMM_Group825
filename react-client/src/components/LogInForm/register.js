@@ -10,33 +10,31 @@ class RegisterDialog extends React.Component{
             repeatedPassword: "",
             open: false,
             users: this.props.users,
-            usernames: []
+            usernames: this.props.usernames
         };
     }
 
     componentDidMount() {
-        let usernames = []
-        let users = this.state.users
 
-        console.log('usernames' + usernames)
+        let usernames = []
+        let users = this.props.users
 
         for(let i = 0; i<users.length; i++){
             usernames.push(users[i].username)
             this.setState({
                 usernames: usernames
             })
-            console.log(usernames)
+
         }
     }
 
     handleRegister(){
 
-
         if(this.state.username === ''){
             alert('please enter a username')
             return;
         }
-        if(this.state.usernames.includes(this.state.username)){
+        if(this.props.usernames.includes(this.state.username)){
             alert('this username is already taken')
             return;
         }
@@ -48,10 +46,6 @@ class RegisterDialog extends React.Component{
             alert("the passwords do not match");
             return;
         }
-        console.log(this.state.username)
-        console.log(this.state.password)
-        console.log(this.state.repeatedPassword)
-        console.log('Nutzer wurde registriert')
         this.setState({
             open: false
         })
@@ -69,7 +63,6 @@ class RegisterDialog extends React.Component{
             })
         }).then(jsonResponse => jsonResponse.json()
             .then(responseObject => {
-                //console.log('[slideShow] recieved answer for post request: ' + JSON.stringify( responseObject ));
                 alert(JSON.stringify( responseObject.message ))
             })
             .catch(jsonParseError => {
@@ -97,7 +90,7 @@ class RegisterDialog extends React.Component{
         return(
             <div>
                 <button variant="outlined" color="primary" onClick={() => {this.handleClickOpen()}}>
-                    Open form dialog
+                    register here
                 </button>
                 <Dialog open={this.state.open} onClose={() => {this.handleCancel()}} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Register</DialogTitle>

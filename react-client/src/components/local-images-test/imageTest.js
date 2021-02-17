@@ -40,7 +40,7 @@ class Imago extends Component {
     return(
         <div>
             {this.state.sources.map((source) =>
-                <img src={source} />)
+                <img src={source} alt={''}/>)
             } 
         </div>
     )
