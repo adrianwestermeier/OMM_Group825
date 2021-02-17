@@ -28,6 +28,10 @@ class RegisterDialog extends React.Component{
         }
     }
 
+    getUsers = () => {
+        this.props.getUsers();
+    }
+
     handleRegister(){
 
         if(this.state.username === ''){
@@ -61,7 +65,12 @@ class RegisterDialog extends React.Component{
                 password: this.state.password,
 
             })
-        }).then(jsonResponse => jsonResponse.json()
+        }).then(
+            () => {
+                console.log('THEN')
+                this.getUsers()
+            }
+        ).then(jsonResponse => jsonResponse.json()
             .then(responseObject => {
                 alert(JSON.stringify( responseObject.message ))
             })
