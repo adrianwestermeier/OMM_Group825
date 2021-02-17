@@ -37,7 +37,6 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
-            <li><Link to="/register" className="menu-link">register</Link></li>
             {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
           </ul>
         </nav>
@@ -46,7 +45,9 @@ class App extends React.Component {
               <Imago />
             </Route> */}
             <Route path="/overview">
-              <Overview />
+              <Overview
+                  user={this.props.user}
+              />
             </Route>
             <Route path="/expand">
               <Expander />
@@ -66,14 +67,22 @@ class Application extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      user: null
     };
   }
 
-  logIn(){
+  /*
+  * TODO: der user wird in LogInFrom in Zeile 21 noch ausgegeben und dann in Zeile 22 übergeben.
+  *  allerdings kommt er hier leider nicht an. Warum?
+  * */
+  logIn(user){
+    console.log(user)
     this.setState({
       loggedIn: true,
+      //user: user
     })
+
   }
 
   render(){
@@ -85,7 +94,9 @@ class Application extends React.Component{
       )
     } else if(this.state.loggedIn){
       return (
-          <App/>
+          <App
+              user={this.state.user}
+          />
       )
     }else {
       return(

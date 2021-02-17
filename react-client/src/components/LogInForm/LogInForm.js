@@ -17,24 +17,29 @@ class LogInForm extends React.Component{
         this.getUsers()
     }
 
-    logIn = () => {
+    logIn = (user) => {
+        console.log(user)
+        this.props.logIn(user);
+    }
+
+    performLogIn(){
         let users = this.state.users
         let usernames = this.state.usernames
         let username = this.state.username
         let enteredPassword = this.state.password
         let userPassword = ''
+        let user = null
 
         if(usernames.includes(username)) {
-            console.log('username exists')
             let i = usernames.indexOf(username)
+            user = users[i]
             userPassword = users[i].password
-            console.log(userPassword)
         } else {
             alert('This user does not exist. Please check the data or register.')
             return;
         }
         if(enteredPassword === userPassword){
-            this.props.logIn();
+            this.logIn(this.state.username);
         } else {
             alert('wrong password')
         }
@@ -97,7 +102,7 @@ class LogInForm extends React.Component{
                     usernames={this.state.usernames}
                     getUsers={() => {this.getUsers()}}
                 />
-                <button onClick={this.logIn}>Log In</button>
+                <button onClick={() => {this.performLogIn()}}>Log In</button>
             </div>
         )
     }
