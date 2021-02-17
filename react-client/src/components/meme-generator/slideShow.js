@@ -7,6 +7,7 @@ import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } fro
 import * as htmlToImage from 'html-to-image';
 import './slideShow.css';
 import DrawApp from './drawMeme';
+import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 
 
 // Meme template with top and bottom caption
@@ -69,6 +70,8 @@ export default class SlideShow extends React.Component {
             showPng: false,
             png: "",
             gotImageFlipPictures: false,
+            icon: <BsChevronRight/>,
+            expanded: false,
          };
     }
 
@@ -179,6 +182,21 @@ export default class SlideShow extends React.Component {
              })
          }
      }
+
+     onClickChooseTemplate(index){
+
+        document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('meme-wrapper').style.display = "block";
+        document.getElementById('arrows').style.display = "block";
+
+         this.setState({
+             currentIndex: index,
+             heading: "Choose a template",
+             headingButton: "DRAW",
+             drawMode: false,
+
+         })
+     }
  
      // save current meme template to the express server
      saveOnServer() {
@@ -250,6 +268,7 @@ export default class SlideShow extends React.Component {
                        document.getElementById('draw-panel').style.display = "none";
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
+                       document.getElementById('template-overview').style.display= "none";
                        node.style.border = "1px solid black";
                        that.onMemeCreated(true);
                    })
@@ -276,6 +295,7 @@ export default class SlideShow extends React.Component {
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('arrows').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
+                       document.getElementById('template-overview').style.display= "none";
                        that.onMemeCreated(true);
                    })
                    .catch(function (error) {
@@ -289,6 +309,7 @@ export default class SlideShow extends React.Component {
             if(this.state.drawMode){
                 document.getElementById('draw-panel').style.display = "inline-block";
                 document.getElementById('button-group').style.display = "none";
+                document.getElementById('template-overview').style.display= "block";
                 this.setState({
                     showPng: false,
                     png: "",
@@ -300,6 +321,7 @@ export default class SlideShow extends React.Component {
                 document.getElementById('meme-wrapper').style.display = "block";
                 document.getElementById('arrows').style.display = "block";
                 document.getElementById('button-group').style.display = "none";
+                document.getElementById('template-overview').style.display= "none";
                 this.setState({
                     showPng: false,
                     png: "",
@@ -321,6 +343,7 @@ export default class SlideShow extends React.Component {
             document.getElementById('draw-panel').style.display = "inline-block";
             document.getElementById('meme-wrapper').style.display = "none";
             document.getElementById('arrows').style.display = "none";
+            document.getElementById('template-overview-wrapper').style.display= "none";
             
             this.setState({
                 heading: "Draw",
@@ -331,6 +354,7 @@ export default class SlideShow extends React.Component {
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('meme-wrapper').style.display = "block";
             document.getElementById('arrows').style.display = "block";
+            document.getElementById('template-overview-wrapper').style.display= "block";
             
             this.setState({
                 heading: "Choose a template",
@@ -430,6 +454,22 @@ export default class SlideShow extends React.Component {
             memeName: event.target.value,
         })
     }
+
+    expand = () => {
+        if(!this.state.expanded) {
+          document.getElementById("template-overview").style.display = "inline";
+          this.setState({
+            icon: <BsChevronDown/>,
+            expanded: true,
+          })
+        } else {
+          document.getElementById("template-overview").style.display = "none";
+          this.setState({
+            icon: <BsChevronRight/>,
+            expanded: false,
+          })
+        }
+      }
  
      render() {
         const currentIndex = this.state.currentIndex;
@@ -466,6 +506,11 @@ export default class SlideShow extends React.Component {
         if(!this.state.drawMode){
            counter = <div><p>Template {currentIndex+1} of {this.state.pictures.length}</p></div>
         }
+
+        const templates = this.state.pictures
+        const allTemplates = templates.map(
+            (t, index) => <img src={t.url} class="flex-img" onClick={() => this.onClickChooseTemplate(index)}></img>
+            )
  
          return (
              <div className="main">
@@ -473,6 +518,20 @@ export default class SlideShow extends React.Component {
                     <h2>{this.state.heading} or </h2>
                     <button className="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
                  </div>
+
+                <div className="template-overview-wrapper" id="template-overview-wrapper">
+                    <div className="header-button-group">
+                      <h2>Choose from all templates</h2>
+                      <button onClick={this.expand}>{this.state.icon}</button>
+                    </div>
+                    <div className="template-overview" id="template-overview">
+                        <p>Click template to edit:</p>
+                        <div className="flex-overview">
+                            {allTemplates}  
+                        </div>
+                    </div>
+                </div>
+
                  <div className="navigation-buttons">
                     <div className="arrows" id="arrows">
                         <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
@@ -512,6 +571,7 @@ export default class SlideShow extends React.Component {
                          />
                     </div>
                 </React.Fragment>
+
                 <div className="button-group" id="button-group">
                     <div>
                         <p className="warning">Make sure you have added a title and a meme name before you share ;)</p>

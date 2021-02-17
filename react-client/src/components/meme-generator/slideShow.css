@@ -53,6 +53,8 @@ img.backButton {
 
 .meme-wrapper {
     width: 600px;
+    /* width: 900px;
+    height: 900px; */
     border: 1px solid black;
     padding: 5px;
   }
@@ -60,10 +62,19 @@ img.backButton {
   img {
       max-width: 100%;
   }
+
+  .actual-image {
+    max-height: 900px;
+  }
   
 .top-and-bottom-wrapper {
     position: relative;
+    max-height: 900px;
 }
+  
+/* .top-and-bottom-wrapper {
+    position: relative;
+} */
 
   .topOut {
       position: absolute;
@@ -87,4 +98,25 @@ img.backButton {
 
 .draw-panel {
     display: none;
+}
+
+.template-overview {
+  display: none;
+}
+
+.flex-overview{
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  align-content: space-between;
+  align-items: center;
+  justify-content: space-around;
+  overflow-x: scroll;
+}
+
+.flex-img{
+  height: 180px;
+  margin: 5px;
+  border: 2px solid black;
 }

@@ -113,7 +113,7 @@ class InputsText extends React.Component {
                     <div className="position-wrapper">
                       <div className="buttons">
                         <button className="position-button" onClick={this.decreaseHorizontalPosition}><BsFillCaretLeftFill/></button>
-                        <div class="up-down-buttons">
+                        <div className="up-down-buttons">
                           <button className="position-button" onClick={this.increaseVerticalPosition}><BsFillCaretUpFill/></button>
                           <button className="position-button" onClick={this.decreaseVerticalPosition}><BsFillCaretDownFill/></button>
                         </div>
