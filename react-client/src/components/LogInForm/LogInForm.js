@@ -70,7 +70,7 @@ class LogInForm extends React.Component{
     render() {
         return(
             <div>
-                <h1>neues Log In Form</h1>
+                <h1>LogIn</h1>
                 <TextField
                     autoFocus
                     margin="dense"
