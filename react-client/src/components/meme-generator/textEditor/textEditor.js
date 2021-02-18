@@ -26,6 +26,7 @@ export default class InputsText extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let text = this.state.text;
+        // text = text.replace(/\n/g , "<br>");
         this.props.textSubmitHandle(this.props.index, text);
     }
 
@@ -96,7 +97,7 @@ export default class InputsText extends React.Component {
               <h3 className="form-header">{this.props.heading} (only available for templates) text {this.props.index}</h3>
                 <div className="inputs-text-button-group">
                   <form className="input-form" onSubmit={this.handleSubmit}>
-                    <textarea placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
+                    <textarea className="input-text" placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
                     <button type="submit">Submit</button>
                   </form>
                   <div className="text-styling-wrapper">

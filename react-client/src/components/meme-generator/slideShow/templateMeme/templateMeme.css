@@ -29,6 +29,7 @@
       font-size: 18px;
       color: white;
       text-shadow: none;
+      white-space: pre-line;
   }
   
   .bottomOut {

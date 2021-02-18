@@ -1,5 +1,10 @@
 .input-form {
     display: inline-flex;
+   
+}
+
+.input-text {
+    white-space: pre-wrap;
 }
     
 input[type=text] {

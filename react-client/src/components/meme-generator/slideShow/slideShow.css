@@ -65,13 +65,7 @@ img.backButton {
 
 .flex-overview{
   height: 200px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: no-wrap;
-  align-content: space-between;
-  align-items: center;
-  justify-content: space-around;
-  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .flex-img{
