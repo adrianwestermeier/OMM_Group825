@@ -51,47 +51,6 @@ img.backButton {
     cursor: pointer;
   }
 
-.meme-wrapper {
-    width: 600px;
-    /* width: 900px;
-    height: 900px; */
-    border: 1px solid black;
-    padding: 5px;
-  }
-  
-  img {
-      max-width: 100%;
-  }
-
-  .actual-image {
-    max-height: 900px;
-  }
-  
-.top-and-bottom-wrapper {
-    position: relative;
-    max-height: 900px;
-}
-  
-/* .top-and-bottom-wrapper {
-    position: relative;
-} */
-
-  .topOut {
-      position: absolute;
-      transform: translateX(-100%);
-      font-size: 18px;
-      color: white;
-      text-shadow: none;
-  }
-  
-  .bottomOut {
-      position: absolute;
-      transform: translateX(-100%);
-      font-size: 18px;
-      color: white;
-      text-shadow: none;
-  }
-
 .button-group {
     display: none;
 }
