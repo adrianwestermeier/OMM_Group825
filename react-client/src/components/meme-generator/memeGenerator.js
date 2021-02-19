@@ -1,293 +1,246 @@
 import React from 'react';
 import './memeGenerator.css';
-import SlideShow from "./slideShow";
-import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillCaretUpFill } from "react-icons/bs";
-import { SketchPicker, CompactPicker } from 'react-color';
+import SlideShow from "./slideShow/slideShow";
+import InputsText from "./textEditor/textEditor";
 
-// Inputs for the top and bottom texts
-class InputsText extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: "",
-            italic: false,
-            bold: false,
-            textSize: 12,
-            textColor: "black",
-            background: '#fff',
-        };
-    }
-
-    handleClick = (event) => {
-        event.preventDefault();
-        let nam = event.target.value;
-        this.setState({text: nam});
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-        let text = this.state.text;
-        this.props.textSubmitHandle(this.props.captionType, text);
-    }
-
-    increaseVerticalPosition = (event) => {
-      this.props.increaseVerticalPosition(this.props.captionType);
-    }
-
-    increaseHorizontalPosition = (event) => {
-      this.props.increaseHorizontalPosition(this.props.captionType);
-    }
-
-    decreaseVerticalPosition = (event) => {
-      this.props.decreaseVerticalPosition(this.props.captionType);
-    }
-
-    decreaseHorizontalPosition = (event) => {
-      this.props.decreaseHorizontalPosition(this.props.captionType);
-    }
-
-    colorSelectEvent = (event) => {
-      console.log(event.target.value);
-    }
-
-    changedSize = (event) => {
-      event.preventDefault();
-      this.props.changedSize(this.props.captionType, event.target.value);
-    }
-
-    clickItalicEvent = (event) => {
-      event.preventDefault();
-      if(this.state.italic) {
-        this.props.clickedItalic(this.props.captionType, "normal");
-        this.setState({
-          italic: false
-        })
-      } else {
-        this.props.clickedItalic(this.props.captionType, "italic");
-        this.setState({
-          italic: true
-        })
-      }
-    }
-
-    clickBoldEvent = (event) => {
-      event.preventDefault();
-      if(this.state.bold) {
-        this.props.clickedBold(this.props.captionType, "normal");
-        this.setState({
-          bold: false
-        })
-      } else {
-        this.props.clickedBold(this.props.captionType, "bold");
-        this.setState({
-          bold: true
-        })
-      }
-    }
-
-    handleChangeComplete = (color) => {
-      // this.setState({ background: color.hex });
-      console.log(color.hex);
-      this.props.changedColor(this.props.captionType, color.hex);
-    };
-
-    render() {
-        return(
-            <div className="inputs-text">
-              <h3 className="form-header">{this.props.heading} (only available for templates)</h3>
-                <div className="inputs-text-button-group">
-                  <form className="input-form" onSubmit={this.handleSubmit}>
-                    <textarea placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
-                    <button type="submit">Submit</button>
-                  </form>
-                  <div className="text-styling-wrapper">
-                    <form>
-                      <input type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
-                    </form>
-                    <button onClick={this.clickBoldEvent}>bold</button>
-                    <button onClick={this.clickItalicEvent}>italic</button>
-                  </div>
-                  <div className="color-pos-group">
-                  <CompactPicker onChangeComplete={this.handleChangeComplete}/>
-                  <div className="position-wrapper-whole">
-                    <div className="position-wrapper">
-                      <div className="buttons">
-                        <button className="position-button" onClick={this.decreaseHorizontalPosition}><BsFillCaretLeftFill/></button>
-                        <div className="up-down-buttons">
-                          <button className="position-button" onClick={this.increaseVerticalPosition}><BsFillCaretUpFill/></button>
-                          <button className="position-button" onClick={this.decreaseVerticalPosition}><BsFillCaretDownFill/></button>
-                        </div>
-                        <button className="position-button" onClick={this.increaseHorizontalPosition}><BsFillCaretRightFill/></button>
-                      </div>
-                    </div> 
-                  </div>
-                </div>
-                </div>
-            </div>
-        )
-    }
-}
 
 // class that renders all the meme generation functions
 export default class Generator extends React.Component {
     constructor(props){
         super(props);
+        const topText = {
+          index: 0,
+          captionType: "top",
+          heading: "Style top text",
+          placeholder: "top caption",
+          text: "",
+          verticalPosition: 3,
+          horizontalPosition: 50,
+          size: 18,
+          color: "black",
+          italic: "normal",
+          bold: "normal",
+        };
+  
+        const bottomText = {
+          index: 1,
+          captionType: "bottom",
+          heading: "Style bottom text",
+          placeholder: "bottom caption",
+          text: "",
+          verticalPosition: 90,
+          horizontalPosition: 50,
+          size: 18,
+          color: "black",
+          italic: "normal",
+          bold: "normal",
+        };
+  
+        const newTexts = [topText, bottomText]
+  
         this.state = {
-            topText: "",
-            bottomText: "",
-            topTextVerticalPosition: 0,
-            topTextHorizontalPosition: 100,
-            bottomTextVerticalPosition: 0,
-            bottomTextHorizontalPosition: 100,
-            topSize: 18,
-            bottomSize: 18,
-            topColor: "black",
-            bottomColor: "black",
-         };
+          texts: newTexts,
+            // topText: "",
+            // bottomText: "",
+            // topTextVerticalPosition: 0,
+            // topTextHorizontalPosition: 100,
+            // bottomTextVerticalPosition: 0,
+            // bottomTextHorizontalPosition: 100,
+            // topSize: 18,
+            // bottomSize: 18,
+            // topColor: "black",
+            // bottomColor: "black",
+        };
     }
 
     // create top and bottom text for a meme template
-    handleTextSubmit = (captionType, text) => {
-        if(captionType==="top") {
-          this.setState({
-            topText: text,
-          });
-        } else {
-          this.setState({
-            bottomText: text,
-          });
-        }
-        
+    handleTextSubmit = (index, text) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated text to it
+      newTexts[index] = {...newTexts[index], text: text};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });  
     }
 
 
     // update text positionss
-    increaseHorizontalPosition = (pos) => {
-      if(pos==="top") {
-        let newPositionValue = this.state.topTextHorizontalPosition
-        newPositionValue += 5;
-        
-          this.setState({
-            topTextHorizontalPosition: newPositionValue,
-          })
-        
-      } else {
-        let newPositionValue = this.state.bottomTextHorizontalPosition
-        newPositionValue += 5;
-        
-          this.setState({
-            bottomTextHorizontalPosition: newPositionValue,
-          })
-        
-      }
+    increaseHorizontalPosition = (index) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated horizontal position to it
+      newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition + 2};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });
     }
 
-    decreaseHorizontalPosition = (pos) => {
-      if(pos==="top") {
-        let newPositionValue = this.state.topTextHorizontalPosition
-        newPositionValue -= 5;
-        
-          this.setState({
-            topTextHorizontalPosition: newPositionValue,
-          })
-        
-      } else {
-        let newPositionValue = this.state.bottomTextHorizontalPosition
-        newPositionValue -= 5;
-        
-          this.setState({
-            bottomTextHorizontalPosition: newPositionValue,
-          })
-        
-      }
+    decreaseHorizontalPosition = (index) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated horizontal position to it
+      newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition - 2};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });
     }
 
-    increaseVerticalPosition = (pos) => {
-      if(pos==="top") {
-        let newPositionValue = this.state.topTextVerticalPosition
-        newPositionValue -= 5;
+    increaseVerticalPosition = (index) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated vertical position to it
+      newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition - 2};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });
+      // if(pos==="top") {
+      //   let newPositionValue = this.state.topTextVerticalPosition
+      //   newPositionValue -= 5;
         
-          this.setState({
-            topTextVerticalPosition: newPositionValue,
-          })
+      //     this.setState({
+      //       topTextVerticalPosition: newPositionValue,
+      //     })
         
-      } else {
-        let newPositionValue = this.state.bottomTextVerticalPosition
-        newPositionValue += 5;
+      // } else {
+      //   let newPositionValue = this.state.bottomTextVerticalPosition
+      //   newPositionValue += 5;
         
-          this.setState({
-            bottomTextVerticalPosition: newPositionValue,
-          })
+      //     this.setState({
+      //       bottomTextVerticalPosition: newPositionValue,
+      //     })
         
-      }
+      // }
     }
 
-    decreaseVerticalPosition = (pos) => {
-      if(pos==="top") {
-        let newPositionValue = this.state.topTextVerticalPosition
-        newPositionValue += 5;
+    decreaseVerticalPosition = (index) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated vertical position to it
+      newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition + 2};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });
+      // if(pos==="top") {
+      //   let newPositionValue = this.state.topTextVerticalPosition
+      //   newPositionValue += 5;
         
-          this.setState({
-            topTextVerticalPosition: newPositionValue,
-          })
+      //     this.setState({
+      //       topTextVerticalPosition: newPositionValue,
+      //     })
         
-      } else {
-        let newPositionValue = this.state.bottomTextVerticalPosition
-        newPositionValue -= 5;
+      // } else {
+      //   let newPositionValue = this.state.bottomTextVerticalPosition
+      //   newPositionValue -= 5;
         
-          this.setState({
-            bottomTextVerticalPosition: newPositionValue,
-          })
+      //     this.setState({
+      //       bottomTextVerticalPosition: newPositionValue,
+      //     })
         
-      }
+      // }
     }
 
-    clickedItalic = (captionType, val) => {
-      if(captionType==="top") {
-        this.setState({
-          topItalic: val,
-        });
-      } else {
-        this.setState({
-          bottomItalic: val,
-        });
-      }
+    clickedItalic = (index, val) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated italic to it
+      newTexts[index] = {...newTexts[index], italic: val};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      });  
+      // if(captionType==="top") {
+      //   this.setState({
+      //     topItalic: val,
+      //   });
+      // } else {
+      //   this.setState({
+      //     bottomItalic: val,
+      //   });
+      // }
     }
 
-    clickedBold = (captionType, val) => {
-      if(captionType==="top") {
-        this.setState({
-          topBold: val,
-        });
-      } else {
-        this.setState({
-          bottomBold: val,
-        });
-      }
+    clickedBold = (index, val) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated bold to it
+      newTexts[index] = {...newTexts[index], bold: val};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      }); 
+      // if(captionType==="top") {
+      //   this.setState({
+      //     topBold: val,
+      //   });
+      // } else {
+      //   this.setState({
+      //     bottomBold: val,
+      //   });
+      // }
     }
 
-    changedSize = (captionType, val) => {
-      if(captionType==="top") {
-        this.setState({
-          topSize: val,
-        });
-      } else {
-        this.setState({
-          bottomSize: val,
-        });
-      }
+    changedSize = (index, val) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated size to it
+      newTexts[index] = {...newTexts[index], size: val};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      }); 
+      // if(captionType==="top") {
+      //   this.setState({
+      //     topSize: val,
+      //   });
+      // } else {
+      //   this.setState({
+      //     bottomSize: val,
+      //   });
+      // }
     }
 
-    changedColor = (captionType, val) => {
-      if(captionType==="top") {
-        this.setState({
-          topColor: val,
-        });
-      } else {
-        this.setState({
-          bottomColor: val,
-        });
-      }
+    changedColor = (index, val) => {
+      // copy state to omit changing state directly
+      let newTexts = [...this.state.texts];
+      // get element at index and assign a new object with updated color to it
+      newTexts[index] = {...newTexts[index], color: val};
+      console.log('[memeGenerator] updated texts: ');
+      console.log(newTexts);
+      // set state to updated text array
+      this.setState({
+        texts: newTexts,
+      }); 
+      // if(captionType==="top") {
+      //   this.setState({
+      //     topColor: val,
+      //   });
+      // } else {
+      //   this.setState({
+      //     bottomColor: val,
+      //   });
+      // }
     }
 
     handleTitleSubmit = (event) => {
@@ -313,12 +266,56 @@ export default class Generator extends React.Component {
       }
     }
 
+    addNewText = () => {
+      let newTexts = [...this.state.texts];
+      // create a new text field with default properties
+      const newText = {
+        index: newTexts.length,
+        captionType: "top",
+        heading: "Style text",
+        placeholder: "text",
+        text: "",
+        verticalPosition: 50,
+        horizontalPosition: 50,
+        size: 18,
+        color: "black",
+        italic: "normal",
+        bold: "normal",
+      };
+      newTexts.push(newText);
+      this.setState({
+        texts: newTexts,
+      })
+    }
+
     render() {
+      const inputTexts = <div>
+        {this.state.texts.map((text, i) => (
+          <InputsText 
+          key={i}
+          index={text.index}
+          captionType={text.captionType}
+          heading={text.heading}
+          placeholder={text.placeholder}
+          textSubmitHandle={this.handleTextSubmit}
+          increaseHorizontalPosition={this.increaseHorizontalPosition}
+          decreaseHorizontalPosition={this.decreaseHorizontalPosition}
+          increaseVerticalPosition={this.increaseVerticalPosition}
+          decreaseVerticalPosition={this.decreaseVerticalPosition}
+          clickedItalic={this.clickedItalic}
+          clickedBold={this.clickedBold}
+          changedSize={this.changedSize}
+          changedColor={this.changedColor}
+          />
+        ))}
+      </div>
+      
+
       return (
         <div className="home">
           <div className="meme-generator-wrapper">
             <div className="slide-show-section">              
-                <SlideShow 
+                {/* <SlideShow 
                   title={this.state.submitTitle}
                   topText={this.state.topText} 
                   bottomText={this.state.bottomText}
@@ -335,6 +332,11 @@ export default class Generator extends React.Component {
                   bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
                   bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
                   onMemeCreated={this.onMemeCreated}
+                />   */}
+                <SlideShow 
+                  title={this.state.submitTitle}
+                  texts={this.state.texts}
+                  onMemeCreated={this.onMemeCreated}
                 />  
             </div>
             <div className="input-section" id="input-section">
@@ -349,34 +351,8 @@ export default class Generator extends React.Component {
                   </form>
                   </div>
                 </div>
-                <InputsText 
-                  captionType="top"
-                  heading="Style top text"
-                  placeholder="top caption"
-                  textSubmitHandle={this.handleTextSubmit}
-                  increaseHorizontalPosition={this.increaseHorizontalPosition}
-                  decreaseHorizontalPosition={this.decreaseHorizontalPosition}
-                  increaseVerticalPosition={this.increaseVerticalPosition}
-                  decreaseVerticalPosition={this.decreaseVerticalPosition}
-                  clickedItalic={this.clickedItalic}
-                  clickedBold={this.clickedBold}
-                  changedSize={this.changedSize}
-                  changedColor={this.changedColor}
-                />
-                <InputsText 
-                  captionType="bottom"
-                  heading="Style bottom text"
-                  placeholder="bottom caption"
-                  textSubmitHandle={this.handleTextSubmit}
-                  increaseHorizontalPosition={this.increaseHorizontalPosition}
-                  decreaseHorizontalPosition={this.decreaseHorizontalPosition}
-                  increaseVerticalPosition={this.increaseVerticalPosition}
-                  decreaseVerticalPosition={this.decreaseVerticalPosition}
-                  clickedItalic={this.clickedItalic}
-                  clickedBold={this.clickedBold}
-                  changedSize={this.changedSize}
-                  changedColor={this.changedColor}
-                />
+                {inputTexts}
+                <button onClick={this.addNewText}>Add new text</button>
             </div>
           </div>
         </div>

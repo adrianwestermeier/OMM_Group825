@@ -1,57 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import arrowBack from '../img/arrow_back-black-18dp.svg';
-import arrowForward from '../img/arrow_forward-black-18dp.svg';
-import './memeGenerator.css';
+import arrowBack from '../../img/arrow_back-black-18dp.svg';
+import arrowForward from '../../img/arrow_forward-black-18dp.svg';
+import './../memeGenerator.css';
 import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
 import * as htmlToImage from 'html-to-image';
 import './slideShow.css';
 import DrawApp from './drawMeme';
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
-
-
-// Meme template with top and bottom caption
-class Meme extends React.Component {
-    constructor(props){
-        super(props);
-    }
-    render() {
-        const topStyle = {
-            top: this.props.topTextVerticalPosition + "%", 
-            left: this.props.topTextHorizontalPosition + "%",
-            fontStyle: this.props.topItalic,
-            fontWeight: this.props.topBold,
-            fontSize: this.props.topSize + "px",
-            color: this.props.topColor,
-        };
-        const bottomStyle = {
-            bottom: this.props.bottomTextVerticalPosition + "%", 
-            left: this.props.bottomTextHorizontalPosition + "%",
-            fontStyle: this.props.bottomItalic,
-            fontWeight: this.props.bottomBold,
-            fontSize: this.props.bottomSize + "px",
-            color: this.props.bottomColor,
-        };
-
-        console.log(topStyle.fontSize);
-        return(
-            <div className="image-wrapper" id="image-wrapper">
-                <figure>
-                    <figcaption>{this.props.title}</figcaption>
-                    <div className="top-and-bottom-wrapper">
-                        <img src={this.props.url} id="actual-image"/>
-                        <div className="topOut" style={topStyle}>
-                            {this.props.topText}
-                        </div>
-                        <div className="bottomOut" style={bottomStyle}>
-                            {this.props.bottomText}
-                        </div>   
-                    </div>
-                </figure>
-            </div>
-        )
-    }
-}
+import TemplateMeme from './templateMeme/templateMeme';
 
 // slide show for existing meme templates
 export default class SlideShow extends React.Component {
@@ -473,20 +430,20 @@ export default class SlideShow extends React.Component {
  
      render() {
         const currentIndex = this.state.currentIndex;
-        const topText = this.props.topText;
-        const bottomText = this.props.bottomText;
-        const topTextVerticalPosition= this.props.topTextVerticalPosition
-        const topTextHorizontalPosition= this.props.topTextHorizontalPosition
-        const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
-        const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
-        const topItalic = this.props.topItalic
-        const bottomItalic = this.props.bottomItalic
-        const topBold = this.props.topBold
-        const bottomBold = this.props.bottomBold
-        const topSize = this.props.topSize
-        const bottomSize = this.props.bottomSize
-        const topColor = this.props.topColor
-        const bottomColor = this.props.bottomColor
+        // const topText = this.props.topText;
+        // const bottomText = this.props.bottomText;
+        // const topTextVerticalPosition= this.props.topTextVerticalPosition
+        // const topTextHorizontalPosition= this.props.topTextHorizontalPosition
+        // const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
+        // const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
+        // const topItalic = this.props.topItalic
+        // const bottomItalic = this.props.bottomItalic
+        // const topBold = this.props.topBold
+        // const bottomBold = this.props.bottomBold
+        // const topSize = this.props.topSize
+        // const bottomSize = this.props.bottomSize
+        // const topColor = this.props.topColor
+        // const bottomColor = this.props.bottomColor
 
         let url;
         let isImageFlip;
@@ -509,7 +466,7 @@ export default class SlideShow extends React.Component {
 
         const templates = this.state.pictures
         const allTemplates = templates.map(
-            (t, index) => <img src={t.url} class="flex-img" onClick={() => this.onClickChooseTemplate(index)}></img>
+            (t, index) => <img src={t.url} className="flex-img" onClick={() => this.onClickChooseTemplate(index)}></img>
             )
  
          return (
@@ -550,7 +507,7 @@ export default class SlideShow extends React.Component {
                         <DrawApp title={this.props.title} />
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
-                       <Meme 
+                       {/* <Meme 
                         url={url} 
                         isImageFlip={isImageFlip}
                         title={this.props.title}
@@ -568,6 +525,12 @@ export default class SlideShow extends React.Component {
                         bottomSize={bottomSize}
                         topColor={topColor} 
                         bottomColor={bottomColor}
+                         /> */}
+                         <TemplateMeme 
+                        url={url} 
+                        isImageFlip={isImageFlip}
+                        title={this.props.title}
+                        texts={this.props.texts}
                          />
                     </div>
                 </React.Fragment>

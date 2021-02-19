@@ -1,0 +1,89 @@
+.input-form {
+    display: inline-flex;
+   
+}
+
+.input-text {
+    white-space: pre-wrap;
+}
+    
+input[type=text] {
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid black;
+    line-height: 2em;
+}
+    
+button[type=submit] {
+    background-color: white;
+    color: black;
+    width: 30%;
+    /* padding: 10px 18px; */
+    margin-left: 30px;
+    border: 2px solid #555555;
+    cursor: pointer;
+}
+    
+.title-submit {
+    height: 35px;
+}
+    
+button[type=button] {
+    background-color: white;
+    color: black;
+    width: 30px;
+    height: 20px;
+    padding: 2px 5px;
+    margin-left: 10px;
+    border: 2px solid #555555;
+    cursor: pointer;
+}
+    
+.buttons {
+    display:flex;
+    justify-content: space-around;
+}
+    
+.position-button {
+    border: none;
+    background-color: inherit;
+    padding: 3px;
+    font-size: 20px;
+}
+    
+.buttons > .up-down-buttons {
+    display:flex;
+    flex-direction:column;
+    justify-content: space-around;
+}
+    
+.position-text {
+    margin: auto;
+    margin-right: 20px;
+}
+
+h3 {
+    background-color: black;
+    color: white;
+    display:inline-block;
+    /* display: inline-block; */
+    padding: 0px 10px;
+}
+      
+.text-styling-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+}
+      
+.text-styling-wrapper > button {
+    margin-left: 20px;
+}
+      
+.color-pos-group {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
