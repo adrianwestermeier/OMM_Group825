@@ -119,12 +119,16 @@ class Grid extends React.Component{
     }
 }
 
+class VoteChart extends React.Component{
+    constructor(props) {
+        super(props);
+    }
 
-// ich würde das VoteChart gerne noch extra machen, wenn ich nicht immer undefined memes bekommen würde
-/*class VoteChart extends React.Component{
 
     render(){
         const memes = this.props.memes
+        console.log(this.props.memes)
+        console.log(this.props.i)
 
         let data = [
             ['x', 'votes'],
@@ -133,12 +137,15 @@ class Grid extends React.Component{
 
         let elem = []
 
-        if(this.props.i){
+        if(this.props.i !== null){
             if(memes[this.props.i]){
-                let upAndDown = memes[this.state.i].upMinusDownVotes
+                let upAndDown = memes[this.props.i].upMinusDownVotes
                 for(let i=1; i<upAndDown.length; i++){
                     elem = [i, upAndDown[i]]
+                    console.log(elem)
+                    console.log(data)
                     data.push(elem)
+                    console.log(data)
 
                 }
 
@@ -167,7 +174,7 @@ class Grid extends React.Component{
             </div>
         )
     }
-}*/
+}
 
 
 
@@ -305,22 +312,7 @@ class SingleView extends React.Component{
 
         }
 
-        let data = [
-            ['x', 'votes'],
-            [0,0]
-        ]
 
-        let elem = []
-
-        if(memes[this.state.i]){
-            let upAndDown = memes[this.state.i].upMinusDownVotes
-            for(let i=1; i<upAndDown.length; i++){
-                elem = [i, upAndDown[i]]
-                data.push(elem)
-
-            }
-
-        }
 
         return(
             <div>
@@ -334,21 +326,9 @@ class SingleView extends React.Component{
                     </div>
                     {items[this.state.i]}
                 </div>
-                <Chart
-                    width={'600px'}
-                    height={'400px'}
-                    chartType="LineChart"
-                    loader={<div>Loading Chart</div>}
-                    data={data}
-                    options={{
-                        hAxis: {
-                            title: 'Time',
-                        },
-                        vAxis: {
-                            title: 'Up- minus DownVotes',
-                        },
-                    }}
-
+                <VoteChart
+                    memes={memes}
+                    i={this.state.i}
                 />
             </div>
         )
