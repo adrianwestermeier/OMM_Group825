@@ -108,9 +108,9 @@ class Application extends React.Component{
           <div>Something went wrong</div>
       )
     }
-
-
   }
+
+
 }
 
 export default Application;

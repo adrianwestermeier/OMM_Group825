@@ -258,6 +258,7 @@ router.post('/saveCreatedMeme', function(req, res) {
   // console.log(base64Data);
   const name = req.body.name + '.png';
   const title = req.body.title;
+  const user = req.body.user;
   const dir = "./public/memes/" + name;
 
   getEntry(name, 'generatedMemes').then((entry) => {
@@ -279,6 +280,7 @@ router.post('/saveCreatedMeme', function(req, res) {
         const newMeme = {
           "name": name,
           "title": title,
+          "user": user,
           "upVotes": 0,
           "downVotes": 0,
           "upMinusDownVotes": [0]

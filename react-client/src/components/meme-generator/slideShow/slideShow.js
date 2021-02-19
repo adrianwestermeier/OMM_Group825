@@ -358,6 +358,7 @@ export default class SlideShow extends React.Component {
         const image = this.state.png;
         const name = this.state.memeName;
         const title = this.props.title;
+        const user = this.props.user
 
         if(!name || !title) {
             alert("please enter a meme name and a title!");
@@ -374,6 +375,7 @@ export default class SlideShow extends React.Component {
               img: image,
               name: name,
               title: title,
+              user: user,
             })
           }).then(jsonResponse => jsonResponse.json()
                 .then(responseObject => {
@@ -429,6 +431,7 @@ export default class SlideShow extends React.Component {
       }
  
      render() {
+        console.log(this.props.user)
         const currentIndex = this.state.currentIndex;
         // const topText = this.props.topText;
         // const bottomText = this.props.bottomText;

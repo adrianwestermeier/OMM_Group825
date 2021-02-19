@@ -50,6 +50,7 @@ export default class Generator extends React.Component {
             // bottomSize: 18,
             // topColor: "black",
             // bottomColor: "black",
+
         };
     }
 
@@ -289,6 +290,7 @@ export default class Generator extends React.Component {
     }
 
     render() {
+        console.log(this.props.user)
       const inputTexts = <div>
         {this.state.texts.map((text, i) => (
           <InputsText 
@@ -337,6 +339,7 @@ export default class Generator extends React.Component {
                   title={this.state.submitTitle}
                   texts={this.state.texts}
                   onMemeCreated={this.onMemeCreated}
+                  user={this.props.user}
                 />  
             </div>
             <div className="input-section" id="input-section">
