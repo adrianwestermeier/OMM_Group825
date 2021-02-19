@@ -386,7 +386,8 @@ class MemeOverview extends React.Component {
         super(props);
         this.state = {
             memes: [],
-            isSingleView: true
+            isSingleView: true,
+            user: this.props.user
         };
     }
 
@@ -478,7 +479,9 @@ export default class Overview extends React.Component {
     render() {
         return (
             <div className="meme-overview">
-                <MemeOverview/>
+                <MemeOverview
+                    user={this.props.user}
+                />
             </div>
         );
     }

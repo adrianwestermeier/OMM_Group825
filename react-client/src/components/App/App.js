@@ -10,15 +10,17 @@ import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
 
 class LogInPage extends React.Component{
-  logIn = () => {
-    this.props.logIn();
+  logIn = (user) => {
+    this.props.logIn(user);
   }
 
   render() {
     return(
         <div>
           <LogInForm
-              logIn={() => {this.logIn()}}
+              logIn={(user) => {
+                this.logIn(user)
+              }}
           />
 
         </div>
@@ -53,7 +55,9 @@ class App extends React.Component {
               <Expander />
             </Route>
             <Route path="/">
-              <Generator />
+              <Generator
+                  user={this.props.user}
+              />
             </Route>
 
           </Switch>
@@ -77,10 +81,9 @@ class Application extends React.Component{
   *  allerdings kommt er hier leider nicht an. Warum?
   * */
   logIn(user){
-    console.log(user)
     this.setState({
       loggedIn: true,
-      //user: user
+      user: user
     })
 
   }
@@ -89,10 +92,12 @@ class Application extends React.Component{
     if(!this.state.loggedIn){
       return (
           <LogInPage
-              logIn={() => {this.logIn()}}
+              logIn={(user) => {
+                this.logIn(user)
+              }}
           />
       )
-    } else if(this.state.loggedIn){
+    } else if(this.state.loggedIn && this.state.user !== null){
       return (
           <App
               user={this.state.user}
@@ -100,7 +105,7 @@ class Application extends React.Component{
       )
     }else {
       return(
-          <div>Das hat nicht geklappt</div>
+          <div>Something went wrong</div>
       )
     }
 

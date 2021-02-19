@@ -18,7 +18,6 @@ class LogInForm extends React.Component{
     }
 
     logIn = (user) => {
-        console.log(user)
         this.props.logIn(user);
     }
 
