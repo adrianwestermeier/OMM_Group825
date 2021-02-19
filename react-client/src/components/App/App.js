@@ -8,6 +8,7 @@ import LogInForm from "../LogInForm/LogInForm";
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
+import MyMemes from "../meme-overview/myMemes";
 
 class LogInPage extends React.Component{
   logIn = (user) => {
@@ -39,6 +40,7 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
+              <li><Link to="/myMemes" className="menu-link">MyMemes</Link></li>
             {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
           </ul>
         </nav>
@@ -51,6 +53,11 @@ class App extends React.Component {
                   user={this.props.user}
               />
             </Route>
+              <Route path="/myMemes">
+                  <MyMemes
+                      user={this.props.user}
+                  />
+              </Route>
             <Route path="/expand">
               <Expander />
             </Route>
