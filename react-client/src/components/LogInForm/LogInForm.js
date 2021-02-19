@@ -6,10 +6,10 @@ class LogInForm extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            users: [],
-            usernames: [],
-            username: '',
-            password: ''
+            users: [],          // all users saved on the db
+            usernames: [],      // the corresponding usernames for all users
+            username: '',       // the username entered in the corresponding username form field
+            password: ''        // the password entered in the corresponding password form field
         }
     }
 
@@ -22,29 +22,33 @@ class LogInForm extends React.Component{
     }
 
     performLogIn(){
-        let users = this.state.users
-        let usernames = this.state.usernames
-        let username = this.state.username
-        let enteredPassword = this.state.password
-        let userPassword = ''
-        let user = null
+        let users = this.state.users                // all users saved on the db
+        let usernames = this.state.usernames        // the corresponding usernames for all users
+        let username = this.state.username          // the username entered in the corresponding username form field
+        let enteredPassword = this.state.password   // the password entered in the corresponding password form field
+        let userPassword = ''                       // the password saved in the db for the corresponding username
 
-        if(usernames.includes(username)) {
-            let i = usernames.indexOf(username)
-            user = users[i]
-            userPassword = users[i].password
+
+        if(usernames.includes(username)) {          // check if the entered username is already saved on the db
+            let i = usernames.indexOf(username)     // the index at which the entered username is
+            userPassword = users[i].password        // get the password saved on the db for the entered username
         } else {
             alert('This user does not exist. Please check the data or register.')
             return;
         }
-        if(enteredPassword === userPassword){
-            this.logIn(this.state.username);
+        if(enteredPassword === userPassword){       // check if the entered password matches the one saved on the db for the entered username
+            this.logIn(this.state.username);        // perform LogIn
         } else {
             alert('wrong password')
         }
 
     }
 
+
+    /*
+    * this function gets all users saved on the db and saves them in this.state. users
+    * aver getting the respones from the backend it also creates a list with all usernames and saves ist in this. state.usernames
+    * */
     getUsers() {
         // get the memes from the express server
         fetch('/users/getUsers')
@@ -60,6 +64,7 @@ class LogInForm extends React.Component{
                 let users = this.state.users
                 let username = ''
                 let usernames = []
+                //creating list with only usernames
                 for(let i=0; i<users.length; i++){
                     username = users[i].username
                     usernames.push(username)

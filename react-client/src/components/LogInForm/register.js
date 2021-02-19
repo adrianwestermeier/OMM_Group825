@@ -5,12 +5,12 @@ class RegisterDialog extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: "",
-            repeatedPassword: "",
-            open: false,
-            users: this.props.users,
-            usernames: this.props.usernames
+            username: "",                       // username entered in the corresponding text field
+            password: "",                       // password entered in the corresponding text field
+            repeatedPassword: "",               // repeated password entered in the corresponding text field
+            open: false,                        // controls if the dialog is open (true) or closed (false)
+            users: this.props.users,            // list of all users saved in the db
+            usernames: this.props.usernames     // list of ll usernames saved in the db
         };
     }
 
@@ -19,6 +19,7 @@ class RegisterDialog extends React.Component{
         let usernames = []
         let users = this.props.users
 
+        // creates a list containing all usernames saved on the db
         for(let i = 0; i<users.length; i++){
             usernames.push(users[i].username)
             this.setState({
@@ -32,28 +33,31 @@ class RegisterDialog extends React.Component{
         this.props.getUsers();
     }
 
+    // is performed after clicking the 'register' button and controls the registering process
     handleRegister(){
 
-        if(this.state.username === ''){
+
+        if(this.state.username === ''){         // check, if a usernames was entered
             alert('please enter a username')
             return;
         }
-        if(this.props.usernames.includes(this.state.username)){
+        if(this.props.usernames.includes(this.state.username)){     // check if the username already exists on the db
             alert('this username is already taken')
             return;
         }
-        if(this.state.password === ''){
+        if(this.state.password === ''){     //check if a password was entered
             alert('please enter a password')
             return;
         }
-        if(this.state.password !== this.state.repeatedPassword){
+        if(this.state.password !== this.state.repeatedPassword){    //check if the entered repeated password matches the first password
             alert("the passwords do not match");
             return;
         }
         this.setState({
-            open: false
+            open: false             //closes the dialog if everything is entered correctly
         })
 
+        // post the new user ti the db
         fetch(`/users/postUser`, {
             method: "POST",
             headers: {
@@ -67,8 +71,7 @@ class RegisterDialog extends React.Component{
             })
         }).then(
             () => {
-                console.log('THEN')
-                this.getUsers()
+                this.getUsers() // after getting the responses from the backend reload the users
             }
         ).then(jsonResponse => jsonResponse.json()
             .then(responseObject => {
@@ -83,12 +86,14 @@ class RegisterDialog extends React.Component{
 
     }
 
+    // close the dialog when clicking on cancel
     handleCancel() {
         this.setState({
             open: false
         })
     }
 
+    // opens the dialog when clicking on register
     handleClickOpen(){
         this.setState({
             open: true
