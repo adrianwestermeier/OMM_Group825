@@ -2,7 +2,6 @@ var express = require('express');
 var fs = require("fs"), json;
 var router = express.Router();
 var cors = require('cors');
-var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
 var zipFolder = require('zip-folder');
 var path = require('path');

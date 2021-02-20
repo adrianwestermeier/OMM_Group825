@@ -32,39 +32,9 @@ export default class SlideShow extends React.Component {
          };
     }
 
-    // getTemplateNames() {
-    //      fetch('/getTemplateNames')
-    //          .then(res => {
-    //              console.log("[slideShow] res");
-    //              console.log(res);
-    //              return res.json()
-    //           })
-    //          .then(images => { 
-    //              console.log("[slideShow]" + images);
-    //              this.setState({ 
-    //                  localPictureNames: images.images,  // image array is wrapped in image json
-    //              })
-    //           });
-    // }
-
     // get the meme templates from the express server
     componentDidMount() {
-        //  fetch('/images')
-        //      .then(res => {
-        //          console.log(res);
-        //          return res.json()
-        //       })
-        //      .then(images => { 
-        //          console.log(images);
-        //          this.setState({ 
-        //              pictures: images.images,  // image array is wrapped in image json
-        //              currentIndex: 0,
-        //              topText: "",
-        //              bottomText: "",
-        //          })
-        //       });
-
-        fetch('/images/getTemplateNames')
+        fetch('http://localhost:3005/images/getTemplateNames')
              .then(res => {
                  console.log("[slideShow]" + res);
                  return res.json()
@@ -100,11 +70,6 @@ export default class SlideShow extends React.Component {
                                         pictures: newPictures,
                                     });
                                     
-                                    /* let newSourceArray = this.state.sources;
-                                    newSourceArray = newSourceArray.concat("data:;base64," + base64)
-                                    this.setState({ sources: newSourceArray });
-                                    console.log("data:;base64," + base64);
-                                }); */
                             });
                         });
                     })
@@ -178,7 +143,7 @@ export default class SlideShow extends React.Component {
              bottom_caption: bottomText
          };
  
-         fetch(`/generatedMemes/uploadGeneratedMeme`, 
+         fetch(`http://localhost:3005/generatedMemes/uploadGeneratedMeme`, 
              {
                method: 'POST',
                headers: {'Content-Type': 'application/json'},
@@ -346,12 +311,6 @@ export default class SlideShow extends React.Component {
                 });
                 document.getElementById('get-imgflip-button').style.display = "none";
             });
-            /* this.setState({ 
-                pictures: images.images,  // image array is wrapped in image json
-                currentIndex: 0,
-                topText: "",
-                bottomText: "",
-            }) */
          });
      })
 
@@ -366,7 +325,7 @@ export default class SlideShow extends React.Component {
             return;
         }
 
-        fetch(`/images/saveCreatedMeme`, {
+        fetch(`http://localhost:3005/images/saveCreatedMeme`, {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -389,23 +348,6 @@ export default class SlideShow extends React.Component {
                 ).catch(requestError => {
                   console.error(requestError);
                 });
-        // fetch(`/upload`, 
-        //     {
-        //       method: 'POST',
-        //       headers: {'Content-Type': 'application/json'},
-        //       body: JSON.stringify( payload ),
-        //     })
-        //     .then(jsonResponse => jsonResponse.json()
-        //       .then(responseObject => {
-        //           console.log('recieved answer for post request: ' + JSON.stringify( responseObject ));
-        //           alert(JSON.stringify( responseObject.message ))
-        //         })
-        //         .catch(jsonParseError => {
-        //           console.error(jsonParseError);
-        //         })
-        //       ).catch(requestError => {
-        //         console.error(requestError);
-        //       });
         }
     
     changeMemeName = (event) => {
@@ -434,20 +376,6 @@ export default class SlideShow extends React.Component {
      render() {
         console.log(this.props.user)
         const currentIndex = this.state.currentIndex;
-        // const topText = this.props.topText;
-        // const bottomText = this.props.bottomText;
-        // const topTextVerticalPosition= this.props.topTextVerticalPosition
-        // const topTextHorizontalPosition= this.props.topTextHorizontalPosition
-        // const bottomTextVerticalPosition= this.props.bottomTextVerticalPosition
-        // const bottomTextHorizontalPosition= this.props.bottomTextHorizontalPosition
-        // const topItalic = this.props.topItalic
-        // const bottomItalic = this.props.bottomItalic
-        // const topBold = this.props.topBold
-        // const bottomBold = this.props.bottomBold
-        // const topSize = this.props.topSize
-        // const bottomSize = this.props.bottomSize
-        // const topColor = this.props.topColor
-        // const bottomColor = this.props.bottomColor
 
         let url;
         let isImageFlip;
@@ -511,31 +439,12 @@ export default class SlideShow extends React.Component {
                         <DrawApp title={this.props.title} />
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
-                       {/* <Meme 
-                        url={url} 
-                        isImageFlip={isImageFlip}
-                        title={this.props.title}
-                        topText={topText} 
-                        bottomText={bottomText} 
-                        topTextHorizontalPosition={topTextHorizontalPosition}
-                        topTextVerticalPosition={topTextVerticalPosition}
-                        bottomTextHorizontalPosition={bottomTextHorizontalPosition}
-                        bottomTextVerticalPosition={bottomTextVerticalPosition}
-                        topItalic={topItalic}
-                        bottomItalic={bottomItalic}
-                        topBold={topBold}
-                        bottomBold={bottomBold}
-                        topSize={topSize}
-                        bottomSize={bottomSize}
-                        topColor={topColor} 
-                        bottomColor={bottomColor}
-                         /> */}
-                         <TemplateMeme 
+                        <TemplateMeme 
                         url={url} 
                         isImageFlip={isImageFlip}
                         title={this.props.title}
                         texts={this.props.texts}
-                         />
+                        />
                     </div>
                 </React.Fragment>
 
@@ -543,16 +452,10 @@ export default class SlideShow extends React.Component {
                     <div>
                         <p className="warning">Make sure you have added a title and a meme name before you share ;)</p>
                     </div>
-                   {/* <button className="saveButton" onClick={() => {this.saveOnServer()}}>
-                     Save Meme on server
-                   </button> */}
                    <input type="text" placeholder="enter a unique meme name" onChange={this.changeMemeName}></input>
                    <button className="saveButton" onClick={() => {this.saveMemeOnServer()}}>
                      Share
                    </button>
-{/*                    <button onClick={() => exportComponentAsJPEG(this.componentRef)}>
-                       Download As JPEG
-                   </button> */}
                    <button onClick={() => exportComponentAsPNG(this.componentRef)}>
                        Download As PNG
                    </button>

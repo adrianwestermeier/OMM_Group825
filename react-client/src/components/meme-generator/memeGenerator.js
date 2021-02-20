@@ -40,17 +40,6 @@ export default class Generator extends React.Component {
   
         this.state = {
           texts: newTexts,
-            // topText: "",
-            // bottomText: "",
-            // topTextVerticalPosition: 0,
-            // topTextHorizontalPosition: 100,
-            // bottomTextVerticalPosition: 0,
-            // bottomTextHorizontalPosition: 100,
-            // topSize: 18,
-            // bottomSize: 18,
-            // topColor: "black",
-            // bottomColor: "black",
-
         };
     }
 
@@ -107,23 +96,6 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
-      // if(pos==="top") {
-      //   let newPositionValue = this.state.topTextVerticalPosition
-      //   newPositionValue -= 5;
-        
-      //     this.setState({
-      //       topTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // } else {
-      //   let newPositionValue = this.state.bottomTextVerticalPosition
-      //   newPositionValue += 5;
-        
-      //     this.setState({
-      //       bottomTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // }
     }
 
     decreaseVerticalPosition = (index) => {
@@ -137,23 +109,6 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
-      // if(pos==="top") {
-      //   let newPositionValue = this.state.topTextVerticalPosition
-      //   newPositionValue += 5;
-        
-      //     this.setState({
-      //       topTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // } else {
-      //   let newPositionValue = this.state.bottomTextVerticalPosition
-      //   newPositionValue -= 5;
-        
-      //     this.setState({
-      //       bottomTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // }
     }
 
     clickedItalic = (index, val) => {
@@ -167,15 +122,6 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });  
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topItalic: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomItalic: val,
-      //   });
-      // }
     }
 
     clickedBold = (index, val) => {
@@ -189,15 +135,6 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topBold: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomBold: val,
-      //   });
-      // }
     }
 
     changedSize = (index, val) => {
@@ -211,15 +148,6 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topSize: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomSize: val,
-      //   });
-      // }
     }
 
     changedColor = (index, val) => {
@@ -232,16 +160,7 @@ export default class Generator extends React.Component {
       // set state to updated text array
       this.setState({
         texts: newTexts,
-      }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topColor: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomColor: val,
-      //   });
-      // }
+      });
     }
 
     handleTitleSubmit = (event) => {
@@ -317,24 +236,6 @@ export default class Generator extends React.Component {
         <div className="home">
           <div className="meme-generator-wrapper">
             <div className="slide-show-section">              
-                {/* <SlideShow 
-                  title={this.state.submitTitle}
-                  topText={this.state.topText} 
-                  bottomText={this.state.bottomText}
-                  topItalic={this.state.topItalic}
-                  bottomItalic={this.state.bottomItalic}
-                  topBold={this.state.topBold}
-                  bottomBold={this.state.bottomBold}
-                  topSize={this.state.topSize}
-                  bottomSize={this.state.bottomSize}
-                  topColor={this.state.topColor}
-                  bottomColor={this.state.bottomColor}
-                  topTextVerticalPosition={this.state.topTextVerticalPosition}
-                  topTextHorizontalPosition={this.state.topTextHorizontalPosition}
-                  bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
-                  bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
-                  onMemeCreated={this.onMemeCreated}
-                />   */}
                 <SlideShow 
                   title={this.state.submitTitle}
                   texts={this.state.texts}

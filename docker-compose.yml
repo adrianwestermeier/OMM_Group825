@@ -1,70 +1,30 @@
 version: "2"
 services:
-    client:
-        image: webapp-client
-        restart: always
-        ports:
-            - "3000:3000"
-        volumes:
-            - ./client:/client
-            - /client/node_modules
-        links:
-            - api
-        networks:
-            - webappnetwork    
+    mongo:
+      image: "mongo:latest"
+      ports:
+        - "27017:27017"
     api:
-        image: webapp-api
-        restart: always
-        ports:
-            - "3005:3005"
-        volumes:
-            - ./api:/api
-            - /api/node_modules
-        depends_on:
-            - mongodb
-        networks:
-            - webappnetwork
-    mongodb:
-        image: mongo:latest
-        restart: always
-        container_name: mongodb
-        # volumes:
-        #     - ./data-node:/data/db
-        ports:
-            - 27017:27017
-        # command: mongod --noauth --smallfiles
-        networks:
-            - webappnetwork
+      build:
+        context: ./express-server
+        dockerfile: Dockerfile
+      environment:
+        - MONGO_URI=mongo:27017
+      ports:
+        - "3005:3005"
+      links:
+        - mongo
+    client:
+      build:
+        context: ./react-client
+        dockerfile: Dockerfile
+      ports:
+        - "3000:3000"
+      links:
+        - api
     dataimport:
         build:
           context: ./datagenerator
           dockerfile: Dockerfile
         links:
-          - mongodb
-networks:
-    webappnetwork:
-        driver: bridge
-
-
-# version: "3"
-# services:
-#   mongo:
-#     image: "mongo:latest"
-#     ports:
-#       - "27017:27017"
-#   nodeapp:
-#     build:
-#       context: ./nodeapp
-#       dockerfile: Dockerfile
-#     environment:
-#       - MONGO_URI=mongo:27017
-#     ports:
-#       - "3000:3000"
-#     links:
-#       - mongo
-#   dataimport:
-#     build:
-#       context: ./datagenerator
-#       dockerfile: Dockerfile
-#     links:
-#       - mongo
+          - mongo

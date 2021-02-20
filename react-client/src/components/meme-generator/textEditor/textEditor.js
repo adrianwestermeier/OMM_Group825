@@ -26,7 +26,6 @@ export default class InputsText extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let text = this.state.text;
-        // text = text.replace(/\n/g , "<br>");
         this.props.textSubmitHandle(this.props.index, text);
     }
 
@@ -86,7 +85,6 @@ export default class InputsText extends React.Component {
     }
 
     handleChangeComplete = (color) => {
-      // this.setState({ background: color.hex });
       console.log(color.hex);
       this.props.changedColor(this.props.index, color.hex);
     };

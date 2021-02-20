@@ -13,104 +13,6 @@ var corsOptions = {
   methods: "GET, PUT"
 }
 
-// var url = "mongodb://localhost:27017/";
-
-// var images;
-
-// ----------- Helper Functions ------------
-
-/* returns all images from "images" collection */
-// function getImagesFromDb() {
-//   console.log('[images] get Image from Db');
-//   mongoClient.connect(url, function(err, db) {
-//     if (err) throw err;
-//     var dbo = db.db("meme-generator-db");
-//     dbo.collection("images").find().toArray(function(err, result) {
-//       if (err) throw err;
-//       images = result;
-//       db.close();
-//     });
-//   }); 
-// }
-
-/* checks if all fields are present */
-// function assertNewDbEntry(entry) {
-//   if (entry.name==="" || entry.url==="" || entry.width==="" || entry.height==="" || entry.boxCount==="") {
-//       console.log('[images] empty string detected');
-//       return 0;
-//   }
-//   return 1;
-// }
-
-/* posts a new meme to the images collections */
-// function postImageToDb(image) {
-//   mongoClient.connect(url, function(err, db) {
-//     if (err) throw err;
-//     var dbo = db.db("meme-generator-db");
-//     dbo.collection("images").insertOne(image, function(err, res) {
-//       if (err) throw err;
-//       console.log("[images] 1 document inserted");
-//       db.close();
-//     });
-//   }); 
-// }
-
-
-
-/* reads a file and parses it to json */
-// function readJsonFileSync(filepath, encoding){
-
-//     if (typeof (encoding) == 'undefined'){
-//         encoding = 'utf8';
-//     }
-//     var file = fs.readFileSync(filepath, encoding);
-//     return JSON.parse(file);
-// }
-
-// function getData(file){
-//     var filepath = __dirname + '/' + file;
-//     console.log(filepath);
-//     return readJsonFileSync(filepath);
-// }
-  
-// getImagesFromDb();
-
-// ----------- HTTP Functions ------------
-
-/* GET local images. */
-// router.get('/localfiles', function (req, res, next) {
-//   mongoClient.connect(url, function(err, db) {
-//     if (err) throw err;
-//     var dbo = db.db("meme-generator-db");
-//     dbo.collection("localImages").find().toArray(function(err, result) {
-//       if (err) throw err;
-//       result.forEach((item) => {
-//         console.log('[images] ' + item);
-//         var options = {
-//           root: path.join(__dirname, 'public'),
-//           dotfiles: 'deny',
-//           headers: {
-//             'x-timestamp': Date.now(),
-//             'x-sent': true
-//           }
-//         }
-      
-//         var fileName = item.name;
-//         console.log(fileName);
-//         res.sendFile(fileName, options, function (err) {
-//           if (err) {
-//             next(err)
-//           } else {
-//             console.log('[images] Sent:', fileName)
-//           }
-//         })
-//       })
-//       db.close();
-//     });
-//   }); 
-  
-// })
-
 /* helper for downloading by url */
 const download_image = (url, image_path) =>
   axios({
@@ -126,7 +28,6 @@ const download_image = (url, image_path) =>
       }),
   );
   
-/* TODO: download image and create a new db entry */
 router.post('/createByUrl', function(req, res, next) {
   console.log('[images] create by url ', req.body);
   const db = req.db;
@@ -181,7 +82,6 @@ router.post('/createByUrl', function(req, res, next) {
 router.post('/saveCreatedMeme', function(req, res) {
   const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
-  // console.log(base64Data);
   const name = req.body.name + '.png';
   const title = req.body.title;
   const user = req.body.user;
@@ -230,7 +130,6 @@ router.post('/saveCreatedMeme', function(req, res) {
 router.post('/saveTemplateSnapshot', function(req, res) {
   const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
-  // console.log(base64Data);
   const name = req.body.name + '.png';
   const dir = "./public/templates/" + name;
 

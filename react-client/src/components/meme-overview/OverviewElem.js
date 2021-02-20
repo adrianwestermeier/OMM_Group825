@@ -37,7 +37,7 @@ export default class OverviewElem extends React.Component {
 
         };
 
-        fetch(`/generatedMemes/updateMeme`,
+        fetch(`http://localhost:3005/generatedMemes/updateMeme`,
             {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},

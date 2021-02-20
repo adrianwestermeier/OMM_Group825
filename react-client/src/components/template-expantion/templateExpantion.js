@@ -21,8 +21,6 @@ class InputsPost extends React.Component {
             alert("Please enter an existing url and a template name!");
             return;
         }
-        // const name = this.state.name;
-        // const url = this.state.url;
        
         console.log(this.state)
         const payload = {
@@ -30,7 +28,7 @@ class InputsPost extends React.Component {
             url: event.target.elements.url.value,
         }
         console.log('[template expantion] sending data ' + JSON.stringify( payload ))
-        fetch(`/images/createByUrl`,
+        fetch(`http://localhost:3005/images/createByUrl`,
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -120,7 +118,6 @@ class FileUpload extends React.Component {
         }
         const formData = new FormData();
         formData.append("userUploadFile", file);
-        // formData.append("fileName", name);
       
         axios.post(
           "http://localhost:3000/images/uploadTemplate", 
@@ -275,7 +272,7 @@ class Snapshot extends React.Component {
 
     console.log("[templateExpantion] image: " + image)
 
-    fetch(`/images/saveTemplateSnapshot`, {
+    fetch(`http://localhost:3005/images/saveTemplateSnapshot`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -381,7 +378,7 @@ class Screenshot extends React.Component {
     const url = this.state.url;
     const name = this.state.name;
 
-    fetch(`/screenshot/create`, {
+    fetch(`http://localhost:3005/screenshot/create`, {
         method: "POST",
         headers: {
           Accept: "application/json",

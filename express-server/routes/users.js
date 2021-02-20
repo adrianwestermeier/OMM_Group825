@@ -10,11 +10,13 @@ router.post( "/postUser", function (req, res) {
     "password": req.body.password,
   };
 
-  database.postUserToDb(db, user).then(() => {
+  database.postUserToDb(db, user).then((myUser) => {
+    console.log('[users] posted user');
+    console.log(myUser);
     res.json({
       "code": 201,
-      "message": "saved meme successfully, refresh page to see changes.",
-      "user": [user]
+      "message": "created user successfully",
+      "user": myUser
     });
   });
 })

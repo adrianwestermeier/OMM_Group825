@@ -2,13 +2,8 @@ module.exports = {
 
 postUserToDb: async function(db, user) {
     const users = db.get('users');
-  
-    users.insert(user)
-      .then((us) => {
-        console.log("[database] inserted user");
-      }).catch((err) => {
-        console.log(err)
-      });
+    const myUser = await users.insert(user);
+    return myUser;
 },
   
 getUsersFromDb: async function(db){
