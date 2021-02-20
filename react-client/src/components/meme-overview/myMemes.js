@@ -14,7 +14,7 @@ export default class MyMemes extends React.Component{
     }
 
     getMyMemes(){
-        const memes = this.state.memes
+        const memes = [...this.state.memes];
         const user = this.state.user
         let meme = null
         let myMemes = []
@@ -79,11 +79,11 @@ export default class MyMemes extends React.Component{
                         newMemes[index] = meme;
                         // Update state
                         that.setState({memes: newMemes});
+                        that.getMyMemes()
+                        
                     });
                 }, memesCopy); // use memesCopy as this
-            }).then(
-                () => {this.getMyMemes()}
-        );
+            })
     }
 
     render(){
