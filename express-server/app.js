@@ -7,6 +7,11 @@ let logger = require('morgan');
 let cors = require('cors');
 const fileUpload = require('express-fileupload');
 
+// if the environment parameter MONGO_URI is set use that (for Docker), otherwise localhost
+const MONGO_URI = process.env.MONGO_URI || "localhost:27017";
+console.log('MONGO_URI: '+MONGO_URI)
+const db = require('monk')(MONGO_URI+'/meme-generator-db'); // connect to database omm-2021
+
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let apiRouter = require('./routes/api');
@@ -44,7 +49,9 @@ app.use(function(req, res, next) {
 
 
 /* app.options('/images/handle', cors()) // enable pre-flight request for DELETE request */
- 
+app.use(function(req,res,next){  req.db = db;
+  next();
+});
 
 
 app.use('/', indexRouter);

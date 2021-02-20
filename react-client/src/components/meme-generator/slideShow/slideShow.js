@@ -32,19 +32,20 @@ export default class SlideShow extends React.Component {
          };
     }
 
-    getTemplateNames() {
-         fetch('/getTemplateNames')
-             .then(res => {
-                 console.log("[slideShow]" + res);
-                 return res.json()
-              })
-             .then(images => { 
-                 console.log("[slideShow]" + images);
-                 this.setState({ 
-                     localPictureNames: images.images,  // image array is wrapped in image json
-                 })
-              });
-    }
+    // getTemplateNames() {
+    //      fetch('/getTemplateNames')
+    //          .then(res => {
+    //              console.log("[slideShow] res");
+    //              console.log(res);
+    //              return res.json()
+    //           })
+    //          .then(images => { 
+    //              console.log("[slideShow]" + images);
+    //              this.setState({ 
+    //                  localPictureNames: images.images,  // image array is wrapped in image json
+    //              })
+    //           });
+    // }
 
     // get the meme templates from the express server
     componentDidMount() {
@@ -75,7 +76,7 @@ export default class SlideShow extends React.Component {
                  })
                  console.log("[slideShow]" + "after get template names")
                  this.state.localPictureNames.forEach(element => {
-                     let url = 'http://localhost:3005/templates/' + element;
+                     let url = 'http://localhost:3005/templates/' + element.name;
                      console.log("[slideShow]" + url)
                      axios.get(url, { responseType: 'arraybuffer' },
                      ).then(response => {

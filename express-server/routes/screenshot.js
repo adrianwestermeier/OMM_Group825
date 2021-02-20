@@ -2,32 +2,8 @@ var express = require('express');
 var fs = require("fs"), json;
 var router = express.Router();
 var path = require('path');
-var mongoClient = require('mongodb').MongoClient;
-// webshot is deprecated, therefor use webshot-node instead
 var webshot = require('webshot-node');
-
-var url = "mongodb://localhost:27017/";
-
-/* posts a new template to the template collection */
-async function postTemplateToDb(template) {
-    const client = await mongoClient.connect(url, { useNewUrlParser: true })
-          .catch(err => { console.log(err); });
-  
-    if (!client) {
-        return;
-    }
-  
-    try {
-      const db = client.db("meme-generator-db");
-      let collection = db.collection('templates');
-      await collection.insertOne(template);
-    } catch (err) {
-        console.log(err);
-    } finally {
-        client.close();
-        return "success"
-    }
-  }
+var database = require('./database');
 
 /**
  * POST to this url ('/screenshots/create') generates a screenshot file and responds with its relative path.
@@ -41,6 +17,7 @@ async function postTemplateToDb(template) {
  * if there was an error, the response also contains a "reason" property.
  */
 router.post('/create', function(req, res) {
+    const db = req.db;
     // define directory to save new template
     const screenshotsDirectory = './public/templates/';
 
@@ -89,7 +66,7 @@ router.post('/create', function(req, res) {
                   "name": fileName,
                 };
             
-                postTemplateToDb(newTemplate).then(() => {
+                database.postTemplateToDb(db, newTemplate).then(() => {
                   console.log("[screenshot] wrote new template to DB");
                   // send the response here.
                   res.json(responseJSON);
