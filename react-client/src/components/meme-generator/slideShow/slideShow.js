@@ -10,7 +10,9 @@ import DrawApp from './drawMeme';
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 import TemplateMeme from './templateMeme/templateMeme';
 
-// slide show for existing meme templates
+/**
+* class which renders the meme template and handles all the user-driven updates on it
+*/
 export default class SlideShow extends React.Component {
     constructor(props){
         super(props);
@@ -32,11 +34,13 @@ export default class SlideShow extends React.Component {
          };
     }
 
-    // get the meme templates from the express server
+    /**
+    * first get all the names of the templates 
+    * then get the meme templates from the express server by the names
+    */
     componentDidMount() {
         fetch('http://localhost:3005/images/getTemplateNames')
              .then(res => {
-                 console.log("[slideShow]" + res);
                  return res.json()
               })
              .then(templates => { 
@@ -44,12 +48,12 @@ export default class SlideShow extends React.Component {
                  this.setState({ 
                      localPictureNames: templates.templates,  // image array is wrapped in image json
                  })
-                 console.log("[slideShow]" + "after get template names")
                  this.state.localPictureNames.forEach(element => {
                      let url = 'http://localhost:3005/templates/' + element.name;
                      console.log("[slideShow]" + url)
                      axios.get(url, { responseType: 'arraybuffer' },
                      ).then(response => {
+                         // image data is base64 encoded
                          const base64 = btoa(
                              new Uint8Array(response.data).reduce(
                                  (data, byte) => data + String.fromCharCode(byte),
@@ -106,6 +110,7 @@ export default class SlideShow extends React.Component {
          }
      }
 
+     // choose a template out of the template overview
      onClickChooseTemplate(index){
 
         document.getElementById('draw-panel').style.display = "none";
@@ -120,50 +125,8 @@ export default class SlideShow extends React.Component {
 
          })
      }
- 
-     // save current meme template to the express server
-     saveOnServer() {
-         console.log("[slideShow]" + "image gets saved to server");
- 
-         let index = this.state.currentIndex;
-         let image = this.state.pictures[index];
-         const topText = this.props.topText;
-         const bottomText = this.props.bottomText;
- 
-         console.log("[slideShow]" + "topCaption: " + topText);
-         console.log("[slideShow]" + "image: " + bottomText);
- 
-         const payload = {
-             name: image.name,
-             url: image.url,
-             width: image.width,
-             height: image.height,
-             top_caption: topText,
-             middle_caption: null,
-             bottom_caption: bottomText
-         };
- 
-         fetch(`http://localhost:3005/generatedMemes/uploadGeneratedMeme`, 
-             {
-               method: 'POST',
-               headers: {'Content-Type': 'application/json'},
-               body: JSON.stringify( payload ),
-             })
-             .then(jsonResponse => jsonResponse.json()
-               .then(responseObject => {
-                   console.log("[slideShow]" + 'recieved answer for post request: ' + JSON.stringify( responseObject ));
-                   alert(JSON.stringify( responseObject.message ))
-                 })
-                 .catch(jsonParseError => {
-                   console.error(jsonParseError);
-                 })
-               ).catch(requestError => {
-                 console.error(requestError);
-               });
-     }
 
     onMemeCreated(memeCreated) {
-        console.log("[slideShow] return showpng: " + memeCreated);
         this.props.onMemeCreated(memeCreated);
     }
 
@@ -174,8 +137,10 @@ export default class SlideShow extends React.Component {
             if(this.state.drawMode) {
                 node = document.getElementById('draw-panel-canvas');
                 node.style.border = "none";
+                // inside htmlToImage we have to reference this as that
                 const that = this;
              
+                // convert html section as image
                 htmlToImage.toPng(node)
                 .then(function (dataUrl) {
                     var img = new Image();
@@ -202,6 +167,7 @@ export default class SlideShow extends React.Component {
                 node = document.getElementById('image-wrapper');
                 const that = this
              
+                // convert html section as image
                 htmlToImage.toPng(node)
                 .then(function (dataUrl) {
                     var img = new Image();
@@ -314,6 +280,7 @@ export default class SlideShow extends React.Component {
          });
      })
 
+     // save the created meme onto the express server
      saveMemeOnServer = () => {
         const image = this.state.png;
         const name = this.state.memeName;
@@ -396,6 +363,7 @@ export default class SlideShow extends React.Component {
            counter = <div><p>Template {currentIndex+1} of {this.state.pictures.length}</p></div>
         }
 
+        // define html section for overview
         const templates = this.state.pictures
         const allTemplates = templates.map(
             (t, index) => <img src={t.url} className="flex-img" onClick={() => this.onClickChooseTemplate(index)}></img>
@@ -431,8 +399,6 @@ export default class SlideShow extends React.Component {
                     </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
- 
-                {/* {counter} */}
  
                 <React.Fragment>
                     <div className="draw-panel" id="draw-panel">

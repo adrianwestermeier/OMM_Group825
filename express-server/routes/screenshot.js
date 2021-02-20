@@ -6,6 +6,7 @@ var webshot = require('webshot-node');
 var database = require('./database');
 
 /**
+ * this is taken mainly from https://github.com/mimuc/omm-ws2021/tree/master/06-christmas/ScreenshotApp
  * POST to this url ('/screenshots/create') generates a screenshot file and responds with its relative path.
  * example response
  * {

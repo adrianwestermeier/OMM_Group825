@@ -3,11 +3,14 @@ import './memeGenerator.css';
 import SlideShow from "./slideShow/slideShow";
 import InputsText from "./textEditor/textEditor";
 
-
-// class that renders all the meme generation functions
+/**
+* class that renders all the template generation functions
+*/
 export default class Generator extends React.Component {
     constructor(props){
         super(props);
+
+        // define the default top and bottom text attributes
         const topText = {
           index: 0,
           captionType: "top",
@@ -43,121 +46,103 @@ export default class Generator extends React.Component {
         };
     }
 
-    // create top and bottom text for a meme template
+    /**
+    * create top and bottom text for a meme template
+    */
     handleTextSubmit = (index, text) => {
       // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
       // get element at index and assign a new object with updated text to it
       newTexts[index] = {...newTexts[index], text: text};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
       // set state to updated text array
       this.setState({
         texts: newTexts,
       });  
     }
 
-
-    // update text positionss
+    /**
+    * update text positions
+    */
     increaseHorizontalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated horizontal position to it
       newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition + 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * update text positions
+    */
     decreaseHorizontalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated horizontal position to it
       newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition - 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * update text positions
+    */
     increaseVerticalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated vertical position to it
       newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition - 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * update text positions
+    */
     decreaseVerticalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated vertical position to it
       newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition + 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * change font-style to italic
+    */
     clickedItalic = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated italic to it
       newTexts[index] = {...newTexts[index], italic: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });  
     }
 
+    /**
+    * change font-weight to bold
+    */
     clickedBold = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated bold to it
       newTexts[index] = {...newTexts[index], bold: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       }); 
     }
 
+    /**
+    * change font-size
+    */
     changedSize = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated size to it
       newTexts[index] = {...newTexts[index], size: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       }); 
     }
 
+    /**
+    * change color
+    */
     changedColor = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated color to it
       newTexts[index] = {...newTexts[index], color: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
@@ -171,7 +156,6 @@ export default class Generator extends React.Component {
 
     handleTitleChange = (event) => {
       event.preventDefault();
-      console.log("[memeGenerator]" + event.target.name);
       let nam = event.target.name;
       let val = event.target.value;
       this.setState({[nam]: val});
@@ -186,6 +170,10 @@ export default class Generator extends React.Component {
       }
     }
 
+
+    /**
+    * function which adds a new text component to the layout
+    */
     addNewText = () => {
       let newTexts = [...this.state.texts];
       // create a new text field with default properties
@@ -209,8 +197,7 @@ export default class Generator extends React.Component {
     }
 
     render() {
-        console.log(this.props.user)
-      const inputTexts = <div>
+        const inputTexts = <div>
         {this.state.texts.map((text, i) => (
           <InputsText 
           key={i}
@@ -231,7 +218,6 @@ export default class Generator extends React.Component {
         ))}
       </div>
       
-
       return (
         <div className="home">
           <div className="meme-generator-wrapper">

@@ -46,11 +46,12 @@ To create a meme with your custom image (which you have saved under ROOT_TO_FILE
 {
     "text": YOUR_TEXT,
     "name": NAME,
+    "title": TITLE,
     "place": PLACE,
     "image": ROOT_TO_FILE/YOUR_FILE
 }
 ```
-where NAME is the name under which you want to save the meme (must not exist yet!) and PLACE is either "top" or "bottom".
+where NAME is the name under which you want to save the meme (must not exist yet!), TITLE is some title for it and PLACE is either "top" or "bottom".
 Send this json to http://localhost:3005/api/createMeme
 
 #### alternatively
@@ -60,6 +61,7 @@ In this case your json should look like this
 {
     "text": YOUR_TEXT,
     "name": NAME,
+    "title": TITLE,
     "place": PLACE,
     "template": NAME_OF_TEMPLATE
 }
@@ -68,23 +70,23 @@ In this case your json should look like this
 #### Example creation with command line using an image
 For top text:
 ```
-(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "place": "top", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
+(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
 curl -H "Content-Type: application/json" -d @-  http://localhost:3005/api/createMeme
 ```
 or for bottom text:
 ```
-(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "place": "bottom", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
+(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
 curl -H "Content-Type: application/json" -d @-  http://localhost:3005/api/createMeme
 ```
 
 #### Example creation with command line using an meme template name
 For top text:
 ```
-curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "place": "top", "template": "dog"}'  http://localhost:3005/api/createMeme
+curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "template": "dog"}'  http://localhost:3005/api/createMeme
 ```
 or for bottom text:
 ```
-curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
+curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
 ```
 
 ### Create a meme with multiple texts

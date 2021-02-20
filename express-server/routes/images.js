@@ -13,7 +13,9 @@ var corsOptions = {
   methods: "GET, PUT"
 }
 
-/* helper for downloading by url */
+/**
+ * helper for downloading by url
+ */
 const download_image = (url, image_path) =>
   axios({
     url,
@@ -27,13 +29,16 @@ const download_image = (url, image_path) =>
           .on('error', e => reject(e));
       }),
   );
-  
+
+/**
+ * download an image from an existing image url and save it to the db as well as to static template folder
+ */
 router.post('/createByUrl', function(req, res, next) {
   console.log('[images] create by url ', req.body);
   const db = req.db;
   
-  // e.g. https://i.imgflip.com/24y43o.jpg
   const name = req.body.name;
+  // e.g. https://i.imgflip.com/24y43o.jpg
   const templateUrl = req.body.url;
 
   let format;
@@ -47,6 +52,7 @@ router.post('/createByUrl', function(req, res, next) {
 
   const path = './public/templates/' + name + format;
 
+  // see if template with this name already exists in the db
   database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
@@ -57,6 +63,7 @@ router.post('/createByUrl', function(req, res, next) {
     } else {
       console.log("[images] no entry yet");
 
+      // download the image and post it to the db
       download_image(templateUrl, path).then(() => {
         console.log("[images] downloaded by url");
         var newTemplate = {
@@ -78,7 +85,9 @@ router.post('/createByUrl', function(req, res, next) {
 })
 
 
-/* save a created meme */
+/**
+ * get base64 encoded image, save it to db as well as to static memes folder
+ */
 router.post('/saveCreatedMeme', function(req, res) {
   const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
@@ -87,6 +96,7 @@ router.post('/saveCreatedMeme', function(req, res) {
   const user = req.body.user;
   const dir = "./public/memes/" + name;
 
+  // check if meme with this name already exists
   database.getEntry(db, name, 'generatedMemes').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
@@ -95,8 +105,9 @@ router.post('/saveCreatedMeme', function(req, res) {
         "message": "meme with name \"" + name + "\" already exists! Please rename your meme.",
       });
     } else {
-      console.log("[images] no entry");
+      console.log("[images] no entry yet");
       
+      // write file to folder
       fs.writeFile(dir, base64Data, 'base64', function(err) {
         if (err) {
           console.log('error in saving');
@@ -114,6 +125,7 @@ router.post('/saveCreatedMeme', function(req, res) {
 
         console.log(newMeme);
       
+        // post image to meme db
         database.postNewMemeToDb(db, newMeme).then(() => {
           console.log("[images] wrote new meme to DB");
           res.json({
@@ -126,13 +138,16 @@ router.post('/saveCreatedMeme', function(req, res) {
   });
 })
 
-/* save a created meme */
+/**
+ * get a base64 encoded user camera image, save it to the db as well as to static template file folder
+ */
 router.post('/saveTemplateSnapshot', function(req, res) {
   const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
   const name = req.body.name + '.png';
   const dir = "./public/templates/" + name;
 
+  // check if template with this name already exists
   database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
@@ -141,8 +156,9 @@ router.post('/saveTemplateSnapshot', function(req, res) {
         "message": "template with name \"" + name + "\" already exists! Please rename your template.",
       });
     } else {
-      console.log("[images] no entry");
+      console.log("[images] no entry yet");
       
+      // save file to folder
       fs.writeFile(dir, base64Data, 'base64', function(err) {
         if (err) {
           console.log('error in saving');
@@ -152,9 +168,8 @@ router.post('/saveTemplateSnapshot', function(req, res) {
         var newTemplate = {
           "name": name,
         };
-
-        console.log('posting template to db');
       
+        // save template to db
         database.postTemplateToDb(db, newTemplate).then(() => {
           console.log("[images] wrote new template to DB");
           res.json({
@@ -167,12 +182,11 @@ router.post('/saveTemplateSnapshot', function(req, res) {
   });
 })
 
-
-/* GET templates from local file storage. */
+/**
+ * get template names of all existing templates in the db
+ */
 router.get('/getTemplateNames', function(req, res, next) {
   const db = req.db;
-
-  console.log('get template name from Db');
 
   const templates = db.get('templates');
   templates.find({}, 'name').then((temps) => {
@@ -181,11 +195,12 @@ router.get('/getTemplateNames', function(req, res, next) {
       "templates": temps
     })
   })
-  console.log('sent templates');
 });
 
 
-/* POST a template file uploaded by the user. */
+/**
+ * save template file uploaded by the user to local file folder and post it to db 
+ */
 router.post('/uploadTemplate', function(req, res) {
   const db = req.db;
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -198,6 +213,7 @@ router.post('/uploadTemplate', function(req, res) {
   let name = req.files.userUploadFile.name;
   console.log("[images] name = " + name);
 
+  // check if template with this name already exists
   database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
@@ -207,7 +223,7 @@ router.post('/uploadTemplate', function(req, res) {
       });
     } else {
       console.log("[images] no entry");
-      // Use the mv() method to place the file somewhere on your server
+      // Use the mv() method to place the file on the server
       const newName = './public/templates/' + name;
       sampleFile.mv(newName, function(err) {
         if (err) {
@@ -219,6 +235,7 @@ router.post('/uploadTemplate', function(req, res) {
           "name": name,
         };
       
+        // post the tempalte to the db
         database.postTemplateToDb(db, newTemplate).then(() => {
           console.log("[images] wrote new template to DB");
           res.json({

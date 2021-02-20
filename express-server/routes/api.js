@@ -6,6 +6,7 @@ var jimp = require('jimp');
 var zipFolder = require('zip-folder');
 var path = require('path');
 const { text } = require('express');
+var database = require('./database');
 
 // helper function for printing one text to image
 async function jimper(data, text, top, path, hasImage) {
@@ -21,9 +22,7 @@ async function jimper(data, text, top, path, hasImage) {
   const font = await jimp.loadFont(jimp.FONT_SANS_64_BLACK);
 
   let w = image.bitmap.width; //  width of the image
-  let h = image.bitmap.height;
-
-  // image.print(font, 10, 10, 'Hello World!');
+  let h = image.bitmap.height; // height of the image
 
   if(top) {
     // Print text to image
@@ -85,6 +84,7 @@ async function jimperExtended(data, texts, path, hasImage) {
     // Load the font
     let font;
 
+    // user chooses the font
     if(text.color === "black") {
       switch (text.size)
       {
@@ -140,10 +140,24 @@ async function jimperExtended(data, texts, path, hasImage) {
   }
 }
 
+
+/*
+* create a meme with top or bottom text
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "text": TEXT,
+    "name": NAME,
+    "place": PLACE,
+    "image": ROOT_TO_FILE
+  }
+  responds with the url under which the meme can be downloaded or with an error message
+*/
 router.post('/createMeme', function(req, res) {
+    const db = req.db;
     const text = req.body.text;
     const name = req.body.name;
     const place = req.body.place;
+    const title = req.body.title;
     const path = './public/memes/' + name + '.png';
     let isTop;
     let data;
@@ -162,9 +176,21 @@ router.post('/createMeme', function(req, res) {
     }
     jimper(data, text, isTop, path, hasImage).then((result)=>{
         if(result === "success") {
-            res.json({
+            const newMeme = {
+              "name": name + ".png",
+              "title": title,
+              "upVotes": 0,
+              "downVotes": 0,
+              "upMinusDownVotes": [0]
+            };
+
+            // post image to meme db
+            database.postNewMemeToDb(db, newMeme).then(() => {
+              console.log("[api] wrote new meme to DB");
+              res.json({
                 "code": 201,
                 "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
+              });
             });
         } else {
             res.json({
@@ -196,7 +222,7 @@ router.post('/createMeme', function(req, res) {
   responds with the url under which the meme can be downloaded or with an error message
 */
 router.post('/createMemeMultipleTexts', function(req, res) {
-
+  const db = req.db;
   const texts = req.body.texts;
   const name = req.body.name;
   const title = req.body.title;
@@ -219,10 +245,22 @@ router.post('/createMemeMultipleTexts', function(req, res) {
 
   jimperExtended(data, texts, path, hasImage).then((result)=>{
       if(result === "success") {
+        const newMeme = {
+          "name": name + ".png",
+          "title": title,
+          "upVotes": 0,
+          "downVotes": 0,
+          "upMinusDownVotes": [0]
+        };
+
+        // post image to meme db
+        database.postNewMemeToDb(db, newMeme).then(() => {
+          console.log("[api] wrote new meme to DB");
           res.json({
-              "code": 201,
-              "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
+            "code": 201,
+            "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
           });
+        });
       } else {
           res.json({
               "code": 501,

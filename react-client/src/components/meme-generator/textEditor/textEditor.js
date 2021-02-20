@@ -3,7 +3,9 @@ import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillC
 import { SketchPicker, CompactPicker } from 'react-color';
 import './textEditor.css'
 
-// Inputs for the top and bottom texts
+/**
+* class that handles all the text editing on the templates
+*/
 export default class InputsText extends React.Component {
     constructor(props) {
         super(props);
@@ -85,7 +87,6 @@ export default class InputsText extends React.Component {
     }
 
     handleChangeComplete = (color) => {
-      console.log(color.hex);
       this.props.changedColor(this.props.index, color.hex);
     };
 

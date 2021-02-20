@@ -1,11 +1,13 @@
 module.exports = {
 
+/* posts a new user to the user collection */
 postUserToDb: async function(db, user) {
     const users = db.get('users');
     const myUser = await users.insert(user);
     return myUser;
 },
-  
+
+/* gets all users from the user collection */
 getUsersFromDb: async function(db){
     const users = db.get('users');
     const myUsers = await users.find({});

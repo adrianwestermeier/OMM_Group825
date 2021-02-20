@@ -1,7 +1,9 @@
 import React from 'react';
 import './templateMeme.css'
 
-// Meme template with top and bottom caption
+/**
+* Meme template class that renders the template together with the texts on it
+*/
 export default class TemplateMeme extends React.Component {
     constructor(props){
         super(props);
@@ -9,6 +11,7 @@ export default class TemplateMeme extends React.Component {
     render() {
         let textsWithStyle = [];
 
+        // define the css styles for all the texts on the template
         for (const text of this.props.texts) {
             let textWithStyle = {
                 text: "",
