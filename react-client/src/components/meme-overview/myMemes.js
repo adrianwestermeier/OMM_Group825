@@ -1,10 +1,12 @@
 import React from 'react';
 import axios from "axios";
+import Grid from "./GridView";
 
 export default class MyMemes extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
+            memes: [],
             user: this.props.user,
             users: [],
             myMemes: [],
@@ -12,7 +14,24 @@ export default class MyMemes extends React.Component{
     }
 
     getMyMemes(){
-        console.log(this.state.memes)
+        const memes = this.state.memes
+        const user = this.state.user
+        let meme = null
+        let myMemes = []
+
+        console.log(memes)    // TODO: warum haben die memes hier eine url
+        console.log(memes[1]) // TODO: hier aber nicht mehr
+
+        for(let i=0; i<memes.length; i++){
+
+            if(memes[i].user === user){
+                meme = memes[i]
+                myMemes.push(meme)
+                this.setState({
+                    myMemes: myMemes
+                })
+            }
+        }
 
     }
 
@@ -21,7 +40,7 @@ export default class MyMemes extends React.Component{
     }
 
     getMemesFromDb() {
-        console.log('getMemesFromDb')
+
         // get the memes from the express server
         fetch('/generatedMemes/getMemeData')
             .then(res => {
@@ -63,7 +82,7 @@ export default class MyMemes extends React.Component{
                     });
                 }, memesCopy); // use memesCopy as this
             }).then(
-            () => {this.getMyMemes()}
+                () => {this.getMyMemes()}
         );
     }
 
@@ -71,7 +90,10 @@ export default class MyMemes extends React.Component{
         return(
             <div>
                 <h1>My Memes</h1>
-                <button onClick={()=>{this.getMyMemes()}}>getMyMemes</button>
+                <Grid
+                    memes={this.state.myMemes}
+                    getMemes={() => {this.getMemesFromDb()}}
+                />
             </div>
         )
     }

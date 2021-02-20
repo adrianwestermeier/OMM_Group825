@@ -92,7 +92,6 @@ class LogInForm extends React.Component{
                 />
                 <br/>
                 <TextField
-                    autoFocus
                     margin="dense"
                     id="password"
                     label="password"
