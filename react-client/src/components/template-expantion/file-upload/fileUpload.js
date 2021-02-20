@@ -37,7 +37,7 @@ export default class FileUpload extends React.Component {
         formData.append("userUploadFile", file);
       
         axios.post(
-          "http://localhost:3000/images/uploadTemplate", 
+          "http://localhost:3005/images/uploadTemplate", 
           formData,
           {headers:{"Content-Type" : 'multipart/form-data'}}
         ).then((res) => {
