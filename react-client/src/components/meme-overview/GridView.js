@@ -14,7 +14,10 @@ export default class Grid extends React.Component{
         const items = [];       //this array later will contain all the elements to be shown in the overview
         let memes = this.props.memes
         for (let i = 0; i < memes.length; i++) {
+            const id = this.props.memes[i]._id
+
             items.push(<OverviewElem
+                key={id}
                 className="gridItem"
                 meme={memes[i]}
                 getMemes={() => {this.getMemesFromDb()}}
