@@ -159,6 +159,7 @@ router.post('/createMeme', function(req, res) {
     const place = req.body.place;
     const title = req.body.title;
     const path = './public/memes/' + name + '.png';
+    const template = req.body.template;
     let isTop;
     let data;
     let hasImage;
@@ -179,6 +180,8 @@ router.post('/createMeme', function(req, res) {
             const newMeme = {
               "name": name + ".png",
               "title": title,
+              "template": template,
+              "date": new Date(),
               "upVotes": 0,
               "downVotes": 0,
               "upMinusDownVotes": [0]
@@ -227,6 +230,7 @@ router.post('/createMemeMultipleTexts', function(req, res) {
   const name = req.body.name;
   const title = req.body.title;
   const path = './public/memes/' + name + '.png';
+  const template = req.body.template;
 
   console.log("[api] texts: " + texts);
   console.log("[api] name: " + name);
@@ -248,6 +252,8 @@ router.post('/createMemeMultipleTexts', function(req, res) {
         const newMeme = {
           "name": name + ".png",
           "title": title,
+          "template": template,
+          "date": new Date(),
           "upVotes": 0,
           "downVotes": 0,
           "upMinusDownVotes": [0]

@@ -21,6 +21,8 @@ router.get('/getMemeData', function(req, res, next) {
         const nextMeme = {
             name: el.name,
             title: el.title,
+            template: el.template,
+            date: el.date,
             user: el.user,
             upVotes: el.upVotes,
             downVotes: el.downVotes,
