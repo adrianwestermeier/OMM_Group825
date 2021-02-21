@@ -68,6 +68,7 @@ export default class SlideShow extends React.Component {
                                      topText: "",
                                      bottomText: "",
                                      title: "",
+                                     template: element.name.slice(0,-4),
                                     };
                                     newPictures = newPictures.concat(newImage);
                                     this.setState({
@@ -269,6 +270,7 @@ export default class SlideShow extends React.Component {
                     topText: "",
                     bottomText: "",
                     title: "",
+                    template: element.name,
                 };
                 newPictures = newPictures.concat(newImage);
                 this.setState({
@@ -286,6 +288,13 @@ export default class SlideShow extends React.Component {
         const name = this.state.memeName;
         const title = this.props.title;
         const user = this.props.user
+        let index = this.state.currentIndex;
+        let template;
+        if(this.state.drawMode === false){
+            template = this.state.pictures[index].template;
+        }else{
+            template = 'drawing';
+        }
 
         if(!name || !title) {
             alert("please enter a meme name and a title!");
@@ -303,6 +312,7 @@ export default class SlideShow extends React.Component {
               name: name,
               title: title,
               user: user,
+              template: template,
             })
           }).then(jsonResponse => jsonResponse.json()
                 .then(responseObject => {
@@ -345,10 +355,12 @@ export default class SlideShow extends React.Component {
         const currentIndex = this.state.currentIndex;
 
         let url;
+        let template;
         let isImageFlip;
         if(this.state.pictures.length > currentIndex) {
             url = this.state.pictures[currentIndex].url;
             isImageFlip = this.state.pictures[currentIndex].imgflip;
+            template = this.state.pictures[currentIndex].template;
         } else {
             url = ""
         }
