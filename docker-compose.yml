@@ -1,0 +1,30 @@
+version: "2"
+services:
+    mongo:
+      image: "mongo:latest"
+      ports:
+        - "27017:27017"
+    api:
+      build:
+        context: ./express-server
+        dockerfile: Dockerfile
+      environment:
+        - MONGO_URI=mongo:27017
+      ports:
+        - "3005:3005"
+      links:
+        - mongo
+    client:
+      build:
+        context: ./react-client
+        dockerfile: Dockerfile
+      ports:
+        - "3000:3000"
+      links:
+        - api
+    dataimport:
+        build:
+          context: ./datagenerator
+          dockerfile: Dockerfile
+        links:
+          - mongo

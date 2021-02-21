@@ -51,7 +51,7 @@ class LogInForm extends React.Component{
     * */
     getUsers() {
         // get the memes from the express server
-        fetch('/users/getUsers')
+        fetch('http://localhost:3005/users/getUsers')
             .then(res => {
                 return res.json()
             })
