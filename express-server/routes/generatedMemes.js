@@ -24,7 +24,8 @@ router.get('/getMemeData', function(req, res, next) {
             user: el.user,
             upVotes: el.upVotes,
             downVotes: el.downVotes,
-            upMinusDownVotes: el.upMinusDownVotes
+            upMinusDownVotes: el.upMinusDownVotes,
+            isPrivate: el.isPrivate
         }
         myMemes.push(nextMeme);
       })

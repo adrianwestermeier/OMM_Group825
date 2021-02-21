@@ -3,12 +3,13 @@ import axios from 'axios';
 import arrowBack from '../../img/arrow_back-black-18dp.svg';
 import arrowForward from '../../img/arrow_forward-black-18dp.svg';
 import './../memeGenerator.css';
-import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+import {exportComponentAsPNG } from 'react-component-export-image';
 import * as htmlToImage from 'html-to-image';
 import './slideShow.css';
 import DrawApp from './drawMeme';
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 import TemplateMeme from './templateMeme/templateMeme';
+import {Checkbox, FormControlLabel} from "@material-ui/core";
 
 /**
 * class which renders the meme template and handles all the user-driven updates on it
@@ -31,6 +32,7 @@ export default class SlideShow extends React.Component {
             gotImageFlipPictures: false,
             icon: <BsChevronRight/>,
             expanded: false,
+            isPrivate: false
          };
     }
 
@@ -286,6 +288,7 @@ export default class SlideShow extends React.Component {
         const name = this.state.memeName;
         const title = this.props.title;
         const user = this.props.user
+        const isPrivate = this.state.isPrivate
 
         if(!name || !title) {
             alert("please enter a meme name and a title!");
@@ -303,6 +306,7 @@ export default class SlideShow extends React.Component {
               name: name,
               title: title,
               user: user,
+              isPrivate: isPrivate
             })
           }).then(jsonResponse => jsonResponse.json()
                 .then(responseObject => {
@@ -339,9 +343,15 @@ export default class SlideShow extends React.Component {
           })
         }
       }
+
+    handleMarkPrivate(){
+        this.setState({
+            isPrivate: !this.state.isPrivate
+        })
+        console.log(this.state.isPrivate)
+    }
  
      render() {
-        console.log(this.props.user)
         const currentIndex = this.state.currentIndex;
 
         let url;
@@ -425,6 +435,11 @@ export default class SlideShow extends React.Component {
                    <button onClick={() => exportComponentAsPNG(this.componentRef)}>
                        Download As PNG
                    </button>
+                    <FormControlLabel
+                        control={<Checkbox onChange={() => {this.handleMarkPrivate()}} name="checkedA" />}
+                        label="mark private"
+                    />
+
                 </div>
                 <div>
                    <img src={createdImage} ref={this.componentRef}/>

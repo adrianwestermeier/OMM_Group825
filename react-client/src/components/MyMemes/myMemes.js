@@ -13,6 +13,9 @@ export default class MyMemes extends React.Component{
         }
     }
 
+    /*
+    * This function filter for all memes owned by the user logged in
+    * */
     getMyMemes(){
         const memes = [...this.state.memes];
         const user = this.state.user

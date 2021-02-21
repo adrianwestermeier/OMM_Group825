@@ -13,12 +13,35 @@ class MemeOverview extends React.Component {
         this.state = {
             memes: [],
             isSingleView: true,
-            user: this.props.user
+            user: this.props.user,
+            filterPrivate: []
         };
     }
 
     componentDidMount() {
         this.getMemesFromDb()
+    }
+
+    /*
+    * this function filters out all memes marked as private
+    * */
+    filterPrivateMemes(){
+        const memes = [...this.state.memes];
+        let meme = null
+        let filterPrivate = []
+
+        for(let i=0; i<memes.length; i++){
+
+            if(!memes[i].isPrivate){
+                meme = memes[i]
+                filterPrivate.push(meme)
+                this.setState({
+                    filterPrivate: filterPrivate
+                })
+            }
+        }
+        console.log(this.state.filterPrivate)
+
     }
 
     /*
@@ -63,6 +86,7 @@ class MemeOverview extends React.Component {
                         newMemes[index] = meme;
                         // Update state
                         that.setState({memes: newMemes});
+                        that.filterPrivateMemes()
                     });      
                 }, memesCopy); // use memesCopy as this
             });
@@ -87,7 +111,7 @@ class MemeOverview extends React.Component {
                 />
                 <SwitchView
                     isSingleView={this.state.isSingleView}
-                    memes={this.state.memes}
+                    memes={this.state.filterPrivate}
                     getMemes={() => {this.getMemesFromDb()}}
                 />
             </div>

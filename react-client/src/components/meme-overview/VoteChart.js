@@ -8,8 +8,6 @@ export default class VoteChart extends React.Component{
 
     render(){
         const memes = this.props.memes
-        console.log(this.props.memes)
-        console.log(this.props.i)
 
         let data = [
             ['x', 'votes'],
