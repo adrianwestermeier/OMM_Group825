@@ -31,6 +31,7 @@ export default class OverviewElem extends React.Component {
             name: meme.name,
             title: meme.title,
             user: meme.user,
+            template: meme.template,
             upVotes: upVotes,
             downVotes: downVotes,
             upMinusDownVotes: upMinusDown
