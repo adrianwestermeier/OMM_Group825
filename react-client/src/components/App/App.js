@@ -8,7 +8,7 @@ import LogInForm from "../LogInForm/LogInForm";
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
-import MyMemes from "../meme-overview/myMemes";
+import MyMemes from "../MyMemes/myMemes";
 
 class LogInPage extends React.Component{
   logIn = (user) => {

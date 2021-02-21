@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from "axios";
-import Grid from "./GridView";
+import MyMemesElem from "./MyMemesElem";
 
 export default class MyMemes extends React.Component{
     constructor(props) {
@@ -18,9 +18,6 @@ export default class MyMemes extends React.Component{
         const user = this.state.user
         let meme = null
         let myMemes = []
-
-        console.log(memes)    // TODO: warum haben die memes hier eine url
-        console.log(memes[1]) // TODO: hier aber nicht mehr
 
         for(let i=0; i<memes.length; i++){
 
@@ -87,13 +84,21 @@ export default class MyMemes extends React.Component{
     }
 
     render(){
+        const items = [];       //this array later will contain all the elements to be shown in the overview
+        let memes = this.state.myMemes
+        for (let i = 0; i < memes.length; i++) {
+            items.push(<MyMemesElem
+                className="gridItem"
+                meme={memes[i]}
+                getMemes={() => {this.getMemesFromDb()}}
+            />)
+        }
         return(
             <div>
                 <h1>My Memes</h1>
-                <Grid
-                    memes={this.state.myMemes}
-                    getMemes={() => {this.getMemesFromDb()}}
-                />
+                <div>
+                    {items}
+                </div>
             </div>
         )
     }
