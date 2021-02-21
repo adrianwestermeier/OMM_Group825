@@ -1,0 +1,6 @@
+[
+    { "_id" : "1", "name" : "new.png", "title" : "safsafsad", "upVotes" : 0, "downVotes" : 0, "upMinusDownVotes" : [ 0 ] },
+    { "_id" : "2", "name" : "work.png", "title" : "work", "upVotes" : 0, "downVotes" : 0, "upMinusDownVotes" : [ 0 ] },
+    { "_id" : "3", "name" : "test.png", "title" : "hey", "user" : "adrian", "upVotes" : 0, "downVotes" : 0, "upMinusDownVotes" : [ 0 ] },
+    { "_id" : "4", "name" : "test2.png", "title" : "sadfasf", "user" : "adrian", "upVotes" : 0, "downVotes" : 0, "upMinusDownVotes" : [ 0 ] }
+]

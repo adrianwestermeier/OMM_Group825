@@ -3,11 +3,14 @@ import './memeGenerator.css';
 import SlideShow from "./slideShow/slideShow";
 import InputsText from "./textEditor/textEditor";
 
-
-// class that renders all the meme generation functions
+/**
+* class that renders all the template generation functions
+*/
 export default class Generator extends React.Component {
     constructor(props){
         super(props);
+
+        // define the default top and bottom text attributes
         const topText = {
           index: 0,
           captionType: "top",
@@ -40,208 +43,109 @@ export default class Generator extends React.Component {
   
         this.state = {
           texts: newTexts,
-            // topText: "",
-            // bottomText: "",
-            // topTextVerticalPosition: 0,
-            // topTextHorizontalPosition: 100,
-            // bottomTextVerticalPosition: 0,
-            // bottomTextHorizontalPosition: 100,
-            // topSize: 18,
-            // bottomSize: 18,
-            // topColor: "black",
-            // bottomColor: "black",
-
         };
     }
 
-    // create top and bottom text for a meme template
+    /**
+    * create top and bottom text for a meme template
+    */
     handleTextSubmit = (index, text) => {
       // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
       // get element at index and assign a new object with updated text to it
       newTexts[index] = {...newTexts[index], text: text};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
       // set state to updated text array
       this.setState({
         texts: newTexts,
       });  
     }
 
-
-    // update text positionss
+    /**
+    * update text positions
+    */
     increaseHorizontalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated horizontal position to it
       newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition + 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * update text positions
+    */
     decreaseHorizontalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated horizontal position to it
       newTexts[index] = {...newTexts[index], horizontalPosition: newTexts[index].horizontalPosition - 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
     }
 
+    /**
+    * update text positions
+    */
     increaseVerticalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated vertical position to it
       newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition - 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
-      // if(pos==="top") {
-      //   let newPositionValue = this.state.topTextVerticalPosition
-      //   newPositionValue -= 5;
-        
-      //     this.setState({
-      //       topTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // } else {
-      //   let newPositionValue = this.state.bottomTextVerticalPosition
-      //   newPositionValue += 5;
-        
-      //     this.setState({
-      //       bottomTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // }
     }
 
+    /**
+    * update text positions
+    */
     decreaseVerticalPosition = (index) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated vertical position to it
       newTexts[index] = {...newTexts[index], verticalPosition: newTexts[index].verticalPosition + 2};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });
-      // if(pos==="top") {
-      //   let newPositionValue = this.state.topTextVerticalPosition
-      //   newPositionValue += 5;
-        
-      //     this.setState({
-      //       topTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // } else {
-      //   let newPositionValue = this.state.bottomTextVerticalPosition
-      //   newPositionValue -= 5;
-        
-      //     this.setState({
-      //       bottomTextVerticalPosition: newPositionValue,
-      //     })
-        
-      // }
     }
 
+    /**
+    * change font-style to italic
+    */
     clickedItalic = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated italic to it
       newTexts[index] = {...newTexts[index], italic: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       });  
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topItalic: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomItalic: val,
-      //   });
-      // }
     }
 
+    /**
+    * change font-weight to bold
+    */
     clickedBold = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated bold to it
       newTexts[index] = {...newTexts[index], bold: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topBold: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomBold: val,
-      //   });
-      // }
     }
 
+    /**
+    * change font-size
+    */
     changedSize = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated size to it
       newTexts[index] = {...newTexts[index], size: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
       }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topSize: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomSize: val,
-      //   });
-      // }
     }
 
+    /**
+    * change color
+    */
     changedColor = (index, val) => {
-      // copy state to omit changing state directly
       let newTexts = [...this.state.texts];
-      // get element at index and assign a new object with updated color to it
       newTexts[index] = {...newTexts[index], color: val};
-      console.log('[memeGenerator] updated texts: ');
-      console.log(newTexts);
-      // set state to updated text array
       this.setState({
         texts: newTexts,
-      }); 
-      // if(captionType==="top") {
-      //   this.setState({
-      //     topColor: val,
-      //   });
-      // } else {
-      //   this.setState({
-      //     bottomColor: val,
-      //   });
-      // }
+      });
     }
 
     handleTitleSubmit = (event) => {
@@ -252,7 +156,6 @@ export default class Generator extends React.Component {
 
     handleTitleChange = (event) => {
       event.preventDefault();
-      console.log("[memeGenerator]" + event.target.name);
       let nam = event.target.name;
       let val = event.target.value;
       this.setState({[nam]: val});
@@ -267,6 +170,10 @@ export default class Generator extends React.Component {
       }
     }
 
+
+    /**
+    * function which adds a new text component to the layout
+    */
     addNewText = () => {
       let newTexts = [...this.state.texts];
       // create a new text field with default properties
@@ -290,8 +197,7 @@ export default class Generator extends React.Component {
     }
 
     render() {
-        console.log(this.props.user)
-      const inputTexts = <div>
+        const inputTexts = <div>
         {this.state.texts.map((text, i) => (
           <InputsText 
           key={i}
@@ -312,29 +218,10 @@ export default class Generator extends React.Component {
         ))}
       </div>
       
-
       return (
         <div className="home">
           <div className="meme-generator-wrapper">
             <div className="slide-show-section">              
-                {/* <SlideShow 
-                  title={this.state.submitTitle}
-                  topText={this.state.topText} 
-                  bottomText={this.state.bottomText}
-                  topItalic={this.state.topItalic}
-                  bottomItalic={this.state.bottomItalic}
-                  topBold={this.state.topBold}
-                  bottomBold={this.state.bottomBold}
-                  topSize={this.state.topSize}
-                  bottomSize={this.state.bottomSize}
-                  topColor={this.state.topColor}
-                  bottomColor={this.state.bottomColor}
-                  topTextVerticalPosition={this.state.topTextVerticalPosition}
-                  topTextHorizontalPosition={this.state.topTextHorizontalPosition}
-                  bottomTextVerticalPosition={this.state.bottomTextVerticalPosition}
-                  bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
-                  onMemeCreated={this.onMemeCreated}
-                />   */}
                 <SlideShow 
                   title={this.state.submitTitle}
                   texts={this.state.texts}

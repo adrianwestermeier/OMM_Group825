@@ -58,7 +58,7 @@ class RegisterDialog extends React.Component{
         })
 
         // post the new user ti the db
-        fetch(`/users/postUser`, {
+        fetch(`http://localhost:3005/users/postUser`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -69,13 +69,11 @@ class RegisterDialog extends React.Component{
                 password: this.state.password,
 
             })
-        }).then(
-            () => {
-                this.getUsers() // after getting the responses from the backend reload the users
-            }
-        ).then(jsonResponse => jsonResponse.json()
+        })
+        .then(jsonResponse => jsonResponse.json()
             .then(responseObject => {
                 alert(JSON.stringify( responseObject.message ))
+                this.getUsers() // after getting the responses from the backend reload the users
             })
             .catch(jsonParseError => {
                 console.error(jsonParseError);

@@ -17,6 +17,7 @@
     "jade": "~1.11.0",
     "jimp": "^0.16.1",
     "mongodb": "^3.6.3",
+    "monk": "^7.3.3",
     "morgan": "~1.9.1",
     "use-react-screenshot": "^1.0.2",
     "webshot-node": "^0.18.2",

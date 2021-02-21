@@ -7,6 +7,12 @@ let logger = require('morgan');
 let cors = require('cors');
 const fileUpload = require('express-fileupload');
 
+// if the environment parameter MONGO_URI is set use that (for Docker), otherwise localhost
+const MONGO_URI = process.env.MONGO_URI || "localhost:27017";
+console.log('MONGO_URI: '+ MONGO_URI)
+// connect to database
+const db = require('monk')(MONGO_URI+'/meme-generator-db'); 
+
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let apiRouter = require('./routes/api');
@@ -21,32 +27,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(fileUpload());
-
-/* app.use(bodyParser.json()); */
 app.use(logger('dev'));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json({limit: '50mb'}));
-// app.use(express.urlencoded({limit: '50mb'}));
+// set high limits to be able to send images
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 app.use(cookieParser());
+// allow cors for all clients
 app.use(cors())
 app.options('*', cors())
 app.use(express.static(path.join(__dirname, 'public')));
-/* 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+// set the db for global access in the routes
+app.use(function(req,res,next){  
+  req.db = db;
   next();
-}); */
+});
 
-
-/* app.options('/images/handle', cors()) // enable pre-flight request for DELETE request */
- 
-
-
+// define routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter);
