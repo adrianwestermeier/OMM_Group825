@@ -9,6 +9,7 @@ import LogInForm from "../LogInForm/LogInForm";
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
 import MyMemes from "../MyMemes/myMemes";
+import SpeechToText from "../speechToText/speechToText";
 
 class LogInPage extends React.Component{
   logIn = (user) => {
@@ -41,6 +42,8 @@ class App extends React.Component {
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
               <li><Link to="/myMemes" className="menu-link">MyMemes</Link></li>
+              <li><Link to="/speechToText" className="menu-link">speech To Text</Link></li>
+
             {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
           </ul>
         </nav>
@@ -58,6 +61,11 @@ class App extends React.Component {
                       user={this.props.user}
                   />
               </Route>
+              <Route path="/speechToText">
+                  <SpeechToText
+                  />
+              </Route>
+
             <Route path="/expand">
               <Expander />
             </Route>
