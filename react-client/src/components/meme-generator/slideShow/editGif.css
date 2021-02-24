@@ -1,0 +1,13 @@
+.edit-gif-canvas {
+    border:1px solid black;
+    width: 600px;
+}
+
+figure {
+    width: 100%;
+    margin: 0 auto;
+}
+
+figcaption {
+    text-align: center;
+}
