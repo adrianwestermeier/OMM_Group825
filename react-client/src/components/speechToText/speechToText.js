@@ -1,10 +1,35 @@
 import React, { Component } from "react";
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition'
+import {TextField} from "@material-ui/core";
 
 class SpokenCaption extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            caption: this.props.text,
+            text: ''
+        }
+    }
+
+    test(){
+        console.log(this.state.text)
+    }
+
     render(){
         return(
             <div>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="username"
+                    type="string"
+                    width="200"
+                    variant="outlined"
+                    value={this.props.text}
+                    onChange={e => {this.setState({text: e.target.value})}}
+                />
+                <button onClick={() => {this.test()}}>print</button>
                 {this.props.text}
             </div>
         )
@@ -20,22 +45,11 @@ const SpeechToText = () => {
             return null
         }
 
-        const startListening = () => {
-            SpeechRecognition.startListening()
-        };
-
-        const stopListening = () => {
-            caption = transcript
-            SpeechRecognition.stopListening()
-            console.log(caption)
-        }
-
         return(
             <div>
-                    <button onClick={startListening}>Start</button>
-                    <button onClick={stopListening}>Stop</button>
-                    <button onClick={resetTranscript}>Reset</button>
-                    <p>{transcript}</p>
+                <button onClick={SpeechRecognition.startListening}>Start</button>
+                <button onClick={SpeechRecognition.stopListening}>Stop</button>
+                <button onClick={resetTranscript}>Reset</button>
                 <SpokenCaption
                     text={transcript}
                 />

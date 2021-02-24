@@ -2,6 +2,7 @@ import React from 'react';
 import './memeGenerator.css';
 import SlideShow from "./slideShow/slideShow";
 import InputsText from "./textEditor/textEditor";
+import SpeechToText from "./textEditor/textEditor";
 
 /**
 * class that renders all the template generation functions
@@ -199,22 +200,22 @@ export default class Generator extends React.Component {
     render() {
         const inputTexts = <div>
         {this.state.texts.map((text, i) => (
-          <InputsText 
-          key={i}
-          index={text.index}
-          captionType={text.captionType}
-          heading={text.heading}
-          placeholder={text.placeholder}
-          textSubmitHandle={this.handleTextSubmit}
-          increaseHorizontalPosition={this.increaseHorizontalPosition}
-          decreaseHorizontalPosition={this.decreaseHorizontalPosition}
-          increaseVerticalPosition={this.increaseVerticalPosition}
-          decreaseVerticalPosition={this.decreaseVerticalPosition}
-          clickedItalic={this.clickedItalic}
-          clickedBold={this.clickedBold}
-          changedSize={this.changedSize}
-          changedColor={this.changedColor}
-          />
+            <SpeechToText
+                key={i}
+                index={text.index}
+                captionType={text.captionType}
+                heading={text.heading}
+                placeholder={text.placeholder}
+                textSubmitHandle={this.handleTextSubmit}
+                increaseHorizontalPosition={this.increaseHorizontalPosition}
+                decreaseHorizontalPosition={this.decreaseHorizontalPosition}
+                increaseVerticalPosition={this.increaseVerticalPosition}
+                decreaseVerticalPosition={this.decreaseVerticalPosition}
+                clickedItalic={this.clickedItalic}
+                clickedBold={this.clickedBold}
+                changedSize={this.changedSize}
+                changedColor={this.changedColor}
+            />
         ))}
       </div>
       

@@ -2,11 +2,52 @@ import React from 'react';
 import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillCaretUpFill } from "react-icons/bs";
 import { SketchPicker, CompactPicker } from 'react-color';
 import './textEditor.css'
+import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
+
+
+
+const SpeechToText = (props) => {
+
+    const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+    let caption = ''
+
+    if (!browserSupportsSpeechRecognition) {
+        return null
+    }
+
+
+
+    return(
+        <div>
+            <button onClick={SpeechRecognition.startListening}>Start</button>
+            <button onClick={SpeechRecognition.stopListening}>Stop</button>
+            <button onClick={resetTranscript}>Reset</button>
+            <InputsText
+                key={props.key}
+                index={props.index}
+                captionType={props.captionType}
+                heading={props.heading}
+                placeholder={props.placeholder}
+                textSubmitHandle={props.textSubmitHandle}
+                increaseHorizontalPosition={props.increaseHorizontalPosition}
+                decreaseHorizontalPosition={props.decreaseHorizontalPosition}
+                increaseVerticalPosition={props.increaseVerticalPosition}
+                decreaseVerticalPosition={props.decreaseVerticalPosition}
+                clickedItalic={props.clickedItalic}
+                clickedBold={props.clickedBold}
+                changedSize={props.changedSize}
+                changedColor={props.changedColor}
+                text={transcript}
+            />
+        </div>
+    )
+
+}
 
 /**
 * class that handles all the text editing on the templates
 */
-export default class InputsText extends React.Component {
+class InputsText extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -96,7 +137,20 @@ export default class InputsText extends React.Component {
               <h3 className="form-header">{this.props.heading} (only available for templates) text {this.props.index}</h3>
                 <div className="inputs-text-button-group">
                   <form className="input-form" onSubmit={this.handleSubmit}>
-                    <textarea className="input-text" placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
+                    <textarea
+                        className="input-text"
+                        placeholder={this.props.placeholder}
+                        name="topText"
+                        onChange={this.handleClick}
+                        rows="2" cols="50"
+                        //value={this.props.text}
+                        /*
+                        * Wenn die obere Zeile einkommentiert wird, erscheint der gesprochenen text in dem Textfeld,
+                        * allerdings kann dann kein Text mehr händisch eingegeben werden und der gesprochene Text erscheint auch
+                        * nicht auf dem Meme, wenn man den Submit button drückt.
+                        * Außerdem erscheint der gesprochene Text in beiden Texatfeldern.
+                        * */
+                    />
                     <button type="submit">Submit</button>
                   </form>
                   <div className="text-styling-wrapper">
@@ -126,3 +180,5 @@ export default class InputsText extends React.Component {
         )
     }
 }
+
+export default SpeechToText;
