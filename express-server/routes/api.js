@@ -355,7 +355,7 @@ router.post('/createMemeMultipleTexts', function(req, res) {
     "name": "NAME_OF_ZIP",
     "template": "dog"
   }
-  responds with the url under which the meme can be downloaded or with an error message
+  responds with the url under which the zip can be downloaded or with an error message
 */
 router.post('/createZip', function(req, res) {
     const db = req.db;
@@ -411,11 +411,89 @@ router.post('/createZip', function(req, res) {
             } else {
                 res.json({
                     "code": 501,
-                    "message": "A meme with this name already exists",
+                    "message": "A zip with this name already exists",
                 });
             }
         })
     });
+
+    // create zip of the set of memes with timeout
+    setTimeout(function() {
+        if (fs.existsSync(dirZip) === false){
+            zipFolder(dirMemes, dirZip, function(err) {
+                if(err) {
+                    console.log('zip could not be created', err);
+                    return res.status(500).send(err);
+                }
+
+                res.json({
+                "code": 201,
+                "message": "created zip file",
+                });
+                //delete temporary directory
+                fs.rmdirSync(dirMemes, { recursive: true });
+            })
+        }
+    }, 3000);
+})
+
+/*
+* Get a set of images using search parameters, with a maximum amount of retrieved images
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "search": "PART_OF_TITEL",
+    "name": "NAME_OF_ZIP",
+  }
+  responds with the url under which the zip can be downloaded or with an error message
+*/
+router.post('/getZip', async function(req, res) {
+    const db = req.db;
+    const search = req.body.search;
+    const name = req.body.name;
+    if ('./public/zip/memesToZip'){
+        fs.rmdirSync('./public/zip/memesToZip', { recursive: true });
+    }
+    // create temporary directory for zip files
+    fs.mkdirSync("./public/zip/memesToZip");
+    dirMemes =   './public/zip/memesToZip';
+    dirZip = './public/zip/' + name + '.zip';
+
+    // get memes from db
+    let myMemes = [];
+    const generatedMemes = db.get('generatedMemes');
+    await generatedMemes.find({}).then((memes) => {
+      memes.forEach(el => {
+        const nextMeme = {
+            name: el.name,
+            title: el.title,
+            template: el.template,
+            date: el.date,
+            user: el.user,
+            upVotes: el.upVotes,
+            downVotes: el.downVotes,
+            upMinusDownVotes: el.upMinusDownVotes,
+            isPrivate: el.isPrivate
+        }
+        myMemes.push(nextMeme);
+      })
+    })
+
+    // filter after part of title
+    let i = 0;
+    myMemes.map(async (meme) => {
+        if(meme.title.includes(search)){
+            i = i+1;
+            if(i <= 10){
+                const pathZip = './public/zip/memesToZip/' + meme.name;
+                image = await jimp.read('./public/memes/' + meme.name);
+                try {
+                    await image.writeAsync(pathZip)
+                } catch(err) {
+                    console.error(err)
+                }
+            }
+        }
+    })
 
     // create zip of the set of memes with timeout
     setTimeout(function() {
@@ -424,7 +502,6 @@ router.post('/createZip', function(req, res) {
                 console.log('zip could not be created', err);
                 return res.status(500).send(err);
             }
-
             res.json({
             "code": 201,
             "message": "created zip file",
