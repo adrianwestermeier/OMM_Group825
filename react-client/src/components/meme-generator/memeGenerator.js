@@ -260,9 +260,9 @@ export default class Generator extends React.Component {
     onMemeCreated = (memeWasCreated) => {
       if(memeWasCreated) {
         console.log("[memeGenerator] meme was created");
-        document.getElementById("input-section").style.display = "none";
+        document.getElementById("input-section-template").style.display = "none";
       } else {
-        document.getElementById("input-section").style.display = "block";
+        document.getElementById("input-section-template").style.display = "block";
       }
     }
 
@@ -339,7 +339,7 @@ export default class Generator extends React.Component {
                   onMemeCreated={this.onMemeCreated}
                 />  
             </div>
-            <div className="input-section" id="input-section">
+            <div className="input-section-template" id="input-section-template">
               <h2>Add and style text</h2>
                 <div className="inputs-text">
                   <h3>Add title</h3>

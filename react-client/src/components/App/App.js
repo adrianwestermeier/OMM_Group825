@@ -77,21 +77,22 @@ class Application extends React.Component{
   }
 
   render(){
-    if(!this.state.loggedIn){
-      return (
-          <LogInPage
-              logIn={() => {this.logIn()}}
-          />
-      )
-    } else if(this.state.loggedIn){
-      return (
-          <App/>
-      )
-    }else {
-      return(
-          <div>Das hat nicht geklappt</div>
-      )
-    }
+    // if(!this.state.loggedIn){
+    //   return (
+    //       <LogInPage
+    //           logIn={() => {this.logIn()}}
+    //       />
+    //   )
+    // } else if(this.state.loggedIn){
+    //   return (
+    //       <App/>
+    //   )
+    // }else {
+    //   return(
+    //       <div>Das hat nicht geklappt</div>
+    //   )
+    // }
+    return(<App/>)
 
 
   }

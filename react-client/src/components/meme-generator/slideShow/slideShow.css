@@ -59,6 +59,10 @@ img.backButton {
     display: none;
 }
 
+.edit-gif-panel {
+  display: none;
+}
+
 .template-overview {
   display: none;
 }

@@ -8,12 +8,12 @@ display: flex;
 justify-content: space-between;
 }
 
-.input-section {
+.input-section-template {
   width: 100%;
   border: none;
 }
 
-.input-section > h2{
+.input-section-template > h2{
   background-color: black;
   color: white;
   padding: 0px 10px;

@@ -7,6 +7,7 @@ import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } fro
 import * as htmlToImage from 'html-to-image';
 import './slideShow.css';
 import DrawApp from './drawMeme';
+import GifEditor from './editGif';
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 import TemplateMeme from './templateMeme/templateMeme';
 
@@ -14,16 +15,20 @@ import TemplateMeme from './templateMeme/templateMeme';
 export default class SlideShow extends React.Component {
     constructor(props){
         super(props);
+        // console.log(props)
         this.componentRef = React.createRef();
+        this.gifChild = React.createRef();
         this.state = {
             localPictureNames: [],
             pictures: [],
             currentIndex: 0,
             heading: "Choose a template",
-            headingButton: "DRAW",
+            headingButton: "Draw a Meme",
+            gifButton: "Edit GIF Template",
             buttonText: "Create Meme",
             createMode: true,
             drawMode: false,
+            gifMode: false,
             showPng: false,
             png: "",
             gotImageFlipPictures: false,
@@ -141,18 +146,28 @@ export default class SlideShow extends React.Component {
      }
 
      onClickChooseTemplate(index){
-
         document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('edit-gif-panel').style.display = "none";
         document.getElementById('meme-wrapper').style.display = "block";
         document.getElementById('arrows').style.display = "block";
 
          this.setState({
              currentIndex: index,
              heading: "Choose a template",
-             headingButton: "DRAW",
+             headingButton: "Draw a Meme",
              drawMode: false,
 
          })
+
+         if(this.state.gifMode) {
+            document.getElementById('draw-panel').style.display = "none";
+            document.getElementById('edit-gif-panel').style.display = "block";
+            document.getElementById('meme-wrapper').style.display = "none";
+            document.getElementById('arrows').style.display = "block";
+            let picture = this.state.pictures[index];
+            this.gifChild.current.draw(index, picture);
+            // this.gifChild.current.addText("Test", 50, 200)
+         }
      }
  
      // save current meme template to the express server
@@ -203,6 +218,7 @@ export default class SlideShow extends React.Component {
 
      // render the current meme template as an image on the website (does not get saved automatically on server)
      showImage = (() => {
+         // switch from editing to "save meme"
         if(this.state.createMode) {
             let node;
             if(this.state.drawMode) {
@@ -223,6 +239,7 @@ export default class SlideShow extends React.Component {
                         createdImage: img,
                        })
                        document.getElementById('draw-panel').style.display = "none";
+                       document.getElementById('edit-gif-panel').style.display = "none";
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('button-group').style.display = "inline";
                        document.getElementById('template-overview').style.display= "none";
@@ -258,13 +275,15 @@ export default class SlideShow extends React.Component {
                    .catch(function (error) {
                        console.error('oops, something went wrong!', error);
                    });
-            }   
+            }  
+        // switch back to editing the meme 
         } else {
             if(!this.state.gotImageFlipPictures) {
                 document.getElementById('get-imgflip-button').style.display = "inline-block";
             }
             if(this.state.drawMode){
                 document.getElementById('draw-panel').style.display = "inline-block";
+                document.getElementById('edit-gif-panel').style.display = "none";
                 document.getElementById('button-group').style.display = "none";
                 document.getElementById('template-overview').style.display= "block";
                 this.setState({
@@ -279,6 +298,8 @@ export default class SlideShow extends React.Component {
                 document.getElementById('arrows').style.display = "block";
                 document.getElementById('button-group').style.display = "none";
                 document.getElementById('template-overview').style.display= "none";
+                document.getElementById('edit-gif-panel').style.display = "none";
+                document.getElementById('gif-button').style.display= "block";
                 this.setState({
                     showPng: false,
                     png: "",
@@ -293,33 +314,84 @@ export default class SlideShow extends React.Component {
      // switch the template creation mode to drawing (drawing canvas will be shown)
      changeToDraw = (() => {
          if(!this.state.createMode) {
-             alert("first switch to editing again!");
+             alert("First switch to editing again!");
              return;
          }
         if(!this.state.drawMode){
             document.getElementById('draw-panel').style.display = "inline-block";
+            document.getElementById('edit-gif-panel').style.display = "none";
             document.getElementById('meme-wrapper').style.display = "none";
             document.getElementById('arrows').style.display = "none";
             document.getElementById('template-overview-wrapper').style.display= "none";
+            document.getElementById('gif-button').style.display= "none";
             
             this.setState({
                 heading: "Draw",
-                headingButton: "choose template",
+                headingButton: "Choose Template",
                 drawMode: true,
             })
+        // switch from drawing mode to template editing
         } else {
             document.getElementById('draw-panel').style.display = "none";
+            document.getElementById('edit-gif-panel').style.display = "none";
             document.getElementById('meme-wrapper').style.display = "block";
             document.getElementById('arrows').style.display = "block";
             document.getElementById('template-overview-wrapper').style.display= "block";
+            document.getElementById('gif-button').style.display= "block";
             
             this.setState({
                 heading: "Choose a template",
-                headingButton: "DRAW",
+                headingButton: "Draw a Meme",
                 drawMode: false,
             }) 
         }
      })
+     // switch from png template to gif template
+     changeToGif = (() => {
+        if(!this.state.createMode) {
+            alert("First switch to editing again!");
+            return;
+        }
+       if(this.state.drawMode){
+            alert("First switch to template selection!");
+            return;
+       } else {
+           // switch from template to gif editing
+           if(!this.state.gifMode){
+            document.getElementById('draw-panel').style.display = "none";
+            document.getElementById('edit-gif-panel').style.display = "block";
+            document.getElementById('meme-wrapper').style.display = "none";
+            document.getElementById('arrows').style.display = "block";
+            document.getElementById('template-overview-wrapper').style.display= "block";
+            document.getElementById('input-section-template').style.display="block";
+            
+            this.setState({
+                heading: "Choose a template",
+                headingButton: "Draw a Meme",
+                gifButton: "Edit PNG Template",
+                drawMode: false,
+                gifMode: true
+            }) 
+            // switch from gif to template editing
+           } else {
+            document.getElementById('draw-panel').style.display = "none";
+            document.getElementById('edit-gif-panel').style.display = "none";
+            document.getElementById('meme-wrapper').style.display = "block";
+            document.getElementById('arrows').style.display = "block";
+            document.getElementById('template-overview-wrapper').style.display= "block";
+            document.getElementById('input-section-template').style.display="block";
+            
+            this.setState({
+                heading: "Choose a template",
+                headingButton: "Draw a Meme",
+                gifButton: "Edit GIF Template",
+                drawMode: false,
+                gifMode: false
+            }) 
+           }
+           
+       }
+    })
 
      // get memes from the ImgFlip url as templates
      getImgFlip = (() => {
@@ -474,6 +546,7 @@ export default class SlideShow extends React.Component {
                  <div className="slide-show-heading">
                     <h2>{this.state.heading} or </h2>
                     <button className="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
+                    <button className="gif-button" id ="gif-button" onClick={this.changeToGif}>{this.state.gifButton}</button>
                  </div>
 
                 <div className="template-overview-wrapper" id="template-overview-wrapper">
@@ -505,6 +578,13 @@ export default class SlideShow extends React.Component {
                 <React.Fragment>
                     <div className="draw-panel" id="draw-panel">
                         <DrawApp title={this.props.title} />
+                    </div>
+                    <div className="edit-gif-panel" id="edit-gif-panel">
+                        <GifEditor ref={this.gifChild}
+                            title={this.props.title}
+                            currentIndex={this.state.currentIndex}
+                            // picture={this.state.pictures[this.state.currentIndex]}
+                            texts={this.props.texts}/>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
                        {/* <Meme 
