@@ -211,6 +211,6 @@ Send this json to http://localhost:3005/api/getZip
 #### Example get a set of memes
 Example to get a set of memes
 ```
-curl -H "Content-Type: application/json" -d '{"search": "funny", "name": "NAME_OF_ZIP"}' hhtp://localhost:3005/api/getZip
+curl -H "Content-Type: application/json" -d '{"search": "funny", "name": "NAME_OF_ZIP"}' http://localhost:3005/api/getZip
 ```
 As above you can get any existing zip file under http://localhost:3005/zip/NAME_OF_ZIP.zip
