@@ -401,13 +401,6 @@ router.post('/createZip', function(req, res) {
 
                 // post image to meme db
                 database.postNewMemeToDb(db, newMeme)
-                /*.then(() => {
-                    console.log("[api] wrote new meme to DB");
-                    res.json({
-                        "code": 201,
-                        "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
-                    });
-                });*/
             } else {
                 res.json({
                     "code": 501,
@@ -419,21 +412,19 @@ router.post('/createZip', function(req, res) {
 
     // create zip of the set of memes with timeout
     setTimeout(function() {
-        if (fs.existsSync(dirZip) === false){
-            zipFolder(dirMemes, dirZip, function(err) {
-                if(err) {
-                    console.log('zip could not be created', err);
-                    return res.status(500).send(err);
-                }
+        zipFolder(dirMemes, dirZip, function(err) {
+            if(err) {
+                console.log('zip could not be created', err);
+                return res.status(500).send(err);
+            }
 
-                res.json({
+            res.json({
                 "code": 201,
                 "message": "created zip file",
-                });
-                //delete temporary directory
-                fs.rmdirSync(dirMemes, { recursive: true });
-            })
-        }
+            });
+            //delete temporary directory
+            fs.rmdirSync(dirMemes, { recursive: true });
+        })
     }, 3000);
 })
 
@@ -448,7 +439,7 @@ router.post('/createZip', function(req, res) {
 */
 router.post('/getZip', async function(req, res) {
     const db = req.db;
-    const search = req.body.search;
+    const search = req.body.search.toLowerCase();
     const name = req.body.name;
     if ('./public/zip/memesToZip'){
         fs.rmdirSync('./public/zip/memesToZip', { recursive: true });
@@ -481,7 +472,7 @@ router.post('/getZip', async function(req, res) {
     // filter after part of title
     let i = 0;
     myMemes.map(async (meme) => {
-        if(meme.title.includes(search)){
+        if(meme.title.toLowerCase().includes(search)){
             i = i+1;
             if(i <= 10){
                 const pathZip = './public/zip/memesToZip/' + meme.name;

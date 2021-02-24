@@ -174,8 +174,10 @@ You can also create a set of memes with a top and bottom text based on a templat
 OR: "image": ROOT_TO_FILE/YOUR_FILE
 }
 ```
-to create a set of memes. TITLE is the title of the meme, NAME_OF_MEME is the name of the meme, TOP_TEXT and BOTTOM_TEXT are the texts you want to write. NAME_OF_ZIP is the name under which you want to save the zip file.
+to create a set of memes. TITLE is the title of the meme, NAME_OF_MEME is the name of the meme and have to be unique, TOP_TEXT and BOTTOM_TEXT are the texts you want to write. NAME_OF_ZIP is the name under which you want to save the zip file and have to be unique.
 Send this json to http://localhost:3005/api/createZip
+
+Note: "top" and "bottom" have to be passed. If no text is to be assigned, then leave it empty. Example with no top text: {"title":"TITLE", "name":"NAME_OF_MEME", "top":"", "bottom":"TEXT"}
 
 #### Example create a set of memes
 Example with template:
@@ -195,10 +197,8 @@ You can get any existing zip file under http://localhost:3005/zip/NAME_OF_ZIP.zi
 
 Also you can get any meme you have added to the set under http://localhost:3005/memes/NAME_OF_MEME.png
 
-Note: "top" and "bottom" have to be passed. If no text is to be assigned, then leave it empty. Example with no top text: {"title":"TITLE", "name":"NAME_OF_MEME", "top":"", "bottom":"TEXT"}
-
 ### Get a set of memes
-You can also get a set of memes by searching after a title or a part of a title. All generated Memes with that title are given as a zip file. As above you can use a json like this
+You can also get a set of memes by searching after a title or a part of a title. All generated Memes with that title are given as a zip file. The specified Maximum amount of retrieved images is 10. As above you can use a json like this
 ```
 {
     "search": (PART_OF_)TITLE,
