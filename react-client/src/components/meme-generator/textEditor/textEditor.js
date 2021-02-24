@@ -19,8 +19,8 @@ const SpeechToText = (props) => {
 
     return(
         <div>
-            <button onClick={SpeechRecognition.startListening}>Start</button>
-            <button onClick={SpeechRecognition.stopListening}>Stop</button>
+            <button onClick={SpeechRecognition.startListening}>Start recording</button>
+            <button onClick={SpeechRecognition.stopListening}>Stop recording</button>
             <button onClick={resetTranscript}>Reset</button>
             <InputsText
                 key={props.key}
@@ -136,6 +136,7 @@ class InputsText extends React.Component {
             <div className="inputs-text">
               <h3 className="form-header">{this.props.heading} (only available for templates) text {this.props.index}</h3>
                 <div className="inputs-text-button-group">
+                    {this.props.text}
                   <form className="input-form" onSubmit={this.handleSubmit}>
                     <textarea
                         className="input-text"
