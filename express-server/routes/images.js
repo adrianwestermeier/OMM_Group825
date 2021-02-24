@@ -97,6 +97,7 @@ router.post('/saveCreatedMeme', function(req, res) {
   const isPrivate = req.body.isPrivate;
   const dir = "./public/memes/" + name;
   const template = req.body.template;
+  const comments = req.body.comments
 
   // check if meme with this name already exists
   database.getEntry(db, name, 'generatedMemes').then((entry) => {
@@ -125,7 +126,9 @@ router.post('/saveCreatedMeme', function(req, res) {
           "date": new Date(),
           "upVotes": 0,
           "downVotes": 0,
-          "upMinusDownVotes": [0]
+          "upMinusDownVotes": [0],
+          "comments": comments
+
         };
 
         console.log(newMeme);

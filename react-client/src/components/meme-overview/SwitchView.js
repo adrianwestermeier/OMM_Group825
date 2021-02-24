@@ -106,6 +106,7 @@ export default class SwitchView extends React.Component {
                         }
                 )}
                 getMemes={() => {this.props.getMemes()}}
+                user={this.props.user}
             />
         } else if(!this.props.isSingleView){
             // get sorted list if defined

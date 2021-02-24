@@ -317,6 +317,7 @@ export default class SlideShow extends React.Component {
               user: user,
               isPrivate: isPrivate,
               template: template,
+              comments: []
             })
           }).then(jsonResponse => jsonResponse.json()
                 .then(responseObject => {

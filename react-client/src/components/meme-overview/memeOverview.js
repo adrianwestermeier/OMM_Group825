@@ -111,6 +111,7 @@ class MemeOverview extends React.Component {
                     isSingleView={this.state.isSingleView}
                     memes={this.state.filterPrivate}
                     getMemes={() => {this.getMemesFromDb()}}
+                    user={this.props.user}
                 />
             </div>
         )

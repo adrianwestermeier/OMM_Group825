@@ -49,7 +49,8 @@ router.put('/updateMeme', function (req, res){
         $set: {
           "upVotes": req.body.upVotes,
           "downVotes": req.body.downVotes,
-          "upMinusDownVotes": req.body.upMinusDownVotes
+          "upMinusDownVotes": req.body.upMinusDownVotes,
+          "comments": req.body.comments
         }
       })
       .then((result) => {
