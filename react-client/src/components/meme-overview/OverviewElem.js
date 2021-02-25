@@ -35,7 +35,8 @@ export default class OverviewElem extends React.Component {
             template: meme.template,
             upVotes: upVotes,
             downVotes: downVotes,
-            upMinusDownVotes: upMinusDown
+            upMinusDownVotes: upMinusDown,
+            comments: meme.comments
 
         };
 
@@ -60,8 +61,6 @@ export default class OverviewElem extends React.Component {
         const meme = this.props.meme
         const upVotes = meme.upVotes
         const downVotes = meme.downVotes
-
-        // TODO: comments disappear when clicking a vote button & schön machen & comments scrollable
 
         return (
             <div className="overview-element">

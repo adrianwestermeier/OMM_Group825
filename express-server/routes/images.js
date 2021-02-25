@@ -97,7 +97,8 @@ router.post('/saveCreatedMeme', function(req, res) {
   const isPrivate = req.body.isPrivate;
   const dir = "./public/memes/" + name;
   const template = req.body.template;
-  const comments = req.body.comments
+
+
 
   // check if meme with this name already exists
   database.getEntry(db, name, 'generatedMemes').then((entry) => {

@@ -54,8 +54,6 @@ class MemeOverview extends React.Component {
                 comments: comments
             })
         }
-
-        console.log(this.state.comments)
     }
 
     /*
