@@ -14,7 +14,8 @@ class MemeOverview extends React.Component {
             memes: [],
             isSingleView: true,
             user: this.props.user,
-            filterPrivate: []
+            filterPrivate: [],
+            comments: []
         };
     }
 
@@ -40,6 +41,21 @@ class MemeOverview extends React.Component {
                 })
             }
         }
+    }
+
+    getComments(){
+        let comment
+        let comments = []
+        const memes = [...this.state.memes];
+        for(let i=0; i<memes.length; i++){
+            comment = memes[i].comments
+            comments = comments.concat(comment)
+            this.setState({
+                comments: comments
+            })
+        }
+
+        console.log(this.state.comments)
     }
 
     /*
@@ -85,6 +101,7 @@ class MemeOverview extends React.Component {
                         // Update state
                         that.setState({memes: newMemes});
                         that.filterPrivateMemes()
+                        that.getComments()
                     });      
                 }, memesCopy); // use memesCopy as this
             });
@@ -112,6 +129,7 @@ class MemeOverview extends React.Component {
                     memes={this.state.filterPrivate}
                     getMemes={() => {this.getMemesFromDb()}}
                     user={this.props.user}
+                    comments={this.props.comments}
                 />
             </div>
         )

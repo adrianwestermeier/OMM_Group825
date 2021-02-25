@@ -4,78 +4,8 @@ import arrowBack from "../img/arrow_back-black-18dp.svg";
 import arrowForward from "../img/arrow_forward-black-18dp.svg";
 import VoteChart from "./VoteChart";
 import {TextField} from "@material-ui/core";
+import Comments from "./comments";
 
-class Comments extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state={
-            comment: '',
-            comments: []
-        }
-    }
-
-    componentDidMount() {
-        console.log(this.props.memes)
-        console.log(this.props.user)
-        console.log(this.props.i)
-    }
-
-    comment(){
-        console.log(this.state.comment)
-
-        let meme = this.props.memes[this.props.i]
-        console.log(meme)
-
-        let comment = {user: this.props.user, comment: this.state.comment}
-
-        let comments = this.state.comments.concat(comment)
-        this.setState({
-            comments: comments
-        })
-
-        console.log(comment)
-        console.log(comments)
-
-        const payload = {
-            id: meme._id,
-            name: meme.name,
-            title: meme.title,
-            user: meme.user,
-            template: meme.template,
-            upVotes: meme.upVotes,
-            downVotes: meme.downVotes,
-            upMinusDownVotes: meme.upMinusDownVotes,
-            comments: comments
-
-        };
-
-        fetch(`http://localhost:3005/generatedMemes/updateMeme`,
-            {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(payload),
-            })
-            .then(() => {
-                //this.getMemesFromDb()
-            })
-    }
-
-    render(){
-        return(
-            <div>
-                <form>
-                    <label>
-                        Comment:
-                        <textarea
-                            onChange={e => {this.setState({comment: e.target.value})}}
-                        />
-                    </label>
-                </form>
-                <button onClick={() => {this.comment()}}>Comment</button>
-            </div>
-        )
-    }
-}
 
 export default class SingleView extends React.Component{
     constructor(props) {
@@ -202,6 +132,7 @@ export default class SingleView extends React.Component{
                 meme={memes[i]}
                 getMemes={() => {this.getMemesFromDb()}}
                 testPrint={() => {this.testPrint()}}
+                user={this.props.user}
             />)
         }
 
@@ -217,11 +148,7 @@ export default class SingleView extends React.Component{
                     </div>
                     {items[this.state.i]}
                 </div>
-                <Comments
-                    user={this.props.user}
-                    memes={memes}
-                    i={this.state.i}
-                />
+
                 <VoteChart
                     memes={memes}
                     i={this.state.i}

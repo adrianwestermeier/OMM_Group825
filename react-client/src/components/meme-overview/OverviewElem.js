@@ -1,6 +1,7 @@
 import React from "react";
 import Meme from "../Meme/meme";
 import {IoIosThumbsDown, IoIosThumbsUp} from "react-icons/io";
+import Comments from "./comments";
 
 export default class OverviewElem extends React.Component {
 
@@ -60,6 +61,8 @@ export default class OverviewElem extends React.Component {
         const upVotes = meme.upVotes
         const downVotes = meme.downVotes
 
+        // TODO: comments disappear when clicking a vote button & schön machen & comments scrollable
+
         return (
             <div className="overview-element">
                 <div className="meme-wrapper">
@@ -69,12 +72,21 @@ export default class OverviewElem extends React.Component {
                         title={meme.title}
                     />
                 </div>
+
+
                 <div className="vote-buttons">
                     <button onClick={() => this.vote(meme, true)}><IoIosThumbsUp/></button>
                     <button onClick={() => this.vote(meme, false)}><IoIosThumbsDown/></button>
                     <p><IoIosThumbsUp/>: {upVotes}</p>
                     <p><IoIosThumbsDown/>: {downVotes}</p>
                 </div>
+
+                <Comments
+                    user={this.props.user}
+                    meme={meme}
+                    getMemes={() => {this.getMemesFromDb()}}
+                />
+
             </div>
         )
     }

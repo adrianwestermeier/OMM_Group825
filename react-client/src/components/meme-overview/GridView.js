@@ -20,6 +20,7 @@ export default class Grid extends React.Component{
                 key={id}
                 className="gridItem"
                 meme={memes[i]}
+                user={this.props.user}
                 getMemes={() => {this.getMemesFromDb()}}
             />)
         }
