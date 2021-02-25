@@ -125,8 +125,8 @@ router.post('/saveCreatedMeme', function(req, res) {
           "isPrivate": isPrivate,
           "template": template,
           "date": new Date(),
-          "upVotes": 0,
-          "downVotes": 0,
+          "upVotes": [],
+          "downVotes": [],
           "upMinusDownVotes": [0],
           "comments": []
 

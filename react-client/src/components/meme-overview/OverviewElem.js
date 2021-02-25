@@ -3,6 +3,8 @@ import Meme from "../Meme/meme";
 import {IoIosThumbsDown, IoIosThumbsUp} from "react-icons/io";
 import Comments from "./comments";
 
+import "./OverviewElem.css"
+
 export default class OverviewElem extends React.Component {
 
     /*
@@ -14,16 +16,21 @@ export default class OverviewElem extends React.Component {
         let upVotes = meme.upVotes
         let downVotes = meme.downVotes
         let upMinusDown = meme.upMinusDownVotes
+        let user = this.props.user
 
+        if(upVotes.includes(user) || downVotes.includes(user)){
+            alert('You already voted this meme')
+            return
+        }
         if (isUpvote) {
-            upVotes = upVotes + 1
+            upVotes = upVotes.concat(user)
         } else if (!isUpvote) {
-            downVotes = downVotes + 1
+            downVotes = downVotes.concat(user)
         } else {
             console.log('error: neither up nor down vote')
         }
 
-        let upDown = upVotes - downVotes
+        let upDown = upVotes.length - downVotes.length
 
         upMinusDown = upMinusDown.concat(upDown)
 
@@ -56,11 +63,32 @@ export default class OverviewElem extends React.Component {
         this.props.getMemes();
     }
 
+    getMyVote(){
+
+    }
+
     render() {
+
+
+
+
 
         const meme = this.props.meme
         const upVotes = meme.upVotes
         const downVotes = meme.downVotes
+
+        let upMinusDown = meme.upMinusDownVotes
+        let user = this.props.user
+
+        let yourVote = null
+
+        if(upVotes.includes(user)){
+            yourVote = 'upVote'
+        } else if(downVotes.includes(user)){
+            yourVote = 'downVote'
+        } else {
+            yourVote = 'not voted'
+        }
 
         return (
             <div className="overview-element">
@@ -76,11 +104,12 @@ export default class OverviewElem extends React.Component {
                 <div className="vote-buttons">
                     <button onClick={() => this.vote(meme, true)}><IoIosThumbsUp/></button>
                     <button onClick={() => this.vote(meme, false)}><IoIosThumbsDown/></button>
-                    <p><IoIosThumbsUp/>: {upVotes}</p>
-                    <p><IoIosThumbsDown/>: {downVotes}</p>
+                    <p><IoIosThumbsUp/>: {upVotes.length}</p>
+                    <p><IoIosThumbsDown/>: {downVotes.length}</p>
+                    <p>your Vote: {yourVote}</p>
                 </div>
 
-                <Comments
+                <Comments className="comments"
                     user={this.props.user}
                     meme={meme}
                     getMemes={() => {this.getMemesFromDb()}}
