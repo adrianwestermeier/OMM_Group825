@@ -404,6 +404,9 @@ export default class SlideShow extends React.Component {
                       <button onClick={this.expand}>{this.state.icon}</button>
                     </div>
                     <div className="template-overview" id="template-overview">
+                    <button className="create-meme-button" id="get-imgflip-button" onClick={this.getImgFlip}>
+                        Get ImgFlip Meme Templates
+                    </button>
                         <p>Click template to edit:</p>
                         <div className="flex-overview">
                             {allTemplates}  
@@ -416,9 +419,6 @@ export default class SlideShow extends React.Component {
                         <img src={arrowBack} className="backButton" onClick={() => this.onClickPrevious()}></img>
                         <img src={arrowForward} className="nextButton" onClick={() => this.onClickNext()}></img>
                     </div>
-                    <button className="create-meme-button" id="get-imgflip-button" onClick={this.getImgFlip}>
-                        Get ImgFlip Meme Templates
-                    </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
  

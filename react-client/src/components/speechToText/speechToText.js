@@ -12,7 +12,7 @@ class SpokenCaption extends React.Component{
     }
 
     test(){
-        console.log(this.state.text)
+        console.log(this.props.text)
     }
 
     render(){
@@ -42,7 +42,11 @@ const SpeechToText = () => {
         let caption = ''
 
         if (!browserSupportsSpeechRecognition) {
-            return null
+            return(
+                <div>
+                    <p>your browser does not support speech recognition, please use e.g. Google Chrome</p>
+                </div>
+            )
         }
 
         return(
@@ -50,9 +54,13 @@ const SpeechToText = () => {
                 <button onClick={SpeechRecognition.startListening}>Start</button>
                 <button onClick={SpeechRecognition.stopListening}>Stop</button>
                 <button onClick={resetTranscript}>Reset</button>
-                <SpokenCaption
+                {/* <SpokenCaption
                     text={transcript}
-                />
+                /> */}
+                <p>You said:</p>
+                <p id="transcript">
+                {transcript}
+                </p>
             </div>
         )
 
