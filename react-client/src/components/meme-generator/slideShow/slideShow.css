@@ -101,6 +101,7 @@ button[type=submit] {
   background-color: black;
   color: white;
   padding: 0px 10px;
+  display: inline;
 }
 
 .toggle-canvas-options {
@@ -113,5 +114,10 @@ button[type=submit] {
 
 .adjust-canvas-size {
   margin-bottom: 5px;
+  display: none;
+}
+
+.insert-additional-image {
+  clear:left;
   display: none;
 }

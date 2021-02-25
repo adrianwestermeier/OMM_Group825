@@ -32,12 +32,17 @@ export default class GifEditor extends React.Component {
         console.log(props)
         this.state = {
             currentPicture: this.props.picture,
-        } 
+            pictureToAdd: this.props.picture,
+            widthForNewPicture: 200,
+            heightForNewPicture: 200,
+            allPictures: [this.props.picture],
+            allPicturesPositions: [[0, 0]],
+            allPicturesSize: [],
+        }
         
     }
 
     draw(p) { 
-
         const canvas = document.getElementById('canvas')
         const context = canvas.getContext('2d')
         this.ctx = context
@@ -65,11 +70,54 @@ export default class GifEditor extends React.Component {
             this.ctx.drawImage(img, 0, 0, width, height)
             this.updateTexts(width, height)
         }
+
+        this.setState({
+            allPicturesSize: this.state.allPicturesSize.concat([width, height])
+        })
+        console.log(this.state.allPictures, this.state.allPicturesPositions, this.state.allPicturesSize)
+    }
+
+    insertImageHere(e) { // insert Image at the position of the mouse
+        const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        this.ctx = context
+
+        let x = e.nativeEvent.offsetX
+        let y = e.nativeEvent.offsetY
+
+        const img = new Image()
+        img.src = this.state.pictureToAdd.url;
+
+        let scalingFactorWidth = 100/img.width
+        let scalingFactorHeight = 100/img.height
+
+        let scalingFactor = Math.min(scalingFactorWidth, scalingFactorHeight)
+
+        let width = img.width*scalingFactor
+        let height = img.height*scalingFactor
+        
+        img.onload = () => {
+            this.ctx.drawImage(img, x, y, width, height)
+            this.updateTexts(width, height)
+        }
+
+        this.setState({
+            allPictures: this.state.allPictures.concat(this.state.pictureToAdd),
+            allPicturesPositions: this.state.allPicturesPositions.concat([[x, y]]),
+            allPicturesSize: this.state.allPicturesSize.concat([[width, height]]),
+        })
+        console.log(this.state.allPictures)
+    }
+
+    setNewInsertPicture(picture) {
+        this.setState({
+            pictureToAdd: picture
+        })
     }
 
     updateTexts(width, height) {
         let texts = this.props.texts
-        console.log(texts)
+        // console.log(texts)
 
         texts.forEach(text => this.addText(text, width, height))
        
@@ -85,8 +133,6 @@ export default class GifEditor extends React.Component {
 
         let textWidth = this.ctx.measureText(text.text).width
         let textHeight = text.size
-
-        console.log(textWidth, textHeight)
 
         let x = (text.horizontalPosition/100*width)
         let y = (text.verticalPosition/100*height)
@@ -122,18 +168,6 @@ export default class GifEditor extends React.Component {
         this.ctx.fillStyle="white"
         this.ctx.fillRect(0,0,canvas.offsetWidth, canvas.offsetHeight)
         this.ctx.lineWidth = 10
-    }
-
-    insertImageHere(e) { // insert Image at the position of the mouse
-        const canvas = document.getElementById('canvas')
-        const context = canvas.getContext('2d')
-        this.ctx = context
-
-        let x = e.nativeEvent.offsetX
-        let y = e.nativeEvent.offsetY
-
-        this.ctx.fillStyle="green"
-        this.ctx.fillRect(x-25, y-25, 50, 50)
     }
 
     adjustCanvasWidth(width) {

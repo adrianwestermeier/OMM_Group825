@@ -314,7 +314,7 @@ export default class Generator extends React.Component {
       return (
         <div className="home">
           <div className="meme-generator-wrapper">
-            <div className="slide-show-section">              
+            <div className="slide-show-section" id="slide-show-section">              
                 {/* <SlideShow 
                   title={this.state.submitTitle}
                   topText={this.state.topText} 
