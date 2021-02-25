@@ -83,11 +83,6 @@ img.backButton {
   border: 2px solid black;
 }
 
-.adjust-canvas-size {
-  margin-bottom: 5px;
-  display: none;
-}
-
 button[type=submit] {
   background-color: white;
   color: black;
@@ -98,11 +93,25 @@ button[type=submit] {
   cursor: pointer;
 }
 
+.custom-canvas {
+  display: none;
+}
+
+.custom-canvas-heading > h2 {
+  background-color: black;
+  color: white;
+  padding: 0px 10px;
+}
+
 .toggle-canvas-options {
   background-color: white;
   color: black;
   padding: 0px 10px;
   font-size: 20px;
   border: none;
-  display: block;
+}
+
+.adjust-canvas-size {
+  margin-bottom: 5px;
+  display: none;
 }

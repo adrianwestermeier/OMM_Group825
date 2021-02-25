@@ -97,7 +97,7 @@ export default class TemplateMeme extends React.Component {
                 <figure>
                     <figcaption>{this.props.title}</figcaption>
                     <div className="top-and-bottom-wrapper">
-                        <img src={this.props.url} id="actual-image"/>
+                        <img src={this.props.url} alt="current Meme Template" id="actual-image"/>
                         {/* <div className="topOut" style={topStyle}>
                             {this.props.topText}
                         </div>

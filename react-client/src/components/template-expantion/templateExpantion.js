@@ -324,7 +324,7 @@ class Snapshot extends React.Component {
           </div>
           {snapshotButton}
           <div class="snapshot-group">
-            <img src={createdSnapshot} id='snapshot' ref={this.componentRef}/>
+            <img src={createdSnapshot} alt="User-provided Snapshot" id='snapshot' ref={this.componentRef}/>
             <div>
               {input}
               {submitButton}
@@ -426,6 +426,7 @@ class Screenshot extends React.Component {
 
 // class that renders all the meme generation functions
 export default class Expander extends React.Component {
+  // eslint-disable-next-line
     constructor(props){
         super(props);
     }

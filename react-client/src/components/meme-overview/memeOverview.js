@@ -329,8 +329,8 @@ class SingleView extends React.Component{
                 <button disabled={this.state.autoPlayOrdered} onClick={() => {this.autoPlayMemes(false)}}>{autoPlayRandomLabel} random</button>
                 <div>
                     <div className="arrows" id="arrows">
-                        <img src={arrowBack} className="backButton"  onClick={() => this.previous()}></img>
-                        <img src={arrowForward} className="nextButton" onClick={() => this.next()}></img>
+                        <img src={arrowBack} alt="Arrow pointing to the left" className="backButton"  onClick={() => this.previous()}></img>
+                        <img src={arrowForward} alt="Arrow pointing to the right" className="nextButton" onClick={() => this.next()}></img>
                     </div>
                     {items[this.state.i]}
                 </div>
@@ -356,6 +356,7 @@ class SingleView extends React.Component{
 }
 
 class SwitchView extends React.Component {
+    // eslint-disable-next-line
     constructor(props) {
         super(props);
     }

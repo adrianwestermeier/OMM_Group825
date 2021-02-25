@@ -30,6 +30,9 @@ export default class GifEditor extends React.Component {
         super(props);
         // this.componentRef = React.createRef();
         console.log(props)
+        this.state = {
+            currentPicture: this.props.picture,
+        } 
         
     }
 
@@ -42,6 +45,10 @@ export default class GifEditor extends React.Component {
         this.reset();
 
         let picture = p;
+
+        this.setState({
+            currentPicture: p
+        })
 
         const img = new Image()
         img.src = picture.url;
@@ -127,6 +134,20 @@ export default class GifEditor extends React.Component {
 
         this.ctx.fillStyle="green"
         this.ctx.fillRect(x-25, y-25, 50, 50)
+    }
+
+    adjustCanvasWidth(width) {
+        console.log(width)
+        const canvas = document.getElementById('canvas')
+        canvas.width = width
+        this.draw(this.state.currentPicture)
+    }
+
+    adjustCanvasHeight(height) {
+        console.log(height)
+        const canvas = document.getElementById('canvas')
+        canvas.height = height
+        this.draw(this.state.currentPicture)
     }
 
     
