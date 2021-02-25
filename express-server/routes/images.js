@@ -127,7 +127,7 @@ router.post('/saveCreatedMeme', function(req, res) {
           "upVotes": 0,
           "downVotes": 0,
           "upMinusDownVotes": [0],
-          "comments": comments
+          "comments": []
 
         };
 

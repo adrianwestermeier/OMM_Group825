@@ -63,9 +63,9 @@ export default class Comments extends React.Component{
 
     render(){
 
+        console.log(this.props.meme.comments)
 
-
-        const items = [];       //this array later will contain all the elements to be shown in the overview
+        const items = [];
         let meme = this.props.meme
         if(meme){
             let comments = meme.comments
