@@ -61,6 +61,11 @@ img.backButton {
 
 .edit-gif-panel {
   display: none;
+  align-content: center;
+}
+
+.edit-gif-panel div {
+  float: left;
 }
 
 .template-overview {
@@ -76,4 +81,28 @@ img.backButton {
   height: 180px;
   margin: 5px;
   border: 2px solid black;
+}
+
+.adjust-canvas-size {
+  margin-bottom: 5px;
+  display: none;
+}
+
+button[type=submit] {
+  background-color: white;
+  color: black;
+  width: 30%;
+  /* padding: 10px 18px; */
+  margin-left: 30px;
+  border: 2px solid #555555;
+  cursor: pointer;
+}
+
+.toggle-canvas-options {
+  background-color: white;
+  color: black;
+  padding: 0px 10px;
+  font-size: 20px;
+  border: none;
+  display: block;
 }

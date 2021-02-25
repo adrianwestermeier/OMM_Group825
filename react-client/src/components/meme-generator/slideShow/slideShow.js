@@ -34,6 +34,8 @@ export default class SlideShow extends React.Component {
             gotImageFlipPictures: false,
             icon: <BsChevronRight/>,
             expanded: false,
+            iconcanvasOptions: <BsChevronRight/>,
+            expandedcanvasOptions: false,
          };
     }
 
@@ -118,31 +120,38 @@ export default class SlideShow extends React.Component {
      // go to next meme template
      onClickNext() {
          const nextIndex = this.state.currentIndex + 1;
+         let picture = this.state.pictures[nextIndex];
          if(nextIndex === this.state.pictures.length) {
              this.setState({ 
                  pictures: this.state.pictures,
-                 currentIndex: 0 })    
+                 currentIndex: 0 }) 
+             picture = this.state.pictures[0];   
          } else {
              this.setState({
                  pictures: this.state.pictures,
                  currentIndex: nextIndex 
              })
+             
          }
+         this.gifChild.current.draw(picture);
      }
  
      // go to previous meme template
      onClickPrevious() {
          const previousIndex = this.state.currentIndex - 1;
+         let picture = this.state.pictures[previousIndex];
          if(previousIndex < 0) {
              this.setState({ 
                  pictures: this.state.pictures,
-                 currentIndex: this.state.pictures.length - 1 })    
+                 currentIndex: this.state.pictures.length - 1 })
+             picture = this.state.pictures[this.state.pictures.length - 1]   
          } else {
              this.setState({
                  pictures: this.state.pictures,
                  currentIndex: previousIndex
              })
          }
+         this.gifChild.current.draw(picture);
      }
 
      onClickChooseTemplate(index){
@@ -165,7 +174,7 @@ export default class SlideShow extends React.Component {
             document.getElementById('meme-wrapper').style.display = "none";
             document.getElementById('arrows').style.display = "block";
             let picture = this.state.pictures[index];
-            this.gifChild.current.draw(index, picture);
+            this.gifChild.current.draw(picture);
             // this.gifChild.current.addText("Test", 50, 200)
          }
      }
@@ -372,6 +381,10 @@ export default class SlideShow extends React.Component {
                 drawMode: false,
                 gifMode: true
             }) 
+            let picture = this.state.pictures[this.state.currentIndex];
+            this.gifChild.current.draw(picture);
+
+
             // switch from gif to template editing
            } else {
             document.getElementById('draw-panel').style.display = "none";
@@ -499,6 +512,22 @@ export default class SlideShow extends React.Component {
           })
         }
       }
+
+    expandCanvasOptions = () => {
+        if(!this.state.expandedCanvasOptions) {
+            document.getElementById("adjust-canvas-size").style.display = "inline";
+            this.setState({
+              iconCanvasOptions: <BsChevronDown/>,
+              expandedCanvasOptions: true,
+            })
+          } else {
+            document.getElementById("adjust-canvas-size").style.display = "none";
+            this.setState({
+              iconCanvasOptions: <BsChevronRight/>,
+              expandedCanvasOptions: false,
+            })
+          }
+    }
  
      render() {
         const currentIndex = this.state.currentIndex;
@@ -572,6 +601,29 @@ export default class SlideShow extends React.Component {
                     </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                  </div>
+
+                 <div>
+                     <div className="slide-show-heading">
+                        <h2>Enter custom canvas size</h2>
+                        <button className="toggle-canvas-options" id="toggle-canvas-options" onClick={this.expandCanvasOptions}>{this.state.iconCanvasOptions}</button>
+                     </div>
+                    <div className="adjust-canvas-size" id="adjust-canvas-size">
+                        <form className="input-form-width" onSubmit={() => console.log("Yay")}>
+                            <p>Width :</p>
+                            <input type="text" placeholder="600" name="custom-canvas-width"></input>
+                            <button className="set-canvas-width" type="submit">Submit</button>
+                        </form>
+                        <form className="input-form-height" onSubmit={() => console.log("Nay")}>
+                            <p>Height: </p>
+                            <input type="text" placeholder="600" name="custom-canvas-height"></input>
+                            <button className="set-canvas-height" type="submit">Submit</button>
+                        </form>
+                    </div>
+                    
+                 </div>
+
+                 
+
  
                 {/* {counter} */}
  
@@ -583,7 +635,7 @@ export default class SlideShow extends React.Component {
                         <GifEditor ref={this.gifChild}
                             title={this.props.title}
                             currentIndex={this.state.currentIndex}
-                            // picture={this.state.pictures[this.state.currentIndex]}
+                            picture={this.state.pictures[0]}
                             texts={this.props.texts}/>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">

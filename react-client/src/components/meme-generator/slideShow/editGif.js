@@ -1,4 +1,5 @@
 import React from 'react';
+import { walkUpBindingElementsAndPatterns } from 'typescript';
 import './editGif.css';
 
 
@@ -32,7 +33,7 @@ export default class GifEditor extends React.Component {
         
     }
 
-    draw(i, p) { 
+    draw(p) { 
 
         const canvas = document.getElementById('canvas')
         const context = canvas.getContext('2d')
@@ -55,36 +56,57 @@ export default class GifEditor extends React.Component {
         
         img.onload = () => {
             this.ctx.drawImage(img, 0, 0, width, height)
-            this.updateTexts()
+            this.updateTexts(width, height)
         }
     }
 
-    updateTexts() {
+    updateTexts(width, height) {
         let texts = this.props.texts
         console.log(texts)
 
-        texts.forEach(text => this.addText(text))
+        texts.forEach(text => this.addText(text, width, height))
        
     }
 
-    addText(text) {
+    addText(text, w, h) {
         const canvas = document.getElementById('canvas')
         const context = canvas.getContext('2d')
         this.ctx = context
 
-        // this.ctx.font = "Arial";
+        let width = w
+        let height = h
+
+        let textWidth = this.ctx.measureText(text.text).width
+        let textHeight = text.size
+
+        console.log(textWidth, textHeight)
+
+        let x = (text.horizontalPosition/100*width)
+        let y = (text.verticalPosition/100*height)
+
+        if (x > width) {
+            x = width
+        } else if (x < textWidth/2) {
+            x = textWidth/2
+        }
+
+        if (y > height) {
+            x = height
+        } else if (y < textHeight) {
+            y = textHeight
+        }
+
+        // get Text Style
         this.ctx.font = text.bold + ' ' +
                         text.italic + ' ' +
                         text.size +
-                        'px Arial';
+                        'px Times New Roman';
         this.ctx.fillStyle = text.color;
-        this.ctx.fillText(text.text,
-                          text.horizontalPosition,
-                          text.verticalPosition);
+        this.ctx.fillText(text.text, x-textWidth/2, y-textHeight/2);
     
     }
 
-    reset() { //clears it to all white, resets state to original
+    reset() { //clears it to all white
 
         //const canvasRef = useRef(null)
         const canvas = document.getElementById('canvas')
@@ -107,15 +129,17 @@ export default class GifEditor extends React.Component {
         this.ctx.fillRect(x-25, y-25, 50, 50)
     }
 
+    
+
     render() {
         return (
             <div style={styles.maindiv}>
                 <div className="edit-gif-canvas" id="edit-gif-canvas">
                     <figure>
                     <figcaption position="center">{this.props.title}</figcaption>
-                    <canvas ref="canvas" id="canvas" width="600px" height="600px" style={styles.canvas} ref={this.componentRef}
-                        onMouseDown={(e) => this.insertImageHere(e)}>
-                    </canvas>
+                        <canvas ref="canvas" id="canvas" width="600px" height="600px" style={styles.canvas} ref={this.componentRef}
+                            onMouseDown={(e) => this.insertImageHere(e)}>
+                        </canvas>
                     </figure>
                 </div>
             </div>

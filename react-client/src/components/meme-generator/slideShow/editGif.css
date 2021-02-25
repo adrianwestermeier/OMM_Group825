@@ -1,11 +1,13 @@
 .edit-gif-canvas {
     border:1px solid black;
-    width: 600px;
+    width: 610px;
+    position: left;
 }
 
 figure {
     width: 100%;
     margin: 0 auto;
+    position: center;
 }
 
 figcaption {
