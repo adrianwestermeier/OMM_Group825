@@ -41,16 +41,11 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
-              <li><Link to="/myMemes" className="menu-link">MyMemes</Link></li>
-              <li><Link to="/speechToText" className="menu-link">speech To Text</Link></li>
-
-            {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
+            <li><Link to="/myMemes" className="menu-link">MyMemes</Link></li>
+            {/* <li><Link to="/speechToText" className="menu-link">speech To Text</Link></li> */}
           </ul>
         </nav>
           <Switch>
-            {/* <Route path="/local">
-              <Imago />
-            </Route> */}
             <Route path="/overview">
               <Overview
                   user={this.props.user}
@@ -61,10 +56,10 @@ class App extends React.Component {
                       user={this.props.user}
                   />
               </Route>
-              <Route path="/speechToText">
+              {/* <Route path="/speechToText">
                   <SpeechToText
                   />
-              </Route>
+              </Route> */}
 
             <Route path="/expand">
               <Expander />

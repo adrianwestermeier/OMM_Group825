@@ -2,7 +2,7 @@ import React from 'react';
 import './memeGenerator.css';
 import SlideShow from "./slideShow/slideShow";
 import InputsText from "./textEditor/textEditor";
-import SpeechToText from "./textEditor/textEditor";
+// import SpeechToText from "./textEditor/textEditor";
 
 /**
 * class that renders all the template generation functions
@@ -149,6 +149,17 @@ export default class Generator extends React.Component {
       });
     }
 
+    /**
+    * set the text, which was spoken via the speech-to-text module
+    */
+    speechInput = (index, inputText) => {
+      let newTexts = [...this.state.texts];
+      newTexts[index] = {...newTexts[index], text: inputText};
+      this.setState({
+        texts: newTexts,
+      });
+    }
+
     handleTitleSubmit = (event) => {
       event.preventDefault();
       let submitTitle = this.state.title;
@@ -200,22 +211,39 @@ export default class Generator extends React.Component {
     render() {
         const inputTexts = <div>
         {this.state.texts.map((text, i) => (
-            <SpeechToText
-                key={i}
-                index={text.index}
-                captionType={text.captionType}
-                heading={text.heading}
-                placeholder={text.placeholder}
-                textSubmitHandle={this.handleTextSubmit}
-                increaseHorizontalPosition={this.increaseHorizontalPosition}
-                decreaseHorizontalPosition={this.decreaseHorizontalPosition}
-                increaseVerticalPosition={this.increaseVerticalPosition}
-                decreaseVerticalPosition={this.decreaseVerticalPosition}
-                clickedItalic={this.clickedItalic}
-                clickedBold={this.clickedBold}
-                changedSize={this.changedSize}
-                changedColor={this.changedColor}
-            />
+            // <SpeechToText
+            //     key={i}
+            //     index={text.index}
+            //     captionType={text.captionType}
+            //     heading={text.heading}
+            //     placeholder={text.placeholder}
+            //     textSubmitHandle={this.handleTextSubmit}
+            //     increaseHorizontalPosition={this.increaseHorizontalPosition}
+            //     decreaseHorizontalPosition={this.decreaseHorizontalPosition}
+            //     increaseVerticalPosition={this.increaseVerticalPosition}
+            //     decreaseVerticalPosition={this.decreaseVerticalPosition}
+            //     clickedItalic={this.clickedItalic}
+            //     clickedBold={this.clickedBold}
+            //     changedSize={this.changedSize}
+            //     changedColor={this.changedColor}
+            // />
+            <InputsText 
+          key={i}
+          index={text.index}
+          captionType={text.captionType}
+          heading={text.heading}
+          placeholder={text.placeholder}
+          textSubmitHandle={this.handleTextSubmit}
+          increaseHorizontalPosition={this.increaseHorizontalPosition}
+          decreaseHorizontalPosition={this.decreaseHorizontalPosition}
+          increaseVerticalPosition={this.increaseVerticalPosition}
+          decreaseVerticalPosition={this.decreaseVerticalPosition}
+          clickedItalic={this.clickedItalic}
+          clickedBold={this.clickedBold}
+          changedSize={this.changedSize}
+          changedColor={this.changedColor}
+          submitSpeechInput={this.speechInput}
+          />
         ))}
       </div>
       
@@ -235,15 +263,14 @@ export default class Generator extends React.Component {
                 <div className="inputs-text">
                   <h3>Add title</h3>
                   <div>
-
-                  <form className="input-form" onSubmit={this.handleTitleSubmit}>
-                      <input type="text" placeholder="meme title" name="title" onChange={this.handleTitleChange}></input>
-                      <button className="title-submit" type="submit">Submit</button>
-                  </form>
+                    <form className="input-form" onSubmit={this.handleTitleSubmit}>
+                        <input type="text" placeholder="meme title" name="title" onChange={this.handleTitleChange}></input>
+                        <button className="title-submit" type="submit">Submit</button>
+                    </form>
                   </div>
                 </div>
                 {inputTexts}
-                <button onClick={this.addNewText}>Add new text</button>
+                <button className="addTextButton" onClick={this.addNewText}>Add new text</button>
             </div>
           </div>
         </div>

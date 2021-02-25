@@ -42,7 +42,7 @@ export default class MyMemes extends React.Component{
     getMemesFromDb() {
 
         // get the memes from the express server
-        fetch('/generatedMemes/getMemeData')
+        fetch('http://localhost:3005/generatedMemes/getMemeData')
             .then(res => {
 
                 return res.json()

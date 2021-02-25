@@ -1,16 +1,23 @@
 .home {
   display: block;
   margin: 25px 50px;
-}   
+}
+
+.main {
+  width: 100%;
+  padding-right: 25px;
+} 
 
 .meme-generator-wrapper {
-display: flex;
-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
 }
 
 .input-section {
   width: 100%;
   border: none;
+  padding-right: 25px;
 }
 
 .input-section > h2{
@@ -60,4 +67,14 @@ margin-left: 0px !important;
 
 h2 {
 margin: 0px;
+}
+
+.addTextButton {
+  background-color: black;
+  color: white;
+  width: 30%;
+  padding: 10px;
+  margin-top: 30px;
+  border: 2px solid #555555;
+  cursor: pointer;
 }

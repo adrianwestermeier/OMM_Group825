@@ -67,7 +67,7 @@ open http://localhost:3000 to see the app
 
 # Server API
 ### Get any existing meme
-You can get any existing meme under http://localhost:3005/images/NAME_OF_MEME.png
+You can get any existing meme under http://localhost:3005/memes/NAME_OF_MEME.png
 
 ### Create a meme
 Important: Images have to be base64 encoded.
@@ -156,21 +156,61 @@ curl
 http://localhost:3005/api/createMemeMultipleTexts
 ```
 
-### Example create a set of memes
-Create a set of memes provided as a zip file. Choose an image or and template and add different top and bottom texts to it. As before you can use your own image or an extisting meme template like in this example:
+### Create a set of memes
+You can also create a set of memes with a top and bottom text based on a template or on a own image provided as a zip file. As above you can use a json like this
+```
+{
+    "texts": [
+        {
+            "title": TITLE,    
+            "name": NAME_OF_MEME,
+            "top": TOP_TEXT,  
+            "bottom": BOTTOM_TEXT,
+        },
+        ...
+    ],
+    "name": NAME_OF_ZIP,
+    "template": NAME_OF_TEMPLATE,
+OR: "image": ROOT_TO_FILE/YOUR_FILE
+}
+```
+to create a set of memes. TITLE is the title of the meme, NAME_OF_MEME is the name of the meme and have to be unique, TOP_TEXT and BOTTOM_TEXT are the texts you want to write. NAME_OF_ZIP is the name under which you want to save the zip file and have to be unique.
+Send this json to http://localhost:3005/api/createZip
+
+Note: "top" and "bottom" have to be passed. If no text is to be assigned, then leave it empty. Example with no top text: {"title":"TITLE", "name":"NAME_OF_MEME", "top":"", "bottom":"TEXT"}
+
+#### Example create a set of memes
+Example with template:
 ```
 curl 
     -H "Content-Type: application/json" 
     -d '{
         "texts": [
-            {"title":"FIRST_TITLE", "name":"NAME_OF_FIRST_MEME", "top":"FIRST_TOP_CAPTION", "bottom":"FIRST_BOTTOM_CAPTION"},
-            {"title":"SECOND_TITLE", "name":"NAME_OF_SECOND_MEME", "top":"SECOND_TOP_CAPTION", "bottom":"SECOND_BOTTOM_CAPTION"},
-            {"title":"THIRD_TITLE", "name":"NAME_OF_THIRD_MEME", "top":"THIRD_TOP_CAPTION", "bottom":"THIRD_BOTTOM_CAPTION"}
+            {"title":"FIRST_TITLE", "name":"NAME_OF_FIRST_MEME", "top":"FIRST_TOP_TEXT", "bottom":"FIRST_BOTTOM_TEXT"},
+            {"title":"SECOND_TITLE", "name":"NAME_OF_SECOND_MEME", "top":"SECOND_TOP_TEXT", "bottom":"SECOND_BOTTOM_TEXT"},
+            {"title":"THIRD_TITLE", "name":"NAME_OF_THIRD_MEME", "top":"THIRD_TOP_TEXT", "bottom":"THIRD_BOTTOM_TEXT"}
             ], 
         "name": "NAME_OF_ZIP", "template": "dog"}'  
 http://localhost:3005/api/createZip
 ```
-where NAME_OF_ZIP is the name under which you want to save the zip file. NAME_OF_#_MEME in "texts" is the name under which you want to save the meme.
+You can get any existing zip file under http://localhost:3005/zip/NAME_OF_ZIP.zip
 
-Note: "top" and "bottom" have to be passed. If no caption is to be assigned, then leave it empty.  Example with no top caption: {"title":"TITLE", "name":"NAME_OF_MEME", "top":"", "bottom":"CAPTION"}
+Also you can get any meme you have added to the set under http://localhost:3005/memes/NAME_OF_MEME.png
 
+### Get a set of memes
+You can also get a set of memes by searching after a title or a part of a title. All generated Memes with that title are given as a zip file. The specified Maximum amount of retrieved images is 10. As above you can use a json like this
+```
+{
+    "search": (PART_OF_)TITLE,
+    "name": NAME_OF_ZIP,
+}
+```
+to get a set of memes. (PART_OF_)TITLE is the title or just the part of the title you want to search for and NAME_OF_ZIP is the name under which you want to save the zip file.
+Send this json to http://localhost:3005/api/getZip
+
+#### Example get a set of memes
+Example to get a set of memes
+```
+curl -H "Content-Type: application/json" -d '{"search": "funny", "name": "NAME_OF_ZIP"}' http://localhost:3005/api/getZip
+```
+As above you can get any existing zip file under http://localhost:3005/zip/NAME_OF_ZIP.zip
