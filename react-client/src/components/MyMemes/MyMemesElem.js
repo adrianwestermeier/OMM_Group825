@@ -20,8 +20,8 @@ export default class MyMemesElem extends React.Component{
                     />
                 </div>
                 <div className="vote-buttons">
-                    <p><IoIosThumbsUp/>: {upVotes}</p>
-                    <p><IoIosThumbsDown/>: {downVotes}</p>
+                    <p><IoIosThumbsUp/>: {upVotes.length}</p>
+                    <p><IoIosThumbsDown/>: {downVotes.length}</p>
                 </div>
             </div>
         )
