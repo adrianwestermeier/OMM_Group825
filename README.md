@@ -83,7 +83,7 @@ To create a meme with your custom image (which you have saved under ROOT_TO_FILE
     "image": ROOT_TO_FILE/YOUR_FILE
 }
 ```
-where NAME is the name under which you want to save the meme (must not exist yet!), TITLE is some title for it and PLACE is either "top" or "bottom".
+where the USER is your existing username, NAME is the name under which you want to save the meme (must not exist yet!), TITLE is some title for it and PLACE is either "top" or "bottom".
 Send this json to http://localhost:3005/api/createMeme
 
 #### alternatively
