@@ -39,6 +39,8 @@ export default class SlideShow extends React.Component {
             maxWidth: Math.floor(window.innerWidth/2-(window.innerWidth*0.05)),
             canvasWidth: Math.min(600, Math.floor(window.innerWidth/2-(window.innerWidth*0.05))),
             canvasHeight: 600,
+            insertWidth: 200,
+            insertHeight: 200,
             
          };
     }
@@ -84,7 +86,7 @@ export default class SlideShow extends React.Component {
                  this.setState({ 
                      localPictureNames: templates.templates,  // image array is wrapped in image json
                  })
-                 console.log("[slideShow]" + "after get template names")
+                 console.log("[slideShow] after get template names")
                  this.state.localPictureNames.forEach(element => {
                      let url = 'http://localhost:3005/templates/' + element;
                      console.log("[slideShow]" + url)
@@ -161,6 +163,7 @@ export default class SlideShow extends React.Component {
      onClickChooseTemplate(index){
         document.getElementById('draw-panel').style.display = "none";
         document.getElementById('edit-gif-panel').style.display = "none";
+        document.getElementById('reset-gif-canvas').style.display= "none";
         document.getElementById('custom-canvas').style.display = "none";
         document.getElementById('insert-additional-image').style.display= "none";
         document.getElementById('meme-wrapper').style.display = "block";
@@ -177,6 +180,7 @@ export default class SlideShow extends React.Component {
          if(this.state.gifMode) {
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('edit-gif-panel').style.display = "block";
+            document.getElementById('reset-gif-canvas').style.display= "inline";
             document.getElementById('custom-canvas').style.display = "inline";
             document.getElementById('insert-additional-image').style.display= "inline-block";
             document.getElementById('meme-wrapper').style.display = "none";
@@ -194,15 +198,15 @@ export default class SlideShow extends React.Component {
  
      // save current meme template to the express server
      saveOnServer() {
-         console.log("[slideShow]" + "image gets saved to server");
+         console.log("[slideShow] image gets saved to server");
  
          let index = this.state.currentIndex;
          let image = this.state.pictures[index];
          const topText = this.props.topText;
          const bottomText = this.props.bottomText;
  
-         console.log("[slideShow]" + "topCaption: " + topText);
-         console.log("[slideShow]" + "image: " + bottomText);
+         console.log("[slideShow] topCaption: " + topText);
+         console.log("[slideShow] image: " + bottomText);
  
          const payload = {
              name: image.name,
@@ -222,7 +226,7 @@ export default class SlideShow extends React.Component {
              })
              .then(jsonResponse => jsonResponse.json()
                .then(responseObject => {
-                   console.log("[slideShow]" + 'recieved answer for post request: ' + JSON.stringify( responseObject ));
+                   console.log("[slideShow] recieved answer for post request: " + JSON.stringify( responseObject ));
                    alert(JSON.stringify( responseObject.message ))
                  })
                  .catch(jsonParseError => {
@@ -262,6 +266,7 @@ export default class SlideShow extends React.Component {
                        })
                        document.getElementById('draw-panel').style.display = "none";
                        document.getElementById('edit-gif-panel').style.display = "none";
+                       document.getElementById('reset-gif-canvas').style.display= "none";
                        document.getElementById('custom-canvas').style.display = "none";
                        document.getElementById('insert-additional-image').style.display= "none";
                        document.getElementById('get-imgflip-button').style.display = "none";
@@ -292,6 +297,9 @@ export default class SlideShow extends React.Component {
                        document.getElementById('meme-wrapper').style.display = "none";
                        document.getElementById('get-imgflip-button').style.display = "none";
                        document.getElementById('arrows').style.display = "none";
+                       document.getElementById('reset-gif-canvas').style.display= "none";
+                       document.getElementById('custom-canvas').style.display = "none";
+                       document.getElementById('insert-additional-image').style.display= "none";
                        document.getElementById('button-group').style.display = "inline";
                        document.getElementById('template-overview').style.display= "none";
                        that.onMemeCreated(true);
@@ -308,6 +316,7 @@ export default class SlideShow extends React.Component {
             if(this.state.drawMode){
                 document.getElementById('draw-panel').style.display = "inline-block";
                 document.getElementById('edit-gif-panel').style.display = "none";
+                document.getElementById('reset-gif-canvas').style.display= "none";
                 document.getElementById('custom-canvas').style.display = "none";
                 document.getElementById('insert-additional-image').style.display= "none";
                 document.getElementById('button-group').style.display = "none";
@@ -325,6 +334,7 @@ export default class SlideShow extends React.Component {
                 document.getElementById('button-group').style.display = "none";
                 document.getElementById('template-overview').style.display= "none";
                 document.getElementById('edit-gif-panel').style.display = "none";
+                document.getElementById('reset-gif-canvas').style.display= "none";
                 document.getElementById('custom-canvas').style.display = "none";
                 document.getElementById('insert-additional-image').style.display= "none";
                 document.getElementById('gif-button').style.display= "block";
@@ -348,6 +358,7 @@ export default class SlideShow extends React.Component {
         if(!this.state.drawMode){
             document.getElementById('draw-panel').style.display = "inline-block";
             document.getElementById('edit-gif-panel').style.display = "none";
+            document.getElementById('reset-gif-canvas').style.display= "none";
             document.getElementById('custom-canvas').style.display = "none";
             document.getElementById('insert-additional-image').style.display= "none";
             document.getElementById('meme-wrapper').style.display = "none";
@@ -364,6 +375,7 @@ export default class SlideShow extends React.Component {
         } else {
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('edit-gif-panel').style.display = "none";
+            document.getElementById('reset-gif-canvas').style.display= "none";
             document.getElementById('custom-canvas').style.display = "none";
             document.getElementById('insert-additional-image').style.display= "none";
             document.getElementById('meme-wrapper').style.display = "block";
@@ -394,6 +406,7 @@ export default class SlideShow extends React.Component {
            if(!this.state.gifMode){
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('edit-gif-panel').style.display = "block";
+            document.getElementById('reset-gif-canvas').style.display= "inline";
             document.getElementById('custom-canvas').style.display = "inline";
             document.getElementById('insert-additional-image').style.display= "block";
             document.getElementById('meme-wrapper').style.display = "none";
@@ -416,6 +429,7 @@ export default class SlideShow extends React.Component {
            } else {
             document.getElementById('draw-panel').style.display = "none";
             document.getElementById('edit-gif-panel').style.display = "none";
+            document.getElementById('reset-gif-canvas').style.display= "none";
             document.getElementById('custom-canvas').style.display = "none";
             document.getElementById('insert-additional-image').style.display= "none";
             document.getElementById('meme-wrapper').style.display = "block";
@@ -583,6 +597,26 @@ export default class SlideShow extends React.Component {
         event.preventDefault();
         this.gifChild.current.adjustCanvasHeight(this.state.canvasHeight);
     }
+
+    handleInsertWidthChange = (event) => {
+        event.preventDefault();
+        this.setState({
+            insertWidth: event.target.value
+        });
+        this.gifChild.current.adjustInsertWidth(event.target.value)
+    }
+
+    handleInsertHeightChange = (event) => {
+        event.preventDefault();
+        this.setState({
+            insertHeight: event.target.value
+        });
+        this.gifChild.current.adjustInsertHeight(event.target.value)
+    }
+
+    resetGifCanvas = (event) => {
+        this.gifChild.current.reset()
+    }
  
      render() {
         const currentIndex = this.state.currentIndex;
@@ -659,6 +693,7 @@ export default class SlideShow extends React.Component {
                         Get ImgFlip Meme Templates
                     </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
+                    <button className="reset-gif-canvas" id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
                  </div>
 
                  <div className="custom-canvas" id="custom-canvas">
@@ -697,7 +732,14 @@ export default class SlideShow extends React.Component {
                             texts={this.props.texts}/>
                     </div>
                     <div className="insert-additional-image" id="insert-additional-image">
-                        <p>Choose additional Template to insert:</p>
+                        <h2>Choose additional Template to insert:</h2>
+                        <div className="size-inserted-image" id="size-inserted-image">
+                            <span>Size of inserted image: </span>
+                            <input type="number" min="10" max={this.state.canvasWidth} defaultValue={this.state.insertWidth} name="insert-width" onChange={this.handleInsertWidthChange}></input>
+                            <span> x </span>
+                            <input type="number" min="10" max={this.state.canvasHeight} defaultValue={this.state.insertHeight} name="insert-height" onChange={this.handleInsertHeightChange}></input>
+                            <span> px</span>
+                        </div>
                         <div className="flex-overview">
                             {allTemplatesToAdd}  
                         </div>

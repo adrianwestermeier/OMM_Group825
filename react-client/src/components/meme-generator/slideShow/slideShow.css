@@ -121,3 +121,15 @@ button[type=submit] {
   clear:left;
   display: none;
 }
+
+.insert-additional-image > h2 {
+  background-color: black;
+  color: white;
+  padding: 0px 10px;
+  display: inline;
+}
+
+.reset-gif-canvas {
+  display: none;
+  height: 40px;
+}

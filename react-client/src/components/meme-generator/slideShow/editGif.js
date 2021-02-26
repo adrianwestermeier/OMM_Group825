@@ -35,6 +35,8 @@ export default class GifEditor extends React.Component {
             pictureToAdd: this.props.picture,
             widthForNewPicture: 200,
             heightForNewPicture: 200,
+            insertWidth: 200, 
+            insertHeight: 200,
             allPictures: [this.props.picture],
             allPicturesPositions: [[0, 0]],
             allPicturesSize: [],
@@ -86,27 +88,31 @@ export default class GifEditor extends React.Component {
         let y = e.nativeEvent.offsetY
 
         const img = new Image()
-        img.src = this.state.pictureToAdd.url;
+        if (!this.state.pictureToAdd) {
+            window.alert("Please first select the image you want to insert!")
+        } else {
+            img.src = this.state.pictureToAdd.url;
 
-        let scalingFactorWidth = 100/img.width
-        let scalingFactorHeight = 100/img.height
-
-        let scalingFactor = Math.min(scalingFactorWidth, scalingFactorHeight)
-
-        let width = img.width*scalingFactor
-        let height = img.height*scalingFactor
-        
-        img.onload = () => {
-            this.ctx.drawImage(img, x, y, width, height)
-            this.updateTexts(width, height)
+            let scalingFactorWidth = this.state.insertWidth/img.width
+            let scalingFactorHeight = this.state.insertHeight/img.height
+    
+            let scalingFactor = Math.min(scalingFactorWidth, scalingFactorHeight)
+    
+            let width = img.width*scalingFactor
+            let height = img.height*scalingFactor
+            
+            img.onload = () => {
+                this.ctx.drawImage(img, x, y, width, height)
+                this.updateTexts(width, height)
+            }
+    
+            this.setState({
+                allPictures: this.state.allPictures.concat(this.state.pictureToAdd),
+                allPicturesPositions: this.state.allPicturesPositions.concat([[x, y]]),
+                allPicturesSize: this.state.allPicturesSize.concat([[width, height]]),
+            })
+            // console.log(this.state.allPictures)
         }
-
-        this.setState({
-            allPictures: this.state.allPictures.concat(this.state.pictureToAdd),
-            allPicturesPositions: this.state.allPicturesPositions.concat([[x, y]]),
-            allPicturesSize: this.state.allPicturesSize.concat([[width, height]]),
-        })
-        console.log(this.state.allPictures)
     }
 
     setNewInsertPicture(picture) {
@@ -184,6 +190,19 @@ export default class GifEditor extends React.Component {
         this.draw(this.state.currentPicture)
     }
 
+    adjustInsertWidth(width) {
+        this.setState({
+            insertWidth: width
+        })
+        console.log(width)
+    }
+
+    adjustInsertHeight(height) {
+        this.setState({
+            insertHeight: height
+        })
+        console.log(height)
+    }
     
 
     render() {
