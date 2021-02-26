@@ -15,6 +15,12 @@ export default class Comments extends React.Component{
         this.props.getMemes();
     }
 
+    /**
+     * this function handles the creation if a new comment.
+     * at first the new comment is created out of the username who crated the comment and the text entered in the textarea.
+     * after that the new comment is added to the list of already existing comments.
+     * after that the newly crated list is sent to the backend and saved on the db
+     * */
     comment(){
 
         let meme = this.props.meme
@@ -52,13 +58,12 @@ export default class Comments extends React.Component{
 
     render(){
 
-        const items = [];
+        const items = [];       //ths list will later contain all comments to be shown
         let meme = this.props.meme
         if(meme){
             let comments = meme.comments
             if(comments){
                 for (let i = 0; i < comments.length; i++) {
-                    const id = this.props.meme._id
                     let user = comments[i].user
                     let text = comments[i].comment
 

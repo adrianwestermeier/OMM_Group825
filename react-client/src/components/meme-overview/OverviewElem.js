@@ -5,7 +5,10 @@ import Comments from "./comments";
 
 import "./OverviewElem.css"
 
-
+/**
+ * this class returns nothing if the user did not vote the meme yet
+ * if the user already voted the meme ist returns the symbol for up or down vote based on the users vote
+ * */
 class YourVote extends React.Component{
     render(){
         const vote = this.props.vote
@@ -33,10 +36,11 @@ class YourVote extends React.Component{
 
 export default class OverviewElem extends React.Component {
 
-    /*
-    * depending on which button was pressed this function performs an up- or downVote, that means updating the corresponding value locally
-    * after that ist sends an update request to the sever to save the corresponding values on the db
-    * after that it reloads all memes to get and render the new information
+    /**
+     * at first this function checks, if the user logged in hase already voted this meme
+     * if its already voted it sends an alert
+     * if the meme was not voted yet it adds the username to the corresponding list (up or down Votes) depending on which button was pressed.
+     * after that the updated information s send to the backend and saved on th db
     * */
     vote(meme, isUpvote) {
         let upVotes = meme.upVotes
@@ -99,6 +103,9 @@ export default class OverviewElem extends React.Component {
 
         let yourVote
 
+        /**
+         * this part checks, if the user already up ot down voted the meme
+         * */
         if(upVotes.includes(user)){
             yourVote = 'upVote'
         } else if(downVotes.includes(user)){

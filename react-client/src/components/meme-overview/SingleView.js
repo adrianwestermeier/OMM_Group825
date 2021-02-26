@@ -3,9 +3,6 @@ import OverviewElem from "./OverviewElem";
 import arrowBack from "../img/arrow_back-black-18dp.svg";
 import arrowForward from "../img/arrow_forward-black-18dp.svg";
 import VoteChart from "./VoteChart";
-import {TextField} from "@material-ui/core";
-import Comments from "./comments";
-
 
 export default class SingleView extends React.Component{
     constructor(props) {

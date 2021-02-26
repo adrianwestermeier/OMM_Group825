@@ -47,7 +47,7 @@ class LogInForm extends React.Component{
 
     /*
     * this function gets all users saved on the db and saves them in this.state. users
-    * aver getting the respones from the backend it also creates a list with all usernames and saves ist in this. state.usernames
+    * aver getting the response from the backend it also creates a list with all usernames and saves ist in this. state.usernames
     * */
     getUsers() {
         // get the memes from the express server

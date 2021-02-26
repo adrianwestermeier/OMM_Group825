@@ -101,7 +101,7 @@ class RegisterDialog extends React.Component{
     render() {
         return(
             <div>
-                <button variant="outlined" color="primary" onClick={() => {this.handleClickOpen()}}>
+                <button color="primary" onClick={() => {this.handleClickOpen()}}>
                     register here
                 </button>
                 <Dialog open={this.state.open} onClose={() => {this.handleCancel()}} aria-labelledby="form-dialog-title">

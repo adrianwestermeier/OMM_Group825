@@ -2,7 +2,6 @@ import React from "react";
 import SingleView from "./SingleView";
 import Grid from "./GridView";
 import option from 'react-select';
-import optionsState from 'react-select';
 
 export default class SwitchView extends React.Component {
     /*

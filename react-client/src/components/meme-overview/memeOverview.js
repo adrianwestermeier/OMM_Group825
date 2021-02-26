@@ -43,6 +43,9 @@ class MemeOverview extends React.Component {
         }
     }
 
+    /**
+     * this function creates a list of all comments from all memes and safes it in this.state.comments
+     * */
     getComments(){
         let comment
         let comments = []
@@ -56,7 +59,7 @@ class MemeOverview extends React.Component {
         }
     }
 
-    /*
+    /**
     * this function fetches all memes from the Database every time it's called
     * */
     getMemesFromDb() {
@@ -98,8 +101,8 @@ class MemeOverview extends React.Component {
                         newMemes[index] = meme;
                         // Update state
                         that.setState({memes: newMemes});
-                        that.filterPrivateMemes()
-                        that.getComments()
+                        that.filterPrivateMemes()     //filter memes marked as private
+                        that.getComments()            //create comments list
                     });      
                 }, memesCopy); // use memesCopy as this
             });
