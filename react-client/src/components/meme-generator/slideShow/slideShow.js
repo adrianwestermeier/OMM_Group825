@@ -614,8 +614,17 @@ export default class SlideShow extends React.Component {
         this.gifChild.current.adjustInsertHeight(event.target.value)
     }
 
-    resetGifCanvas = (event) => {
+    resetGifCanvas = () => {
         this.gifChild.current.reset()
+        this.gifChild.current.resetElements()
+    }
+
+    refreshGifCanvas = () => {
+        this.gifChild.current.update()
+    }
+
+    updateTexts = () => {
+        this.gifChild.current.update()
     }
  
      render() {
@@ -694,6 +703,7 @@ export default class SlideShow extends React.Component {
                     </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                     <button className="reset-gif-canvas" id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
+                    <button className="refresh-gif-canvas" id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button> 
                  </div>
 
                  <div className="custom-canvas" id="custom-canvas">
@@ -728,13 +738,13 @@ export default class SlideShow extends React.Component {
                         <GifEditor ref={this.gifChild}
                             title={this.props.title}
                             currentIndex={this.state.currentIndex}
-                            picture={this.state.pictures[0]}
+                            picture={this.state.pictures[this.state.currentIndex]}
                             texts={this.props.texts}/>
                     </div>
                     <div className="insert-additional-image" id="insert-additional-image">
                         <h2>Choose additional Template to insert:</h2>
                         <div className="size-inserted-image" id="size-inserted-image">
-                            <span>Size of inserted image: </span>
+                            <span>Maximum size of inserted image: </span>
                             <input type="number" min="10" max={this.state.canvasWidth} defaultValue={this.state.insertWidth} name="insert-width" onChange={this.handleInsertWidthChange}></input>
                             <span> x </span>
                             <input type="number" min="10" max={this.state.canvasHeight} defaultValue={this.state.insertHeight} name="insert-height" onChange={this.handleInsertHeightChange}></input>

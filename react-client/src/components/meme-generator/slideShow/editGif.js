@@ -28,18 +28,16 @@ export default class GifEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.componentRef = React.createRef();
-        console.log(props)
         this.state = {
             currentPicture: this.props.picture,
             pictureToAdd: this.props.picture,
-            widthForNewPicture: 200,
-            heightForNewPicture: 200,
             insertWidth: 200, 
             insertHeight: 200,
-            allPictures: [this.props.picture],
+            standardWidth: undefined, 
+            standardHeight:undefined, 
+            allPictures: [[this.props.picture]],
             allPicturesPositions: [[0, 0]],
-            allPicturesSize: [],
+            allPicturesSize: [[600, 600]],
         }
         
     }
@@ -67,16 +65,28 @@ export default class GifEditor extends React.Component {
 
         let width = img.width*scalingFactor
         let height = img.height*scalingFactor
-        
+
+        let pictureSizes = this.state.allPicturesSize
+        let size = [width, height]
+        pictureSizes[0] = size
+
+        let pictures = this.state.allPictures
+        pictures[0] = p
+  
+        this.setState({
+            allPicturesSize: pictureSizes,
+            allPictures: pictures,
+            standardWidth: width,
+            standardHeight: height
+        })    
+
         img.onload = () => {
             this.ctx.drawImage(img, 0, 0, width, height)
-            this.updateTexts(width, height)
+            this.updateTexts()
         }
-
-        this.setState({
-            allPicturesSize: this.state.allPicturesSize.concat([width, height])
-        })
-        console.log(this.state.allPictures, this.state.allPicturesPositions, this.state.allPicturesSize)
+        console.log(this.state.allPictures.length,
+                    this.state.allPicturesPositions.length,
+                    this.state.allPicturesSize.length)
     }
 
     insertImageHere(e) { // insert Image at the position of the mouse
@@ -103,7 +113,7 @@ export default class GifEditor extends React.Component {
             
             img.onload = () => {
                 this.ctx.drawImage(img, x, y, width, height)
-                this.updateTexts(width, height)
+                this.updateTexts()
             }
     
             this.setState({
@@ -111,8 +121,10 @@ export default class GifEditor extends React.Component {
                 allPicturesPositions: this.state.allPicturesPositions.concat([[x, y]]),
                 allPicturesSize: this.state.allPicturesSize.concat([[width, height]]),
             })
-            // console.log(this.state.allPictures)
         }
+        console.log(this.state.allPictures.length,
+            this.state.allPicturesPositions.length,
+            this.state.allPicturesSize.length)
     }
 
     setNewInsertPicture(picture) {
@@ -121,12 +133,14 @@ export default class GifEditor extends React.Component {
         })
     }
 
-    updateTexts(width, height) {
+    updateTexts() {
         let texts = this.props.texts
-        // console.log(texts)
+        console.log(texts)
+        let width = this.state.allPicturesSize[0][0]
+        let height = this.state.allPicturesSize[0][1]
 
         texts.forEach(text => this.addText(text, width, height))
-       
+        
     }
 
     addText(text, w, h) {
@@ -165,15 +179,56 @@ export default class GifEditor extends React.Component {
     
     }
 
-    reset() { //clears it to all white
+    redrawAllImages() {
+        const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        this.ctx = context
 
-        //const canvasRef = useRef(null)
+        this.reset();
+
+        console.log(this.state.allPictures, this.state.allPicturesPositions, this.state.allPicturesSize)
+
+        for (let i =0; i < this.state.allPictures.length; i++) {
+            console.log(i)
+            const img = new Image()
+            
+            img.src = this.state.allPictures[i].url;
+
+            let x = this.state.allPicturesPositions[i][0]
+            let y = this.state.allPicturesPositions[i][1]
+
+            let width = this.state.allPicturesSize[i][0]
+            let height = this.state.allPicturesSize[i][1]
+            
+            img.onload = () => {
+                this.ctx.drawImage(img, x, y, width, height)
+                this.updateTexts()
+            }
+            
+        }
+            
+    }
+
+    update() {
+        this.redrawAllImages()
+    }
+
+    reset() { //clears it to all white
         const canvas = document.getElementById('canvas')
         const context = canvas.getContext('2d')
         this.ctx = context
         this.ctx.fillStyle="white"
-        this.ctx.fillRect(0,0,canvas.offsetWidth, canvas.offsetHeight)
-        this.ctx.lineWidth = 10
+        this.ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
+    }
+
+    resetElements() {
+        const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        this.setState({
+            allPictures: [this.state.currentPicture],
+            allPicturesPositions: [[0, 0]],
+            allPicturesSize: [[this.state.standardWidth, this.state.standardHeight]],
+        })
     }
 
     adjustCanvasWidth(width) {

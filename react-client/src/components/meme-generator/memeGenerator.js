@@ -37,6 +37,8 @@ export default class Generator extends React.Component {
         };
   
         const newTexts = [topText, bottomText]
+
+        this.slideShowChild = React.createRef();
   
         this.state = {
           texts: newTexts,
@@ -65,6 +67,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });  
+      this.slideShowChild.current.updateTexts()
     }
 
 
@@ -80,6 +83,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
+      this.slideShowChild.current.updateTexts()
     }
 
     decreaseHorizontalPosition = (index) => {
@@ -93,6 +97,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
+      this.slideShowChild.current.updateTexts()
     }
 
     increaseVerticalPosition = (index) => {
@@ -106,6 +111,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
+      this.slideShowChild.current.updateTexts()
       // if(pos==="top") {
       //   let newPositionValue = this.state.topTextVerticalPosition
       //   newPositionValue -= 5;
@@ -136,6 +142,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
+      this.slideShowChild.current.updateTexts()
       // if(pos==="top") {
       //   let newPositionValue = this.state.topTextVerticalPosition
       //   newPositionValue += 5;
@@ -166,6 +173,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });  
+      this.slideShowChild.current.updateTexts()
       // if(captionType==="top") {
       //   this.setState({
       //     topItalic: val,
@@ -188,6 +196,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       }); 
+      this.slideShowChild.current.updateTexts()
       // if(captionType==="top") {
       //   this.setState({
       //     topBold: val,
@@ -210,6 +219,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       }); 
+      this.slideShowChild.current.updateTexts()
       // if(captionType==="top") {
       //   this.setState({
       //     topSize: val,
@@ -232,6 +242,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       }); 
+      this.slideShowChild.current.updateTexts()
       // if(captionType==="top") {
       //   this.setState({
       //     topColor: val,
@@ -333,7 +344,7 @@ export default class Generator extends React.Component {
                   bottomTextHorizontalPosition={this.state.bottomTextHorizontalPosition}
                   onMemeCreated={this.onMemeCreated}
                 />   */}
-                <SlideShow 
+                <SlideShow ref={this.slideShowChild}
                   title={this.state.submitTitle}
                   texts={this.state.texts}
                   onMemeCreated={this.onMemeCreated}

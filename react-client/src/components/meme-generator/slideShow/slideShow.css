@@ -133,3 +133,7 @@ button[type=submit] {
   display: none;
   height: 40px;
 }
+
+.refresh-gif-canvas {
+  height: 40px;
+}
