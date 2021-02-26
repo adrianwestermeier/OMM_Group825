@@ -1,16 +1,5 @@
 import React from "react";
-import OverviewElem from "./OverviewElem";
-
-class ListElem extends React.Component{
-    render(){
-        return(
-            <div>
-                <p>{this.props.user}: {this.props.text}</p>
-
-            </div>
-        )
-    }
-}
+import './comments.css'
 
 export default class Comments extends React.Component{
     constructor(props) {
@@ -83,16 +72,16 @@ export default class Comments extends React.Component{
 
         return(
             <div>
-                <form>
+                <form className="editComment">
                     <label>
-                        Comment:
                         <textarea
                             onChange={e => {this.setState({comment: e.target.value})}}
+                            placeholder="Comment"
                         />
                     </label>
                 </form>
-                <button onClick={() => {this.comment()}}>Comment</button>
-                <div>{items}</div>
+                <button className="commentButton" onClick={() => {this.comment()}}>Comment</button>
+                <div className="comments">{items}</div>
             </div>
         )
     }
