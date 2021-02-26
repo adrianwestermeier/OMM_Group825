@@ -8,17 +8,21 @@ import LogInForm from "../LogInForm/LogInForm";
 
 import React from 'react';
 import Expander from '../template-expantion/templateExpantion';
+import MyMemes from "../MyMemes/myMemes";
+import SpeechToText from "../speechToText/speechToText";
 
 class LogInPage extends React.Component{
-  logIn = () => {
-    this.props.logIn();
+  logIn = (user) => {
+    this.props.logIn(user);
   }
 
   render() {
     return(
         <div>
           <LogInForm
-              logIn={() => {this.logIn()}}
+              logIn={(user) => {
+                this.logIn(user)
+              }}
           />
 
         </div>
@@ -37,22 +41,33 @@ class App extends React.Component {
             <li><Link to="/overview">Overview of generated memes</Link></li>
             <li><Link to="/" className="menu-link">Generate new memes</Link></li>
             <li><Link to="/expand" className="menu-link">Add new templates</Link></li>
-            <li><Link to="/register" className="menu-link">register</Link></li>
-            {/* <li><Link to="/local" className="menu-link">local image</Link></li> */}
+            <li><Link to="/myMemes" className="menu-link">MyMemes</Link></li>
+            {/* <li><Link to="/speechToText" className="menu-link">speech To Text</Link></li> */}
           </ul>
         </nav>
           <Switch>
-            {/* <Route path="/local">
-              <Imago />
-            </Route> */}
             <Route path="/overview">
-              <Overview />
+              <Overview
+                  user={this.props.user}
+              />
             </Route>
+              <Route path="/myMemes">
+                  <MyMemes
+                      user={this.props.user}
+                  />
+              </Route>
+              {/* <Route path="/speechToText">
+                  <SpeechToText
+                  />
+              </Route> */}
+
             <Route path="/expand">
               <Expander />
             </Route>
             <Route path="/">
-              <Generator />
+              <Generator
+                  user={this.props.user}
+              />
             </Route>
 
           </Switch>
@@ -66,36 +81,46 @@ class Application extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      user: null
     };
   }
 
-  logIn(){
+  /*
+  * TODO: der user wird in LogInFrom in Zeile 21 noch ausgegeben und dann in Zeile 22 übergeben.
+  *  allerdings kommt er hier leider nicht an. Warum?
+  * */
+  logIn(user){
     this.setState({
       loggedIn: true,
+      user: user
     })
+
   }
 
   render(){
-    // if(!this.state.loggedIn){
-    //   return (
-    //       <LogInPage
-    //           logIn={() => {this.logIn()}}
-    //       />
-    //   )
-    // } else if(this.state.loggedIn){
-    //   return (
-    //       <App/>
-    //   )
-    // }else {
-    //   return(
-    //       <div>Das hat nicht geklappt</div>
-    //   )
-    // }
-    return(<App/>)
-
-
+    if(!this.state.loggedIn){
+      return (
+          <LogInPage
+              logIn={(user) => {
+                this.logIn(user)
+              }}
+          />
+      )
+    } else if(this.state.loggedIn && this.state.user !== null){
+      return (
+          <App
+              user={this.state.user}
+          />
+      )
+    }else {
+      return(
+          <div>Something went wrong</div>
+      )
+    }
   }
+
+
 }
 
 export default Application;

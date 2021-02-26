@@ -3,9 +3,9 @@ var fs = require("fs"), json;
 var router = express.Router();
 const axios = require('axios');
 var cors = require('cors');
-var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
 const { title } = require('process');
+var database = require('./database');
 
 var corsOptions = {
   origin: 'http://localhost:8080',
@@ -13,181 +13,9 @@ var corsOptions = {
   methods: "GET, PUT"
 }
 
-var url = "mongodb://localhost:27017/";
-
-var images;
-
-// ----------- Helper Functions ------------
-
-/* returns all images from "images" collection */
-function getImagesFromDb() {
-  console.log('[images] get Image from Db');
-  mongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("meme-generator-db");
-    dbo.collection("images").find().toArray(function(err, result) {
-      if (err) throw err;
-      images = result;
-      db.close();
-    });
-  }); 
-}
-
-/* checks if all fields are present */
-function assertNewDbEntry(entry) {
-  if (entry.name==="" || entry.url==="" || entry.width==="" || entry.height==="" || entry.boxCount==="") {
-      console.log('[images] empty string detected');
-      return 0;
-  }
-  return 1;
-}
-
-/* posts a new meme to the images collections */
-function postImageToDb(image) {
-  mongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("meme-generator-db");
-    dbo.collection("images").insertOne(image, function(err, res) {
-      if (err) throw err;
-      console.log("[images] 1 document inserted");
-      db.close();
-    });
-  }); 
-}
-
-/* posts a new template to the template collection */
-async function postTemplateToDb(template) {
-  const client = await mongoClient.connect(url, { useNewUrlParser: true })
-        .catch(err => { console.log(err); });
-
-  if (!client) {
-      return;
-  }
-
-  try {
-    const db = client.db("meme-generator-db");
-    let collection = db.collection('templates');
-    await collection.insertOne(template);
-  } catch (err) {
-      console.log(err);
-  } finally {
-      client.close();
-      return "success"
-  }
-}
-
-/* posts a new meme to the generatedMemes collection */
-async function postNewMemeToDb(template) {
-  const client = await mongoClient.connect(url, { useNewUrlParser: true })
-        .catch(err => { console.log(err); });
-
-  if (!client) {
-      return;
-  }
-
-  try {
-    const db = client.db("meme-generator-db");
-    let collection = db.collection('generatedMemes');
-    await collection.insertOne(template);
-  } catch (err) {
-      console.log(err);
-  } finally {
-      client.close();
-      return "success"
-  }
-}
-
-/* gets an entry from the template collection with the name "name" */
-async function getEntry(name, collectionName) {
-  const client = await mongoClient.connect(url, { useNewUrlParser: true })
-        .catch(err => { console.log(err); });
-
-  if (!client) {
-      return;
-  }
-
-  try {
-    const db = client.db("meme-generator-db");
-    let collection = db.collection(collectionName);
-    const entry = await collection.findOne(
-      { name: name },
-      { _id: 0, 'name': 1}
-    );
-    if (entry) {
-      let myName = entry.name;
-      console.log("[images] found entry " + myName);
-      return entry;
-   }
-  } catch (err) {
-      console.log(err);
-  } finally {
-      client.close();
-  }
-}
-
-/* reads a file and parses it to json */
-function readJsonFileSync(filepath, encoding){
-
-    if (typeof (encoding) == 'undefined'){
-        encoding = 'utf8';
-    }
-    var file = fs.readFileSync(filepath, encoding);
-    return JSON.parse(file);
-}
-
-function getData(file){
-    var filepath = __dirname + '/' + file;
-    console.log(filepath);
-    return readJsonFileSync(filepath);
-}
-  
-getImagesFromDb();
-
-// ----------- HTTP Functions ------------
-
-/* GET images. */
-router.get('/', function(req, res, next) {
-    res.json({
-        "images": images
-    });
-    console.log('[images] sent images');
-});
-
-/* GET local images. */
-router.get('/localfiles', function (req, res, next) {
-  mongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("meme-generator-db");
-    dbo.collection("localImages").find().toArray(function(err, result) {
-      if (err) throw err;
-      result.forEach((item) => {
-        console.log('[images] ' + item);
-        var options = {
-          root: path.join(__dirname, 'public'),
-          dotfiles: 'deny',
-          headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true
-          }
-        }
-      
-        var fileName = item.name;
-        console.log(fileName);
-        res.sendFile(fileName, options, function (err) {
-          if (err) {
-            next(err)
-          } else {
-            console.log('[images] Sent:', fileName)
-          }
-        })
-      })
-      db.close();
-    });
-  }); 
-  
-})
-
-/* helper for downloading by url */
+/**
+ * helper for downloading by url
+ */
 const download_image = (url, image_path) =>
   axios({
     url,
@@ -201,13 +29,16 @@ const download_image = (url, image_path) =>
           .on('error', e => reject(e));
       }),
   );
-  
-/* TODO: download image and create a new db entry */
+
+/**
+ * download an image from an existing image url and save it to the db as well as to static template folder
+ */
 router.post('/createByUrl', function(req, res, next) {
   console.log('[images] create by url ', req.body);
+  const db = req.db;
   
-  // e.g. https://i.imgflip.com/24y43o.jpg
   const name = req.body.name;
+  // e.g. https://i.imgflip.com/24y43o.jpg
   const templateUrl = req.body.url;
 
   let format;
@@ -221,7 +52,8 @@ router.post('/createByUrl', function(req, res, next) {
 
   const path = './public/templates/' + name + format;
 
-  getEntry(name, 'templates').then((entry) => {
+  // see if template with this name already exists in the db
+  database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({
@@ -231,13 +63,14 @@ router.post('/createByUrl', function(req, res, next) {
     } else {
       console.log("[images] no entry yet");
 
+      // download the image and post it to the db
       download_image(templateUrl, path).then(() => {
         console.log("[images] downloaded by url");
         var newTemplate = {
           "name": name + format,
         };
       
-        postTemplateToDb(newTemplate).then(() => {
+        database.postTemplateToDb(db, newTemplate).then(() => {
           console.log("[images] wrote new template to DB");
           res.json({
             "code": 201,
@@ -252,15 +85,23 @@ router.post('/createByUrl', function(req, res, next) {
 })
 
 
-/* save a created meme */
+/**
+ * get base64 encoded image, save it to db as well as to static memes folder
+ */
 router.post('/saveCreatedMeme', function(req, res) {
+  const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
-  // console.log(base64Data);
   const name = req.body.name + '.png';
   const title = req.body.title;
+  const user = req.body.user;
+  const isPrivate = req.body.isPrivate;
   const dir = "./public/memes/" + name;
+  const template = req.body.template;
 
-  getEntry(name, 'generatedMemes').then((entry) => {
+
+
+  // check if meme with this name already exists
+  database.getEntry(db, name, 'generatedMemes').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({
@@ -268,8 +109,9 @@ router.post('/saveCreatedMeme', function(req, res) {
         "message": "meme with name \"" + name + "\" already exists! Please rename your meme.",
       });
     } else {
-      console.log("[images] no entry");
+      console.log("[images] no entry yet");
       
+      // write file to folder
       fs.writeFile(dir, base64Data, 'base64', function(err) {
         if (err) {
           console.log('error in saving');
@@ -279,12 +121,21 @@ router.post('/saveCreatedMeme', function(req, res) {
         const newMeme = {
           "name": name,
           "title": title,
-          "upVotes": 0,
-          "downVotes": 0,
-          "upMinusDownVotes": [0]
+          "user": user,
+          "isPrivate": isPrivate,
+          "template": template,
+          "date": new Date(),
+          "upVotes": [],
+          "downVotes": [],
+          "upMinusDownVotes": [0],
+          "comments": []
+
         };
+
+        console.log(newMeme);
       
-        postNewMemeToDb(newMeme).then(() => {
+        // post image to meme db
+        database.postNewMemeToDb(db, newMeme).then(() => {
           console.log("[images] wrote new meme to DB");
           res.json({
             "code": 201,
@@ -296,14 +147,17 @@ router.post('/saveCreatedMeme', function(req, res) {
   });
 })
 
-/* save a created meme */
+/**
+ * get a base64 encoded user camera image, save it to the db as well as to static template file folder
+ */
 router.post('/saveTemplateSnapshot', function(req, res) {
+  const db = req.db;
   const base64Data = req.body.img.replace(/^data:image\/png;base64,/, "");
-  console.log(base64Data);
   const name = req.body.name + '.png';
   const dir = "./public/templates/" + name;
 
-  getEntry(name, 'templates').then((entry) => {
+  // check if template with this name already exists
+  database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({
@@ -311,8 +165,9 @@ router.post('/saveTemplateSnapshot', function(req, res) {
         "message": "template with name \"" + name + "\" already exists! Please rename your template.",
       });
     } else {
-      console.log("[images] no entry");
+      console.log("[images] no entry yet");
       
+      // save file to folder
       fs.writeFile(dir, base64Data, 'base64', function(err) {
         if (err) {
           console.log('error in saving');
@@ -323,7 +178,8 @@ router.post('/saveTemplateSnapshot', function(req, res) {
           "name": name,
         };
       
-        postTemplateToDb(newTemplate).then(() => {
+        // save template to db
+        database.postTemplateToDb(db, newTemplate).then(() => {
           console.log("[images] wrote new template to DB");
           res.json({
             "code": 201,
@@ -335,33 +191,27 @@ router.post('/saveTemplateSnapshot', function(req, res) {
   });
 })
 
-
-/* GET templates from local file storage. */
+/**
+ * get template names of all existing templates in the db
+ */
 router.get('/getTemplateNames', function(req, res, next) {
-  let templates = [];
-  console.log('get template name from Db');
-  mongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("meme-generator-db");
-    dbo.collection("templates").find().toArray(function(err, result) {
-      if (err) throw err;
-      
-      result.forEach(el => {
-        templates.push(el.name);
-      })
-      console.log('data to send from db: ' + templates);
-      res.json({
-        "templates": templates
-      });
-      db.close();
-    });
-  }); 
-  console.log('sent templates');
+  const db = req.db;
+
+  const templates = db.get('templates');
+  templates.find({}, 'name').then((temps) => {
+    console.log(temps);
+    res.json({
+      "templates": temps
+    })
+  })
 });
 
 
-/* POST a template file uploaded by the user. */
+/**
+ * save template file uploaded by the user to local file folder and post it to db 
+ */
 router.post('/uploadTemplate', function(req, res) {
+  const db = req.db;
   if (!req.files || Object.keys(req.files).length === 0) {
     console.log('err1');
     return res.status(400).send('No files were uploaded.');
@@ -372,7 +222,8 @@ router.post('/uploadTemplate', function(req, res) {
   let name = req.files.userUploadFile.name;
   console.log("[images] name = " + name);
 
-  getEntry(name, 'templates').then((entry) => {
+  // check if template with this name already exists
+  database.getEntry(db, name, 'templates').then((entry) => {
     if(entry) {
       console.log("[images] entry: " + entry);
       res.json({
@@ -381,7 +232,7 @@ router.post('/uploadTemplate', function(req, res) {
       });
     } else {
       console.log("[images] no entry");
-      // Use the mv() method to place the file somewhere on your server
+      // Use the mv() method to place the file on the server
       const newName = './public/templates/' + name;
       sampleFile.mv(newName, function(err) {
         if (err) {
@@ -393,7 +244,8 @@ router.post('/uploadTemplate', function(req, res) {
           "name": name,
         };
       
-        postTemplateToDb(newTemplate).then(() => {
+        // post the tempalte to the db
+        database.postTemplateToDb(db, newTemplate).then(() => {
           console.log("[images] wrote new template to DB");
           res.json({
             "code": 201,

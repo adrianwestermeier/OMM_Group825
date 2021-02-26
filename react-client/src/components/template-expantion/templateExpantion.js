@@ -1,427 +1,264 @@
 import React from 'react';
-import axios from 'axios';
 import './templateExpansion.css';
-import { BsChevronRight, BsChevronDown } from "react-icons/bs";
-
-// inputs for user-posted urls
-class InputsPost extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          name: null,
-          url: null,
-          icon: <BsChevronRight/>,
-          expanded: false,
-        };
-      }
-
-      mySubmitHandler = (event) => {
-        event.preventDefault();
-        if ( !this.state.name || !this.state.url) {
-            alert("Please enter an existing url and a template name!");
-            return;
-        }
-        // const name = this.state.name;
-        // const url = this.state.url;
-       
-        console.log(this.state)
-        const payload = {
-            name: event.target.elements.name.value,
-            url: event.target.elements.url.value,
-        }
-        console.log('[template expantion] sending data ' + JSON.stringify( payload ))
-        fetch(`/images/createByUrl`,
-        {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify( payload ),
-        })
-        .then(jsonResponse => jsonResponse.json()
-        .then(responseObject => {
-            console.log('[template expantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
-            alert(JSON.stringify( responseObject.message ))
-          })
-          .catch(jsonParseError => {
-            console.error(jsonParseError);
-          })
-        ).catch(requestError => {
-          console.error(requestError);
-        });           
-        
-      }
-
-      myChangeHandler = (event) => {
-        let nam = event.target.name;
-        let val = event.target.value;
-        this.setState({[nam]: val});
-      }
-
-      expand = () => {
-        if(!this.state.expanded) {
-  
-          document.getElementById("post-form").style.display = "inline";
-          this.setState({
-            icon: <BsChevronDown/>,
-            expanded: true,
-          })
-        } else {
-          document.getElementById("post-form").style.display = "none";
-          this.setState({
-            icon: <BsChevronRight/>,
-            expanded: false,
-          })
-        }
-      }
-
-    render() {
-        return (
-            <div className="inputs-post"> 
-              <div className="header-button-group">
-                <h2>Add a new template by an existing image URL</h2>
-                <button onClick={this.expand}>{this.state.icon}</button>
-              </div>
-                <form className="post-form" id="post-form" onSubmit={this.mySubmitHandler}>
-                  <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
-                  <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
-                  <button type="submit" className="postSubmit">Submit</button>
-                </form>
-            </div>
-        );
-      }
-}
-
-
-// user upload, file gets saved on local file system
-class FileUpload extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedFile: null,
-            icon: <BsChevronRight/>,
-            expanded: false,
-        }
-    }
-
-    onFileChangeHandler = (event) => {
-        console.log(event.target.files[0])
-        this.setState({
-            selectedFile: event.target.files[0],
-            loaded: 0,
-          })
-    }
-
-    onClickHandler = () => {
-        const file = this.state.selectedFile;
-        const name = this.state.selectedFile.name;
-        console.log("[template expantion] name = " + name);
-        if(!name) {
-          alert("Please specify a template name!")
-          return;
-        }
-        const formData = new FormData();
-        formData.append("userUploadFile", file);
-        // formData.append("fileName", name);
-      
-        axios.post(
-          "http://localhost:3000/images/uploadTemplate", 
-          formData,
-          {headers:{"Content-Type" : 'multipart/form-data'}}
-        ).then((res) => {
-            alert(res.data.message);
-          })
-          .catch((err) => alert("File Upload Error"));
-    }
-
-    expand = () => {
-      if(!this.state.expanded) {
-
-        document.getElementById("file-upload-inputs").style.display = "inline";
-        this.setState({
-          icon: <BsChevronDown/>,
-          expanded: true,
-        })
-      } else {
-        document.getElementById("file-upload-inputs").style.display = "none";
-        this.setState({
-          icon: <BsChevronRight/>,
-          expanded: false,
-        })
-      }
-    }
-
-    render() {
-        return(   
-            <div className="file-upload">
-              <div className="header-button-group">
-                <h2>Upload an image template from your computer</h2>
-                <button onClick={this.expand}>{this.state.icon}</button>
-              </div>
-                <div className="file-upload-inputs" id="file-upload-inputs">
-                  <input type="file" name="sampleFile" onChange={this.onFileChangeHandler}/>
-                  <button className="upload-button" type="button" onClick={this.onClickHandler}>Upload</button>
-                </div>
-            </div>
-        )
-    }
-    
-}
-
+import UserProvidedUrl from './user-provided-url/userProvidedUrl';
+import FileUpload from './file-upload/fileUpload';
+import Snapshot from './snapshot/snapshot';
+import Screenshot from './screenshot/screenshot';
 
 /**
-* This component was inspired by the 10th OMM tutorial
-* see https://github.com/mimuc/omm-ws2021/tree/master/10-media-streaming
+* class that renders all the template generation functions
 */
-class Snapshot extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        snaphot: '',
-        snaphotTaken: false,
-        name: null,
-        url: null,
-        icon: <BsChevronRight/>,
-        expanded: false,
-    }
-  }
+// class Snapshot extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//         snaphot: '',
+//         snaphotTaken: false,
+//         name: null,
+//         url: null,
+//         icon: <BsChevronRight/>,
+//         expanded: false,
+//     }
+//   }
 
-  isMediaDevicesCapable() {
-    return navigator.mediaDevices &&
-      navigator.mediaDevices.getUserMedia;
-  }
+//   isMediaDevicesCapable() {
+//     return navigator.mediaDevices &&
+//       navigator.mediaDevices.getUserMedia;
+//   }
 
-  getSnapshot = () => {
-    console.log("[templateExpantion] in getSnapshot");
+//   getSnapshot = () => {
+//     console.log("[templateExpantion] in getSnapshot");
 
-    const video = document.getElementById('camera');
-    /**
-     *  generates an image from the stream in the <video>
-     *  sets snapshot to image source in state
-     */
-    let context;
-    const width = video.offsetWidth;
-    const height = video.offsetHeight;
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, width, height);
-    this.setState({
-      snapshot: canvas.toDataURL('image/png'),
-      snapshotTaken: true,
-    })
-    // hide video after snapshot is taken
-    document.getElementById('video-wrapper').style.display = 'none';
-  }
+//     const video = document.getElementById('camera');
+//     /**
+//      *  generates an image from the stream in the <video>
+//      *  sets snapshot to image source in state
+//      */
+//     let context;
+//     const width = video.offsetWidth;
+//     const height = video.offsetHeight;
+//     const canvas = document.createElement('canvas');
+//     canvas.width = width;
+//     canvas.height = height;
+//     context = canvas.getContext('2d');
+//     context.drawImage(video, 0, 0, width, height);
+//     this.setState({
+//       snapshot: canvas.toDataURL('image/png'),
+//       snapshotTaken: true,
+//     })
+//     // hide video after snapshot is taken
+//     document.getElementById('video-wrapper').style.display = 'none';
+//   }
 
-  componentDidMount() {
-    if (this.isMediaDevicesCapable()) {
-      console.log('mediaDevices.getUserMedia supported');
-    } else {
-      console.log('sorry, mediaDevices.getUserMedia unsupported');
-    }
+//   componentDidMount() {
+//     if (this.isMediaDevicesCapable()) {
+//       console.log('mediaDevices.getUserMedia supported');
+//     } else {
+//       console.log('sorry, mediaDevices.getUserMedia unsupported');
+//     }
   
-    let requestedPermissions = {
-      audio: false,
-      video: true
-    };
-    // get the first video element in the DOM
-    const video = document.getElementById('camera');
-    if(!video) {
-      console.log("[templateExpantion] video not defined");
-    }
+//     let requestedPermissions = {
+//       audio: false,
+//       video: true
+//     };
+//     // get the first video element in the DOM
+//     const video = document.getElementById('camera');
+//     if(!video) {
+//       console.log("[templateExpantion] video not defined");
+//     }
     
-    if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia(requestedPermissions)
-      .then(function(stream) {
-        video.srcObject = stream;
-      }).catch(function(error) {
-        document.write(error);
-      });
-    }
+//     if (navigator.mediaDevices.getUserMedia) {
+//       navigator.mediaDevices.getUserMedia(requestedPermissions)
+//       .then(function(stream) {
+//         video.srcObject = stream;
+//       }).catch(function(error) {
+//         document.write(error);
+//       });
+//     }
 
-  }
+//   }
 
-  expand = () => {
-    if(!this.state.expanded) {
-      document.getElementById("video-snapshot-group").style.display = "inline";
-      this.setState({
-        icon: <BsChevronDown/>,
-        expanded: true,
-      })
-    } else {
-      document.getElementById("video-snapshot-group").style.display = "none";
-      this.setState({
-        icon: <BsChevronRight/>,
-        expanded: false,
-      })
-    }
-  }
+//   expand = () => {
+//     if(!this.state.expanded) {
+//       document.getElementById("video-snapshot-group").style.display = "inline";
+//       this.setState({
+//         icon: <BsChevronDown/>,
+//         expanded: true,
+//       })
+//     } else {
+//       document.getElementById("video-snapshot-group").style.display = "none";
+//       this.setState({
+//         icon: <BsChevronRight/>,
+//         expanded: false,
+//       })
+//     }
+//   }
 
-  changeName = (event) => {
-    event.preventDefault();
-    this.setState({
-        name: event.target.value,
-    })
-  }
+//   changeName = (event) => {
+//     event.preventDefault();
+//     this.setState({
+//         name: event.target.value,
+//     })
+//   }
 
-  onSubmit = () => {
-    if(!this.state.name) {
-      alert('please enter a name');
-      return;
-    }
+//   onSubmit = () => {
+//     if(!this.state.name) {
+//       alert('please enter a name');
+//       return;
+//     }
 
-    const image = this.state.snapshot;
-    const name = this.state.name;
+//     const image = this.state.snapshot;
+//     const name = this.state.name;
 
-    console.log("[templateExpantion] image: " + image)
+//     console.log("[templateExpantion] image: " + image)
 
-    fetch(`/images/saveTemplateSnapshot`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          img: image,
-          name: name,
-        })
-      }).then(jsonResponse => jsonResponse.json()
-          .then(responseObject => {
-            console.log('[TemplateExpantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
-            alert(JSON.stringify( responseObject.message ))
-          })
-          .catch(jsonParseError => {
-            console.error(jsonParseError);
-          })
-        ).catch(requestError => {
-            console.error(requestError);
-          });
-  }
+//     fetch(`/images/saveTemplateSnapshot`, {
+//         method: "POST",
+//         headers: {
+//           Accept: "application/json",
+//           "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({
+//           img: image,
+//           name: name,
+//         })
+//       }).then(jsonResponse => jsonResponse.json()
+//           .then(responseObject => {
+//             console.log('[TemplateExpantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
+//             alert(JSON.stringify( responseObject.message ))
+//           })
+//           .catch(jsonParseError => {
+//             console.error(jsonParseError);
+//           })
+//         ).catch(requestError => {
+//             console.error(requestError);
+//           });
+//   }
 
-  render() {
-    let createdSnapshot;
-    createdSnapshot = this.state.snapshot;
+//   render() {
+//     let createdSnapshot;
+//     createdSnapshot = this.state.snapshot;
     
-    let input;
-    let snapshotButton;
-    let submitButton;
-    if(this.state.snapshotTaken) {
-      input = <input type="text" placeholder="enter a name" name="name" id="name-input" onChange={this.changeName}/>
-      submitButton = <button id="submit-button" onClick={this.onSubmit}>save as template</button>
-    } else {
-      snapshotButton = <button id="snapshot-button" onClick={this.getSnapshot}>get snapshot</button>
-    }
+//     let input;
+//     let snapshotButton;
+//     let submitButton;
+//     if(this.state.snapshotTaken) {
+//       input = <input type="text" placeholder="enter a name" name="name" id="name-input" onChange={this.changeName}/>
+//       submitButton = <button id="submit-button" onClick={this.onSubmit}>save as template</button>
+//     } else {
+//       snapshotButton = <button id="snapshot-button" onClick={this.getSnapshot}>get snapshot</button>
+//     }
     
-    return (
-      <div>
-        <div className="header-button-group">
-          <h2>Create a template from a custom camera snapshot</h2>
-          <button onClick={this.expand}>{this.state.icon}</button>
-        </div>
-        <div className="video-snapshot-group" id="video-snapshot-group">
-          <div id="video-wrapper">
-            <video id="camera" autoPlay></video>
-          </div>
-          {snapshotButton}
-          <div class="snapshot-group">
-            <img src={createdSnapshot} alt="User-provided Snapshot" id='snapshot' ref={this.componentRef}/>
-            <div>
-              {input}
-              {submitButton}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
+//     return (
+//       <div>
+//         <div className="header-button-group">
+//           <h2>Create a template from a custom camera snapshot</h2>
+//           <button onClick={this.expand}>{this.state.icon}</button>
+//         </div>
+//         <div className="video-snapshot-group" id="video-snapshot-group">
+//           <div id="video-wrapper">
+//             <video id="camera" autoPlay></video>
+//           </div>
+//           {snapshotButton}
+//           <div class="snapshot-group">
+//             <img src={createdSnapshot} alt="User-provided Snapshot" id='snapshot' ref={this.componentRef}/>
+//             <div>
+//               {input}
+//               {submitButton}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     )
+//   }
+// }
 
 /**
 * GET a screenshot from user provided url
 */
-class Screenshot extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        url: null,
-        icon: <BsChevronRight/>,
-        expanded: false,
-    }
-  }
+// class Screenshot extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//         url: null,
+//         icon: <BsChevronRight/>,
+//         expanded: false,
+//     }
+//   }
 
-  expand = () => {
-    if(!this.state.expanded) {
-      document.getElementById("screenshot-group").style.display = "inline";
-      this.setState({
-        icon: <BsChevronDown/>,
-        expanded: true,
-      })
-    } else {
-      document.getElementById("screenshot-group").style.display = "none";
-      this.setState({
-        icon: <BsChevronRight/>,
-        expanded: false,
-      })
-    }
-  }
+//   expand = () => {
+//     if(!this.state.expanded) {
+//       document.getElementById("screenshot-group").style.display = "inline";
+//       this.setState({
+//         icon: <BsChevronDown/>,
+//         expanded: true,
+//       })
+//     } else {
+//       document.getElementById("screenshot-group").style.display = "none";
+//       this.setState({
+//         icon: <BsChevronRight/>,
+//         expanded: false,
+//       })
+//     }
+//   }
 
-  changeName = (event) => {
-    event.preventDefault();
-    this.setState({
-        url: event.target.value,
-    })
-  }
+//   changeName = (event) => {
+//     event.preventDefault();
+//     this.setState({
+//         url: event.target.value,
+//     })
+//   }
 
-  onSubmit = () => {
-    if(!this.state.url) {
-      alert('please enter an url');
-      return;
-    }
+//   onSubmit = () => {
+//     if(!this.state.url) {
+//       alert('please enter an url');
+//       return;
+//     }
 
-    const url = this.state.url;
-    const name = this.state.name;
+//     const url = this.state.url;
+//     const name = this.state.name;
 
-    fetch(`/screenshot/create`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          url: url,
-          name: name,
-        })
-      }).then(jsonResponse => jsonResponse.json()
-          .then(responseObject => {
-            console.log('[TemplateExpantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
-            alert(JSON.stringify( responseObject.message ))
-          })
-          .catch(jsonParseError => {
-            console.error(jsonParseError);
-          })
-        ).catch(requestError => {
-            console.error(requestError);
-          });
-  }
+//     fetch(`/screenshot/create`, {
+//         method: "POST",
+//         headers: {
+//           Accept: "application/json",
+//           "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({
+//           url: url,
+//           name: name,
+//         })
+//       }).then(jsonResponse => jsonResponse.json()
+//           .then(responseObject => {
+//             console.log('[TemplateExpantion] recieved answer for post request: ' + JSON.stringify( responseObject ));
+//             alert(JSON.stringify( responseObject.message ))
+//           })
+//           .catch(jsonParseError => {
+//             console.error(jsonParseError);
+//           })
+//         ).catch(requestError => {
+//             console.error(requestError);
+//           });
+//   }
 
-  render() {
-    return(
-      <div>
-        <div className="header-button-group">
-          <h2>Create a template from a website screenshot</h2>
-          <button onClick={this.expand}>{this.state.icon}</button>
-        </div>
-        <div className="screenshot-group" id="screenshot-group">
-          <input type="text" placeholder="enter your website url" name="name" id="name-input" onChange={this.changeName}/>
-          <button id="submit-button" onClick={this.onSubmit}>create screenshot & save as template</button>
-          <p>(this may take a few seconds)</p>
-        </div>
-      </div>
+//   render() {
+//     return(
+//       <div>
+//         <div className="header-button-group">
+//           <h2>Create a template from a website screenshot</h2>
+//           <button onClick={this.expand}>{this.state.icon}</button>
+//         </div>
+//         <div className="screenshot-group" id="screenshot-group">
+//           <input type="text" placeholder="enter your website url" name="name" id="name-input" onChange={this.changeName}/>
+//           <button id="submit-button" onClick={this.onSubmit}>create screenshot & save as template</button>
+//           <p>(this may take a few seconds)</p>
+//         </div>
+//       </div>
        
       
-    )
-  }
-}
+//     )
+//   }
+// }
 
 
 // class that renders all the meme generation functions
@@ -434,7 +271,7 @@ export default class Expander extends React.Component {
     render() {
       return (
         <div className="template-expansion">
-            <InputsPost/>
+            <UserProvidedUrl/>
             <FileUpload/>
             <Snapshot/>
             <Screenshot/>

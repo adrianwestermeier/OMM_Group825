@@ -2,11 +2,11 @@ var express = require('express');
 var fs = require("fs"), json;
 var router = express.Router();
 var cors = require('cors');
-var mongoClient = require('mongodb').MongoClient;
 var jimp = require('jimp');
 var zipFolder = require('zip-folder');
 var path = require('path');
 const { text } = require('express');
+var database = require('./database');
 
 // helper function for printing one text to image
 async function jimper(data, text, top, path, hasImage) {
@@ -22,9 +22,7 @@ async function jimper(data, text, top, path, hasImage) {
   const font = await jimp.loadFont(jimp.FONT_SANS_64_BLACK);
 
   let w = image.bitmap.width; //  width of the image
-  let h = image.bitmap.height;
-
-  // image.print(font, 10, 10, 'Hello World!');
+  let h = image.bitmap.height; // height of the image
 
   if(top) {
     // Print text to image
@@ -86,6 +84,7 @@ async function jimperExtended(data, texts, path, hasImage) {
     // Load the font
     let font;
 
+    // user chooses the font
     if(text.color === "black") {
       switch (text.size)
       {
@@ -141,14 +140,90 @@ async function jimperExtended(data, texts, path, hasImage) {
   }
 }
 
+// helper function for printing multiple texts to image
+async function jimperZip(data, texts, path, hasImage, pathZip) {
+    // load or read image from buffer
+    const top = texts.top;
+    const bottom = texts.bottom;
+    let image;
+    if(hasImage) {
+        image = await jimp.read( Buffer.from(data, 'base64') );
+    } else {
+        image = await jimp.read('./public/templates/' + data + '.jpg');
+    }
+    // Load the font
+    const font = await jimp.loadFont(jimp.FONT_SANS_64_BLACK);
+
+    let w = image.bitmap.width; //  width of the image
+    let h = image.bitmap.height; // height of the image
+
+    // Print top text to image
+    await image.print(
+    font,
+    0,
+    0,
+    {
+    text: texts.top,
+    alignmentX: jimp.HORIZONTAL_ALIGN_CENTER,
+    alignmentY: jimp.VERTICAL_ALIGN_TOP
+    },
+    w,
+    h
+    );
+
+    // Print bottom text to image
+    await image.print(
+    font,
+    0,
+    0,
+    {
+    text: texts.bottom,
+    alignmentX: jimp.HORIZONTAL_ALIGN_CENTER,
+    alignmentY: jimp.VERTICAL_ALIGN_BOTTOM
+    },
+    w,
+    h
+    );
+
+    // Save the image
+    try {
+        if (fs.existsSync(path)) {
+            console.log("file exists");
+            return "fail";
+        } else {
+            await image.writeAsync(path);
+            await image.writeAsync(pathZip);
+            return "success";
+        }
+    } catch(err) {
+        console.error(err)
+    }
+}
+
+/*
+* create a meme with top or bottom text
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "text": TEXT,
+    "name": NAME,
+    "place": PLACE,
+    "image": ROOT_TO_FILE
+  }
+  responds with the url under which the meme can be downloaded or with an error message
+*/
 router.post('/createMeme', function(req, res) {
+    const db = req.db;
+    const user = req.body.user;
     const text = req.body.text;
     const name = req.body.name;
     const place = req.body.place;
+    const title = req.body.title;
     const path = './public/memes/' + name + '.png';
+
     let isTop;
     let data;
     let hasImage;
+    let template;
     if(place==="top") {
         isTop = true;
     } else {
@@ -157,15 +232,34 @@ router.post('/createMeme', function(req, res) {
     if(req.body.image) {
         hasImage = true;
         data = req.body.image.replace(/^data:image\/png;base64,/, "");
+        template = 'custom image'
     } else {
         hasImage = false;
         data = req.body.template;
+        template = data;
     }
     jimper(data, text, isTop, path, hasImage).then((result)=>{
         if(result === "success") {
-            res.json({
+            const newMeme = {
+              "name": name + ".png",
+              "title": title,
+              "user": user,
+              "isPrivate": false,
+              "template": template,
+              "date": new Date(),
+              "upVotes": [],
+              "downVotes": [],
+              "upMinusDownVotes": [0],
+              "comments": []
+            };
+
+            // post image to meme db
+            database.postNewMemeToDb(db, newMeme).then(() => {
+              console.log("[api] wrote new meme to DB");
+              res.json({
                 "code": 201,
                 "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
+              });
             });
         } else {
             res.json({
@@ -197,7 +291,8 @@ router.post('/createMeme', function(req, res) {
   responds with the url under which the meme can be downloaded or with an error message
 */
 router.post('/createMemeMultipleTexts', function(req, res) {
-
+  const db = req.db;
+  const user = req.body.user;
   const texts = req.body.texts;
   const name = req.body.name;
   const title = req.body.title;
@@ -209,21 +304,40 @@ router.post('/createMemeMultipleTexts', function(req, res) {
   
   let data;
   let hasImage;
-  
+  let template;
   if(req.body.image) {
       hasImage = true;
       data = req.body.image.replace(/^data:image\/png;base64,/, "");
+      template = 'costum image';
   } else {
       hasImage = false;
       data = req.body.template;
+      template = data;
   }
 
   jimperExtended(data, texts, path, hasImage).then((result)=>{
       if(result === "success") {
+        const newMeme = {
+          "name": name + ".png",
+          "title": title,
+          "user": user,
+          "isPrivate": false,
+          "template": template,
+          "date": new Date(),
+          "upVotes": [],
+          "downVotes": [],
+          "upMinusDownVotes": [0],
+          "comments": []
+        };
+
+        // post image to meme db
+        database.postNewMemeToDb(db, newMeme).then(() => {
+          console.log("[api] wrote new meme to DB");
           res.json({
-              "code": 201,
-              "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
+            "code": 201,
+            "message": "saved image on server, get the meme under http://localhost:3005/memes/" + name + '.png',
           });
+        });
       } else {
           res.json({
               "code": 501,
@@ -234,63 +348,171 @@ router.post('/createMemeMultipleTexts', function(req, res) {
 })
 
 /*
-* the code below will create a meme and add it to a set of memes
-* @param {object} req - The properties of the meme set
-* @param {object} textList - The different texts
-* @param {const} name - The name of the meme
-* @param {string} place - The place of the text on the image
+* create a set of memes from one image/template with top and bottom caption
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "texts": [
+        {
+            "title": TITLE,
+            "name": NAME_OF_MEME,
+            "top": TOP_CAPTION,
+            "bottom": BOTTOM_CAPTION,
+        },
+        ...
+    ],
+    "name": "NAME_OF_ZIP",
+    "template": "dog"
+  }
+  responds with the url under which the zip can be downloaded or with an error message
 */
 router.post('/createZip', function(req, res) {
-  const textList = req.body.text;
-  const name = req.body.name;
-  const place = req.body.place;
-  // create temporary directory
-  fs.mkdirSync("./public/zip/memesToZip");
-  dirMemes =   './public/zip/memesToZip';
-  dirZip = './public/zip/' + name + '.zip';
+    const db = req.db;
+    const user = req.body.user;
+    const memesList = req.body.texts;
+    const name = req.body.name;
+    if ('./public/zip/memesToZip'){
+        fs.rmdirSync('./public/zip/memesToZip', { recursive: true });
+    }
+    // create temporary directory
+    fs.mkdirSync("./public/zip/memesToZip");
+    dirMemes =   './public/zip/memesToZip';
+    dirZip = './public/zip/' + name + '.zip';
 
-  let isTop;
-  let data;
-  let hasImage;
-  if(place==="top") {
-      isTop = true;
-  } else {
-      isTop = false;
+    let data;
+    let hasImage;
+    let template;
+    if(req.body.image) {
+        hasImage = true;
+        data = req.body.image.replace(/^data:image\/png;base64,/, "");
+        template = 'costum image';
+    } else {
+        hasImage = false;
+        data = req.body.template;
+        template = data;
+    }
+
+    // create memes with different texts
+    memesList.map((texts) => {
+        const nameMeme = texts.name;
+        const path = './public/memes/' + nameMeme + '.png';
+        const pathZip = './public/zip/memesToZip/' + nameMeme + '.png';
+        jimperZip(data, texts, path, hasImage, pathZip).then((result)=>{
+            if(result === "success") {
+              const newMeme = {
+                "name": name + ".png",
+                "title": title,
+                "user": user,
+                "isPrivate": false,
+                "template": template,
+                "date": new Date(),
+                "upVotes": [],
+                "downVotes": [],
+                "upMinusDownVotes": [0],
+                "comments": []
+              };
+
+                // post image to meme db
+                database.postNewMemeToDb(db, newMeme)
+            } else {
+                res.json({
+                    "code": 501,
+                    "message": "A zip with this name already exists",
+                });
+            }
+        })
+    });
+
+    // create zip of the set of memes with timeout
+    setTimeout(function() {
+        zipFolder(dirMemes, dirZip, function(err) {
+            if(err) {
+                console.log('zip could not be created', err);
+                return res.status(500).send(err);
+            }
+
+            res.json({
+                "code": 201,
+                "message": "created zip file",
+            });
+            //delete temporary directory
+            fs.rmdirSync(dirMemes, { recursive: true });
+        })
+    }, 3000);
+})
+
+/*
+* Get a set of images using search parameters, with a maximum amount of retrieved images
+* @param {object} req - The properties of the meme, should have the form
+* {
+    "search": "PART_OF_TITEL",
+    "name": "NAME_OF_ZIP",
   }
-  if(req.body.image) {
-      hasImage = true;
-      data = req.body.image.replace(/^data:image\/png;base64,/, "");
+  responds with the url under which the zip can be downloaded or with an error message
+*/
+router.post('/getZip', async function(req, res) {
+    const db = req.db;
+    const search = req.body.search.toLowerCase();
+    const name = req.body.name;
+    if ('./public/zip/memesToZip'){
+        fs.rmdirSync('./public/zip/memesToZip', { recursive: true });
+    }
+    // create temporary directory for zip files
+    fs.mkdirSync("./public/zip/memesToZip");
+    dirMemes =   './public/zip/memesToZip';
+    dirZip = './public/zip/' + name + '.zip';
 
-  } else {
-      hasImage = false;
-      data = req.body.template;
-  }
-
-  // variable to set different names to the created memes
-  var i = 0;
-  // create memes with different texts
-  textList.map((text) => {
-      jimper(data, text, isTop, './public/zip/memesToZip/' + name + '(' + i + ').png', hasImage),
-      i = i+1
-  });
-
-  // create zip of the set of memes with timeout
-  setTimeout(function() {
-    zipFolder(dirMemes, dirZip, function(err) {
-      if(err) {
-        console.log('zip could not be created', err);
-        return res.status(500).send(err);
-      }
-
-      res.json({
-        "code": 201,
-        "message": "created zip file",
-      });
-      //delete temporary directory
-      fs.rmdirSync(dirMemes, { recursive: true });
+    // get memes from db
+    let myMemes = [];
+    const generatedMemes = db.get('generatedMemes');
+    await generatedMemes.find({}).then((memes) => {
+      memes.forEach(el => {
+        const nextMeme = {
+            name: el.name,
+            title: el.title,
+            template: el.template,
+            date: el.date,
+            user: el.user,
+            upVotes: el.upVotes,
+            downVotes: el.downVotes,
+            upMinusDownVotes: el.upMinusDownVotes,
+            isPrivate: el.isPrivate
+        }
+        myMemes.push(nextMeme);
+      })
     })
-  }, 3000);
 
+    // filter after part of title
+    let i = 0;
+    myMemes.map(async (meme) => {
+        if(meme.title.toLowerCase().includes(search)){
+            i = i+1;
+            if(i <= 10){
+                const pathZip = './public/zip/memesToZip/' + meme.name;
+                image = await jimp.read('./public/memes/' + meme.name);
+                try {
+                    await image.writeAsync(pathZip)
+                } catch(err) {
+                    console.error(err)
+                }
+            }
+        }
+    })
+
+    // create zip of the set of memes with timeout
+    setTimeout(function() {
+        zipFolder(dirMemes, dirZip, function(err) {
+            if(err) {
+                console.log('zip could not be created', err);
+                return res.status(500).send(err);
+            }
+            res.json({
+            "code": 201,
+            "message": "created zip file",
+            });
+            //delete temporary directory
+            fs.rmdirSync(dirMemes, { recursive: true });
+        })
+    }, 3000);
 })
 
 module.exports = router;

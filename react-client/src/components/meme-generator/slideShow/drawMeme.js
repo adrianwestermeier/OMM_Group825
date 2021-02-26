@@ -9,7 +9,6 @@ const styles = {
     },
 
     maindiv : {
-        //padding:'10px',
         margin:'auto',
         width:'600px'
     },
@@ -32,7 +31,9 @@ const styles = {
     }
 }
 
-//simple draw component made in react
+/**
+* class to draw on a canvas
+*/
 export default class DrawApp extends React.Component {
 
     constructor(props) {
@@ -122,8 +123,6 @@ export default class DrawApp extends React.Component {
             penColor : 'black'
         })
 
-
-        //const canvasRef = useRef(null)
         const canvas = this.componentRef.current
         const context = canvas.getContext('2d')
         this.ctx = context

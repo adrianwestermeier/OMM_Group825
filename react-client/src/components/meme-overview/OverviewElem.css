@@ -1,0 +1,6 @@
+.votes{
+    display: flex;
+    justify-content: space-around;
+    height: 30px;
+    width: 100px;
+}

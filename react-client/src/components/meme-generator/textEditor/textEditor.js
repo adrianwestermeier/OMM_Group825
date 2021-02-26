@@ -1,10 +1,54 @@
 import React from 'react';
 import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillCaretUpFill } from "react-icons/bs";
 import { SketchPicker, CompactPicker } from 'react-color';
-import './textEditor.css'
+import './textEditor.css';
+import SpeechToText from "../../speechToText/speechToText";
+// import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
 
-// Inputs for the top and bottom texts
-export default class InputsText extends React.Component {
+
+
+// const SpeechToText = (props) => {
+
+//     const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+//     let caption = ''
+
+//     if (!browserSupportsSpeechRecognition) {
+//         return null
+//     }
+
+
+
+//     return(
+//         <div>
+//             <button onClick={SpeechRecognition.startListening}>Start</button>
+//             <button onClick={SpeechRecognition.stopListening}>Stop</button>
+//             <button onClick={resetTranscript}>Reset</button>
+//             <InputsText
+//                 key={props.key}
+//                 index={props.index}
+//                 captionType={props.captionType}
+//                 heading={props.heading}
+//                 placeholder={props.placeholder}
+//                 textSubmitHandle={props.textSubmitHandle}
+//                 increaseHorizontalPosition={props.increaseHorizontalPosition}
+//                 decreaseHorizontalPosition={props.decreaseHorizontalPosition}
+//                 increaseVerticalPosition={props.increaseVerticalPosition}
+//                 decreaseVerticalPosition={props.decreaseVerticalPosition}
+//                 clickedItalic={props.clickedItalic}
+//                 clickedBold={props.clickedBold}
+//                 changedSize={props.changedSize}
+//                 changedColor={props.changedColor}
+//                 // text={transcript}
+//             />
+//         </div>
+//     )
+
+// }
+
+/**
+* class that handles all the text editing on the templates
+*/
+class InputsText extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +70,6 @@ export default class InputsText extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let text = this.state.text;
-        // text = text.replace(/\n/g , "<br>");
         this.props.textSubmitHandle(this.props.index, text);
     }
 
@@ -86,20 +129,39 @@ export default class InputsText extends React.Component {
     }
 
     handleChangeComplete = (color) => {
-      // this.setState({ background: color.hex });
-      console.log(color.hex);
       this.props.changedColor(this.props.index, color.hex);
     };
+
+    /**
+    * get the text, which was spoken via the speech-to-text module;
+    * must be accessed with DOM as it is not possible to create speechToText as class
+    */
+    getSpeechInput = () => {
+      let speechInput = document.getElementById("transcript").textContent;
+      console.log("[texteditor] speechInput: " + speechInput);
+      this.props.submitSpeechInput(this.props.index, speechInput);
+    }
 
     render() {
         return(
             <div className="inputs-text">
               <h3 className="form-header">{this.props.heading} (only available for templates) text {this.props.index}</h3>
                 <div className="inputs-text-button-group">
+                    {this.props.text}
                   <form className="input-form" onSubmit={this.handleSubmit}>
-                    <textarea className="input-text" placeholder={this.props.placeholder} name="topText" onChange={this.handleClick} rows="2" cols="50"></textarea>
-                    <button type="submit">Submit</button>
+                      <textarea
+                        className="input-text"
+                        placeholder={this.props.placeholder}
+                        name="topText"
+                        onChange={this.handleClick}
+                        rows="2"
+                        cols="50">
+                      </textarea>
+                      <button type="submit">Submit</button>
                   </form>
+                  <p>OR use speech input:</p>
+                  <SpeechToText/>
+                  <button onClick={this.getSpeechInput}>submit spoken text</button>
                   <div className="text-styling-wrapper">
                     <form>
                       <input type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
@@ -127,3 +189,5 @@ export default class InputsText extends React.Component {
         )
     }
 }
+
+export default InputsText;
