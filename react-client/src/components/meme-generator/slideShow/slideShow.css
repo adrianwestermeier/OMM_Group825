@@ -137,3 +137,7 @@ button[type=submit] {
 .refresh-gif-canvas {
   height: 40px;
 }
+
+.undo-last-insert {
+  height: 40px;
+}

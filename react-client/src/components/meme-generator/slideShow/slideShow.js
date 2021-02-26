@@ -625,6 +625,12 @@ export default class SlideShow extends React.Component {
 
     updateTexts = () => {
         this.gifChild.current.update()
+        this.gifChild.current.update()
+    }
+
+    undoLastInsert = () => {
+        this.gifChild.current.undoLastInsert()
+        this.gifChild.current.update()
     }
  
      render() {
@@ -703,7 +709,8 @@ export default class SlideShow extends React.Component {
                     </button>
                     <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
                     <button className="reset-gif-canvas" id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
-                    <button className="refresh-gif-canvas" id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button> 
+                    <button className="refresh-gif-canvas" id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button>
+                    <button className="undo-last-insert" id="undo-last-insert" onClick={() => this.undoLastInsert()} >Undo last insert</button>
                  </div>
 
                  <div className="custom-canvas" id="custom-canvas">

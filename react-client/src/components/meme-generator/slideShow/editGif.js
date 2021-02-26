@@ -48,6 +48,7 @@ export default class GifEditor extends React.Component {
         this.ctx = context
 
         this.reset();
+        this.resetElements();
 
         let picture = p;
 
@@ -207,6 +208,26 @@ export default class GifEditor extends React.Component {
             
         }
             
+    }
+
+    undoLastInsert() {
+        let pictures = this.state.allPictures
+        let allPositions = this.state.allPicturesPositions
+        let allSizes = this.state.allPicturesSize
+        
+        if (pictures.length > 1) {
+            pictures.pop()
+            allPositions.pop()
+            allSizes.pop()
+
+            this.setState({
+                allPictures: pictures,
+                allPicturesPositions: allPositions,
+                allPicturesSize: allSizes
+            })
+        } else {
+            window.alert("Could not remove an element")
+        }
     }
 
     update() {
