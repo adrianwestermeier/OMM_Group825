@@ -119,7 +119,7 @@ curl -H "Content-Type: application/json" -d '{"user": "username", "text": "YOUR_
 ```
 or for bottom text:
 ```
-curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
+curl -H "Content-Type: application/json" -d '{"user": "username", "text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "template": "guy"}'  http://localhost:3005/api/createMeme
 ```
 
 ### Create a meme with multiple texts
