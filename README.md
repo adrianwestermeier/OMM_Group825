@@ -75,6 +75,7 @@ Important: Images have to be base64 encoded.
 To create a meme with your custom image (which you have saved under ROOT_TO_FILE/YOUR_FILE_NAME - has to be .png) and a custom top/bottom text YOUR_TEXT, use the json
 ```
 {
+    "user": USER,
     "text": YOUR_TEXT,
     "name": NAME,
     "title": TITLE,
@@ -90,6 +91,7 @@ Instead of using your own image you can use the name of an extisting meme templa
 In this case your json should look like this
 ```
 {
+    "user": USER,
     "text": YOUR_TEXT,
     "name": NAME,
     "title": TITLE,
@@ -101,19 +103,19 @@ In this case your json should look like this
 #### Example creation with command line using an image
 For top text:
 ```
-(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
+(echo -n '{"user": "username", "text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
 curl -H "Content-Type: application/json" -d @-  http://localhost:3005/api/createMeme
 ```
 or for bottom text:
 ```
-(echo -n '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
+(echo -n '{"user": "username", "text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "bottom", "image": "'; base64 ROOT_TO_FILE/YOUR_FILE_NAME; echo '"}') |
 curl -H "Content-Type: application/json" -d @-  http://localhost:3005/api/createMeme
 ```
 
 #### Example creation with command line using an meme template name
 For top text:
 ```
-curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "template": "dog"}'  http://localhost:3005/api/createMeme
+curl -H "Content-Type: application/json" -d '{"user": "username", "text": "YOUR_TEXT", "name": "NAME", "title": "funny", "place": "top", "template": "dog"}'  http://localhost:3005/api/createMeme
 ```
 or for bottom text:
 ```
@@ -124,6 +126,7 @@ curl -H "Content-Type: application/json" -d '{"text": "YOUR_TEXT", "name": "NAME
 You can also create a meme with multiple texts and styles based on a template. As above you can use a json like this
 ```
 {
+    "user": USER,
     "name": NAME,
     "title": TITEL,
     "template": NAME_OF_TEMPLATE,
@@ -148,7 +151,7 @@ For top text:
 curl    
     -H "Content-Type: application/json" 
     -d '{
-            "name": "cool_name", "title":"some_title", "template": "horse", 
+            "user": "username", "name": "cool_name", "title":"some_title", "template": "horse", 
             "texts": [
                     {"text":"first_text", "posX":100, "posY":100, "color":"black", "size":32},
                     {"text": "second_text", "posX":600, "posY":1600, "color": "white", "size":64}
@@ -160,6 +163,7 @@ http://localhost:3005/api/createMemeMultipleTexts
 You can also create a set of memes with a top and bottom text based on a template or on a own image provided as a zip file. As above you can use a json like this
 ```
 {
+    "user": "username",
     "texts": [
         {
             "title": TITLE,    
@@ -185,6 +189,7 @@ Example with template:
 curl 
     -H "Content-Type: application/json" 
     -d '{
+        "user": "username",
         "texts": [
             {"title":"FIRST_TITLE", "name":"NAME_OF_FIRST_MEME", "top":"FIRST_TOP_TEXT", "bottom":"FIRST_BOTTOM_TEXT"},
             {"title":"SECOND_TITLE", "name":"NAME_OF_SECOND_MEME", "top":"SECOND_TOP_TEXT", "bottom":"SECOND_BOTTOM_TEXT"},

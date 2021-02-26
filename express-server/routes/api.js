@@ -213,6 +213,7 @@ async function jimperZip(data, texts, path, hasImage, pathZip) {
 */
 router.post('/createMeme', function(req, res) {
     const db = req.db;
+    const user = req.body.user;
     const text = req.body.text;
     const name = req.body.name;
     const place = req.body.place;
@@ -242,11 +243,14 @@ router.post('/createMeme', function(req, res) {
             const newMeme = {
               "name": name + ".png",
               "title": title,
+              "user": user,
+              "isPrivate": false,
               "template": template,
               "date": new Date(),
-              "upVotes": 0,
-              "downVotes": 0,
-              "upMinusDownVotes": [0]
+              "upVotes": [],
+              "downVotes": [],
+              "upMinusDownVotes": [0],
+              "comments": []
             };
 
             // post image to meme db
@@ -288,6 +292,7 @@ router.post('/createMeme', function(req, res) {
 */
 router.post('/createMemeMultipleTexts', function(req, res) {
   const db = req.db;
+  const user = req.body.user;
   const texts = req.body.texts;
   const name = req.body.name;
   const title = req.body.title;
@@ -315,11 +320,14 @@ router.post('/createMemeMultipleTexts', function(req, res) {
         const newMeme = {
           "name": name + ".png",
           "title": title,
+          "user": user,
+          "isPrivate": false,
           "template": template,
           "date": new Date(),
-          "upVotes": 0,
-          "downVotes": 0,
-          "upMinusDownVotes": [0]
+          "upVotes": [],
+          "downVotes": [],
+          "upMinusDownVotes": [0],
+          "comments": []
         };
 
         // post image to meme db
@@ -359,6 +367,7 @@ router.post('/createMemeMultipleTexts', function(req, res) {
 */
 router.post('/createZip', function(req, res) {
     const db = req.db;
+    const user = req.body.user;
     const memesList = req.body.texts;
     const name = req.body.name;
     if ('./public/zip/memesToZip'){
@@ -389,15 +398,18 @@ router.post('/createZip', function(req, res) {
         const pathZip = './public/zip/memesToZip/' + nameMeme + '.png';
         jimperZip(data, texts, path, hasImage, pathZip).then((result)=>{
             if(result === "success") {
-                const newMeme = {
-                    "name": texts.name + ".png",
-                    "title": texts.title,
-                    "template": template,
-                    "date": new Date(),
-                    "upVotes": 0,
-                    "downVotes": 0,
-                    "upMinusDownVotes": [0]
-                };
+              const newMeme = {
+                "name": name + ".png",
+                "title": title,
+                "user": user,
+                "isPrivate": false,
+                "template": template,
+                "date": new Date(),
+                "upVotes": [],
+                "downVotes": [],
+                "upMinusDownVotes": [0],
+                "comments": []
+              };
 
                 // post image to meme db
                 database.postNewMemeToDb(db, newMeme)
