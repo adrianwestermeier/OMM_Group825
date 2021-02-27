@@ -204,7 +204,7 @@ export default class Generator extends React.Component {
       const newText = {
         index: newTexts.length,
         captionType: "top",
-        heading: "Style text",
+        heading: "Style new text",
         placeholder: "text",
         text: "",
         verticalPosition: 50,
@@ -221,24 +221,8 @@ export default class Generator extends React.Component {
     }
 
     render() {
-        const inputTexts = <div>
+        const inputTexts = <div id="inputs-text-wrapper">
         {this.state.texts.map((text, i) => (
-            // <SpeechToText
-            //     key={i}
-            //     index={text.index}
-            //     captionType={text.captionType}
-            //     heading={text.heading}
-            //     placeholder={text.placeholder}
-            //     textSubmitHandle={this.handleTextSubmit}
-            //     increaseHorizontalPosition={this.increaseHorizontalPosition}
-            //     decreaseHorizontalPosition={this.decreaseHorizontalPosition}
-            //     increaseVerticalPosition={this.increaseVerticalPosition}
-            //     decreaseVerticalPosition={this.decreaseVerticalPosition}
-            //     clickedItalic={this.clickedItalic}
-            //     clickedBold={this.clickedBold}
-            //     changedSize={this.changedSize}
-            //     changedColor={this.changedColor}
-            // />
             <InputsText 
           key={i}
           index={text.index}
@@ -277,12 +261,12 @@ export default class Generator extends React.Component {
                   <div>
                     <form className="input-form" onSubmit={this.handleTitleSubmit}>
                         <input type="text" placeholder="meme title" name="title" onChange={this.handleTitleChange}></input>
-                        <button className="title-submit" type="submit">Submit</button>
+                        <button className="secondary-button" style={{height:"40px", marginLeft:"20px"}} type="submit">Submit</button>
                     </form>
                   </div>
                 </div>
                 {inputTexts}
-                <button className="addTextButton" onClick={this.addNewText}>Add new text</button>
+                <button className="secondary-button" style={{marginTop:"30px"}} onClick={this.addNewText}>Add new text</button>
             </div>
           </div>
         </div>

@@ -17,14 +17,19 @@
 .input-section-template {
   width: 100%;
   border: none;
-  padding-right: 25px;
+  
+  padding-left:50px;
 }
 
 .input-section-template > h2{
-  background-color: black;
-  color: white;
+  background-color:   black;
+  color:white;
   padding: 0px 10px;
-  display:inline-block; 
+  font-family: 'Amatic SC';
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.05em;
+  display: inline; 
 }
 
 .inputs-text {

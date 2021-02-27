@@ -11,9 +11,13 @@
 }
 
 .slide-show-heading > h2 {
-  background-color: black;
-  color: white;
+  background-color:   black;
+  color:white;
   padding: 0px 10px;
+  font-family: 'Amatic SC';
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.05em;
 }
 
 .warning {
@@ -26,10 +30,6 @@
 .draw-button {
     height: 30px;  
     margin-left: 20px; 
-}
-
-.create-meme-button {
-    height: 40px;
 }
 
 /* arrows */
@@ -68,6 +68,10 @@ img.backButton {
   float: left;
 }
 
+.template-overview-wrapper {
+  margin-bottom: 30px;
+}
+
 .template-overview {
   display: none;
 }
@@ -87,15 +91,23 @@ img.backButton {
   display: none;
 }
 
+.custom-canvas-heading {
+  margin-bottom: 20px;
+}
+
 .custom-canvas-heading > h2 {
-  background-color: black;
+  background-color:   black;
   color: white;
   padding: 0px 10px;
+  font-family: 'Amatic SC';
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.05em;
   display: inline;
 }
 
 .toggle-canvas-options {
-  background-color: white;
+  background-color:  #FFF9C4;
   color: black;
   padding: 0px 10px;
   font-size: 20px;
@@ -105,17 +117,28 @@ img.backButton {
 .adjust-canvas-size {
   margin-bottom: 5px;
   display: none;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.adjust-canvas-size-el {
+  margin-right: 20px;
 }
 
 .insert-additional-image {
   clear:left;
   display: none;
+  padding-top: 20px;
 }
 
 .insert-additional-image > h2 {
-  background-color: black;
+  background-color:   black;
   color: white;
   padding: 0px 10px;
+  font-family: 'Amatic SC';
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: 0.05em;
   display: inline;
 }
 

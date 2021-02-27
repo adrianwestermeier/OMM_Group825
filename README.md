@@ -1,7 +1,7 @@
 # OMM_Group825
 
 # Use docker compose
-In the main folder build the docker composer: 
+In the main folder build the docker composer (Remark: currently the speech input works only with google chrome)
 ```
 sudo docker-compose build
 ```

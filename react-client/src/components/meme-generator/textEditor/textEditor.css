@@ -15,29 +15,8 @@ input[type=text] {
     line-height: 2em;
 }
     
-button[type=submit] {
-    background-color: white;
-    color: black;
-    width: 30%;
-    /* padding: 10px 18px; */
-    margin-left: 30px;
-    border: 2px solid #555555;
-    cursor: pointer;
-}
-    
 .title-submit {
     height: 35px;
-}
-    
-button[type=button] {
-    background-color: white;
-    color: black;
-    width: 30px;
-    height: 20px;
-    padding: 2px 5px;
-    margin-left: 10px;
-    border: 2px solid #555555;
-    cursor: pointer;
 }
     
 .buttons {
@@ -64,11 +43,15 @@ button[type=button] {
 }
 
 h3 {
-    background-color: black;
-    color: white;
-    display:inline-block;
-    /* display: inline-block; */
+    background-color:   black;
+    color:white;
     padding: 0px 10px;
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0.05em;
+    display:inline-block;
+    
 }
       
 .text-styling-wrapper {

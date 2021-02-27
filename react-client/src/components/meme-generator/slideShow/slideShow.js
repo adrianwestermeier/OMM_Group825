@@ -507,6 +507,7 @@ export default class SlideShow extends React.Component {
         document.getElementById('undo-last-insert').style.display= "none";
         document.getElementById('choose-template-heading').style.display= "inline";
         document.getElementById('draw-button').style.display= "block";
+        document.getElementById('inputs-text-wrapper').style.display = "none";
     }
 
     setEditPngView = () => {
@@ -527,6 +528,7 @@ export default class SlideShow extends React.Component {
         document.getElementById('refresh-gif-canvas').style.display= "none";
         document.getElementById('undo-last-insert').style.display= "none";
         document.getElementById('choose-template-heading').style.display= "inline";
+        document.getElementById('inputs-text-wrapper').style.display = "inline";
     }
 
     setEditGifView = () => {
@@ -654,11 +656,6 @@ export default class SlideShow extends React.Component {
            createdImage = this.state.png;
         }
 
-        // let counter;
-        // if(!this.state.drawMode){
-        //    counter = <div><p>Template {currentIndex+1} of {this.state.pictures.length}</p></div>
-        // }
-
         // define html section for overview
         const templates = this.state.pictures
         const allTemplates = templates.map(
@@ -673,8 +670,8 @@ export default class SlideShow extends React.Component {
              <div className="main">
                  <div className="slide-show-heading">
                     <h2 id="choose-template-heading">{this.state.heading} or </h2>
-                    <button className="draw-button" id="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
-                    <button className="gif-button" id ="gif-button" onClick={this.changeToGif}>{this.state.gifButton}</button>
+                    <button className="secondary-button" style={{height: "40px", marginLeft:"20px"}} id="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
+                    <button className="secondary-button" style={{height: "40px", marginLeft:"20px"}} id ="gif-button" onClick={this.changeToGif}>{this.state.gifButton}</button>
                  </div>
 
                 <div className="template-overview-wrapper" id="template-overview-wrapper">
@@ -683,7 +680,7 @@ export default class SlideShow extends React.Component {
                       <button onClick={this.expand}>{this.state.icon}</button>
                     </div>
                     <div className="template-overview" id="template-overview">
-                    <button className="create-meme-button" id="get-imgflip-button" onClick={this.getImgFlip}>
+                    <button className="secondary-button" style={{height: "40px"}} id="get-imgflip-button" onClick={this.getImgFlip}>
                         Get ImgFlip Meme Templates
                     </button>
                         <p>Click template to edit:</p>
@@ -698,10 +695,10 @@ export default class SlideShow extends React.Component {
                         <img src={arrowBack} alt="Arrow pointing to the left" className="backButton" onClick={() => this.onClickPrevious()}></img>
                         <img src={arrowForward} alt="Arrow pointing to the right" className="nextButton" onClick={() => this.onClickNext()}></img>
                     </div>
-                    <button className="create-meme-button" onClick={this.showImage}>{this.state.buttonText}</button>
-                    <button className="reset-gif-canvas" id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
-                    <button className="refresh-gif-canvas" id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button>
-                    <button className="undo-last-insert" id="undo-last-insert" onClick={() => this.undoLastInsert()} >Undo last insert</button>
+                    <button className="secondary-button" style={{height: "40px"}} onClick={this.showImage}>{this.state.buttonText}</button>
+                    <button className="secondary-button" style={{height: "40px"}} id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
+                    <button className="secondary-button" style={{height: "40px"}} id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button>
+                    <button className="secondary-button" style={{height: "40px"}} id="undo-last-insert" onClick={() => this.undoLastInsert()} >Undo last insert</button>
                  </div>
 
                  <div className="custom-canvas" id="custom-canvas">
@@ -710,20 +707,22 @@ export default class SlideShow extends React.Component {
                         <button className="toggle-canvas-options" id="toggle-canvas-options" onClick={this.expandCanvasOptions}>{this.state.iconCanvasOptions}</button>
                      </div>
                     <div className="adjust-canvas-size" id="adjust-canvas-size">
-                        <form className="input-form-width" onSubmit={this.adjustCanvasWidth}>
-                            <p>Width :</p>
-                            <input type="number" min="10" max={this.state.maxWidth} defaultValue={this.state.canvasWidth} name="custom-canvas-width" onChange={this.handleWidthChange}></input>
-                            <button className="set-canvas-width" type="submit">Submit</button>
-                        </form>
-                        <form className="input-form-height" onSubmit={this.adjustCanvasHeight}>
-                            <p>Height: </p>
-                            <input type="number" min="10" max="1000" defaultValue={this.state.canvasHeight} name="custom-canvas-height" onChange={this.handleHeightChange}></input>
-                            <button className="set-canvas-height" type="submit">Submit</button>
-                        </form>
+                        <div className="adjust-canvas-size-el">
+                            <form className="input-form-width" onSubmit={this.adjustCanvasWidth}>
+                                <p>Width :</p>
+                                <input type="number" min="10" max={this.state.maxWidth} defaultValue={this.state.canvasWidth} name="custom-canvas-width" onChange={this.handleWidthChange}></input>
+                                <button className="small-button" style={{marginLeft:"10px"}} type="submit">Submit</button>
+                            </form>
+                        </div>
+                        <div className="adjust-canvas-size-el">
+                            <form className="input-form-height" onSubmit={this.adjustCanvasHeight}>
+                                <p>Height: </p>
+                                <input type="number" min="10" max="1200" defaultValue={this.state.canvasHeight} name="custom-canvas-height" onChange={this.handleHeightChange}></input>
+                                <button className="small-button" style={{marginLeft:"10px"}} type="submit">Submit</button>
+                            </form>
+                        </div>
                     </div>
                  </div>
-
-                 
 
  
                 <React.Fragment>
@@ -749,7 +748,7 @@ export default class SlideShow extends React.Component {
                         <div className="flex-overview">
                             {allTemplatesToAdd}  
                         </div>
-                        <div>Click on Canvas to insert additional Template.</div>
+                        <p>Click on Canvas to insert additional Template.</p>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
                         <TemplateMeme 
@@ -758,10 +757,7 @@ export default class SlideShow extends React.Component {
                         title={this.props.title}
                         texts={this.props.texts}
                         />
-                    </div>
-                    
-
-                    
+                    </div>           
                 </React.Fragment>
 
                 <div className="button-group" id="button-group">
@@ -769,10 +765,10 @@ export default class SlideShow extends React.Component {
                         <p className="warning">Make sure you have added a title and a meme name before you share ;)</p>
                     </div>
                    <input type="text" placeholder="enter a unique meme name" onChange={this.changeMemeName}></input>
-                   <button className="saveButton" onClick={() => {this.saveMemeOnServer()}}>
+                   <button className="secondary-button" style={{height: "40px", marginLeft:"20px"}} onClick={() => {this.saveMemeOnServer()}}>
                      Share
                    </button>
-                   <button onClick={() => exportComponentAsPNG(this.componentRef)}>
+                   <button className="secondary-button" style={{height: "40px", marginLeft:"20px", marginRight:"20px"}} onClick={() => exportComponentAsPNG(this.componentRef)}>
                        Download As PNG
                    </button>
                     <FormControlLabel

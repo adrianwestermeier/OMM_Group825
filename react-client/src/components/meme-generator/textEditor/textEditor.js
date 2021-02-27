@@ -104,7 +104,7 @@ class InputsText extends React.Component {
     render() {
         return(
             <div className="inputs-text">
-              <h3 className="form-header">{this.props.heading} (only available for templates) text {this.props.index}</h3>
+              <h3 className="form-header">{this.props.heading}</h3>
                 <div className="inputs-text-button-group">
                     {this.props.text}
                   <form className="input-form" onSubmit={this.handleSubmit}>
@@ -116,17 +116,17 @@ class InputsText extends React.Component {
                         rows="2"
                         cols="50">
                       </textarea>
-                      <button type="submit">Submit</button>
+                      <button type="submit" className="secondary-button" style={{height: "40px", marginLeft:"20px"}}>Submit</button>
                   </form>
                   <p>OR use speech input:</p>
                   <SpeechToText/>
-                  <button onClick={this.getSpeechInput}>submit spoken text</button>
+                  <button className="secondary-button" style={{height: "40px"}} onClick={this.getSpeechInput}>submit spoken text</button>
                   <div className="text-styling-wrapper">
                     <form>
-                      <input type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
+                      <input style={{height:"30px"}} type="number" id="quantity" name="quantity" min="1" max="50" defaultValue="18" onChange={this.changedSize}/>
                     </form>
-                    <button onClick={this.clickBoldEvent}>bold</button>
-                    <button onClick={this.clickItalicEvent}>italic</button>
+                    <button className="small-button" onClick={this.clickBoldEvent}>bold</button>
+                    <button className="small-button" onClick={this.clickItalicEvent}>italic</button>
                   </div>
                   <div className="color-pos-group">
                   <CompactPicker onChangeComplete={this.handleChangeComplete}/>

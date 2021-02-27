@@ -7,7 +7,7 @@ export default class Meme extends React.Component{
         return(
             <div className="meme">
             <figure>
-                <figcaption>{this.props.title}</figcaption>
+                {/* <figcaption>{this.props.title}</figcaption> */}
                 <div className="top-and-bottom-wrapper">
                     <img src={this.props.url} alt={'Meme'}/>
                 </div>

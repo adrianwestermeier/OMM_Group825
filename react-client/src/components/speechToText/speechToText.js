@@ -51,9 +51,9 @@ const SpeechToText = () => {
 
         return(
             <div>
-                <button onClick={SpeechRecognition.startListening}>Start</button>
-                <button onClick={SpeechRecognition.stopListening}>Stop</button>
-                <button onClick={resetTranscript}>Reset</button>
+                <button className="small-button" style={{marginRight:"10px"}} onClick={SpeechRecognition.startListening}>Start</button>
+                <button className="small-button" style={{marginRight:"10px"}} onClick={SpeechRecognition.stopListening}>Stop</button>
+                <button className="small-button" style={{marginRight:"10px"}} onClick={resetTranscript}>Reset</button>
                 {/* <SpokenCaption
                     text={transcript}
                 /> */}
