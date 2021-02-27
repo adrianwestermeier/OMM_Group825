@@ -399,8 +399,8 @@ router.post('/createZip', function(req, res) {
         jimperZip(data, texts, path, hasImage, pathZip).then((result)=>{
             if(result === "success") {
               const newMeme = {
-                "name": name + ".png",
-                "title": title,
+                "name": nameMeme + ".png",
+                "title": texts.title,
                 "user": user,
                 "isPrivate": false,
                 "template": template,
