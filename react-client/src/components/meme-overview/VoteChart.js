@@ -29,7 +29,7 @@ export default class VoteChart extends React.Component{
         }
 
         return(
-            <div>
+            <div style={{marginTop: "20px"}}>
                 <Chart
                     width={'600px'}
                     height={'400px'}

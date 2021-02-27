@@ -126,8 +126,8 @@ export default class OverviewElem extends React.Component {
 
                 <div>
                     <div className="vote-buttons">
-                        <button className="UpVoteButton" onClick={() => this.vote(meme, true)}><IoIosThumbsUp/></button>
-                        <button className="DownVoteButton" onClick={() => this.vote(meme, false)}><IoIosThumbsDown/></button>
+                        <button className="UpDownVoteButton" onClick={() => this.vote(meme, true)}><IoIosThumbsUp/></button>
+                        <button className="UpDownVoteButton" onClick={() => this.vote(meme, false)}><IoIosThumbsDown/></button>
                         <div className="votes">
                             <p className="UpVoteElem"><IoIosThumbsUp/>: {upVotes.length}</p>
                             <p className="DownVoteElem"><IoIosThumbsDown/>: {downVotes.length}</p>

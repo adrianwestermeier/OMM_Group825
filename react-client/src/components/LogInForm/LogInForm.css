@@ -1,0 +1,56 @@
+html {
+    background-color: #FFF9C4; 
+}
+
+.login-wrapper {
+    text-align: center;
+    background-color: #FFF9C4;
+}
+
+.login-button {
+    background-color:#FBC02D;
+    color: #757575;
+    width: 200px;
+    padding: 10px 18px;
+    /* margin-left: 30px; */
+    margin: 20px 0px;
+    border: 2px solid #BDBDBD;
+    cursor: pointer;
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 24px;
+}
+
+.secondary-button {
+    background-color:#FBC02D;
+    color: black;
+    /* width: 200px; */
+    padding: 8px 14px;
+    /* margin-left: 30px; */
+    /* margin: 20px 0px; */
+    border: none;
+    cursor: pointer;
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 16px;
+}
+
+h1 {
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    letter-spacing: 0.00938em;
+}
+
+p, span {
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.00938em;
+}
+
+a {
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0.00938em;
+}

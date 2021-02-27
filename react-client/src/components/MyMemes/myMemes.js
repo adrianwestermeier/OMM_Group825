@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import MyMemesElem from "./MyMemesElem";
+import "./myMemes.css";
 
 export default class MyMemes extends React.Component{
     constructor(props) {
@@ -97,7 +98,7 @@ export default class MyMemes extends React.Component{
             />)
         }
         return(
-            <div>
+            <div className="my-memes">
                 <h1>My Memes</h1>
                 <div>
                     {items}

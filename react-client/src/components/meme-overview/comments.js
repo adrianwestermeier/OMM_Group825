@@ -85,7 +85,7 @@ export default class Comments extends React.Component{
                         />
                     </label>
                 </form>
-                <button className="commentButton" onClick={() => {this.comment()}}>Comment</button>
+                <button className="secondary-button" onClick={() => {this.comment()}}>Comment</button>
                 <div className="comments">{items}</div>
             </div>
         )

@@ -1,5 +1,6 @@
 import React from "react";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@material-ui/core";
+import "./LogInForm.css"
 
 class RegisterDialog extends React.Component{
     constructor(props) {
@@ -101,7 +102,7 @@ class RegisterDialog extends React.Component{
     render() {
         return(
             <div>
-                <button color="primary" onClick={() => {this.handleClickOpen()}}>
+                <button className="login-button" onClick={() => {this.handleClickOpen()}}>
                     register here
                 </button>
                 <Dialog open={this.state.open} onClose={() => {this.handleCancel()}} aria-labelledby="form-dialog-title">

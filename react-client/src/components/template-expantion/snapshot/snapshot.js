@@ -144,9 +144,9 @@ export default class Snapshot extends React.Component {
       let submitButton;
       if(this.state.snapshotTaken) {
         input = <input type="text" placeholder="enter a name" name="name" id="name-input" onChange={this.changeName}/>
-        submitButton = <button id="submit-button" onClick={this.onSubmit}>save as template</button>
+        submitButton = <button className="secondary-button" style={{marginLeft:"20px"}} id="submit-button" onClick={this.onSubmit}>save as template</button>
       } else {
-        snapshotButton = <button id="snapshot-button" onClick={this.getSnapshot}>get snapshot</button>
+        snapshotButton = <button className="secondary-button" id="snapshot-button" onClick={this.getSnapshot}>get snapshot</button>
       }
       
       return (

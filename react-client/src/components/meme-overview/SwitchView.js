@@ -2,6 +2,7 @@ import React from "react";
 import SingleView from "./SingleView";
 import Grid from "./GridView";
 import option from 'react-select';
+import "./SwitchView.css";
 
 export default class SwitchView extends React.Component {
     /*
@@ -136,26 +137,35 @@ export default class SwitchView extends React.Component {
         */
         return(
             <div>
-                Sort after creation date or votes:
-                <select value={this.state.sortAfter} onChange={this.updateSort.bind(this)}>
-                    <option value="creationDateOld">Creation date oldest first</option>
-                    <option value="creationDateNew">Creation date newest first</option>
-                    <option value="upvotes">Up Votes</option>
-                    <option value="downvotes">Down Votes</option>
-                </select>
-                Filter after used template:
-                <select value={this.state.template} onChange={this.updateTemplate.bind(this)}>
-                    // show the used template from templateList in dropdown menu
-                     {templateList.map((element) => (
-                        <option value={element} key={element}>{element}</option>
-                     ))}
-                </select>
-                Search after (parts of) the title:
-                <input type = "text"
-                    placeholder="meme title"
-                    value = {this.state.search}
-                    onChange={this.updateSearch.bind(this)}
-                />{view}
+            <div className="sort-search-wrapper">
+                <div>
+                    <p>Sort after creation date or votes:</p> 
+                    <select value={this.state.sortAfter} onChange={this.updateSort.bind(this)}>
+                        <option value="creationDateOld">Creation date oldest first</option>
+                        <option value="creationDateNew">Creation date newest first</option>
+                        <option value="upvotes">Up Votes</option>
+                        <option value="downvotes">Down Votes</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Filter after used template:</p> 
+                    <select value={this.state.template} onChange={this.updateTemplate.bind(this)}>
+                        // show the used template from templateList in dropdown menu
+                         {templateList.map((element) => (
+                             <option value={element} key={element}>{element}</option>
+                             ))}
+                    </select>
+                </div>
+                <div>
+                    <p>Search after (parts of) the title:</p>
+                    <input type = "text"
+                        placeholder="meme title"
+                        value = {this.state.search}
+                        onChange={this.updateSearch.bind(this)}
+                    />
+                </div>
+            </div>
+            {view}
             </div>
         )
     }

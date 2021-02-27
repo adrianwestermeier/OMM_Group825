@@ -78,8 +78,8 @@ class LogInForm extends React.Component{
 
     render() {
         return(
-            <div>
-                <h1>LogIn</h1>
+            <div className="login-wrapper">
+                <h1>GROUP825</h1>
                 <TextField
                     autoFocus
                     margin="dense"
@@ -100,12 +100,14 @@ class LogInForm extends React.Component{
                     variant="outlined"
                     onChange={e => {this.setState({password: e.target.value})}}
                 />
+                <br/>
+                <button className="login-button" onClick={() => {this.performLogIn()}}>Log In</button>
+                <p style={{margin: '0px'}}>OR</p>
                 <RegisterDialog
                     users={this.state.users}
                     usernames={this.state.usernames}
                     getUsers={() => {this.getUsers()}}
                 />
-                <button onClick={() => {this.performLogIn()}}>Log In</button>
             </div>
         )
     }

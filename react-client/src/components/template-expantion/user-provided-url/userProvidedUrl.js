@@ -83,7 +83,7 @@ export default class UserProvidedUrl extends React.Component {
                 <form className="post-form" id="post-form" onSubmit={this.mySubmitHandler}>
                   <input type="text" placeholder="name" name="name" onChange={this.myChangeHandler}/> <br/>
                   <input type="text" placeholder="url" name="url" onChange={this.myChangeHandler}/> <br/>
-                  <button type="submit" className="postSubmit">Submit</button>
+                  <button type="submit" className="secondary-button">Submit</button>
                 </form>
             </div>
         );

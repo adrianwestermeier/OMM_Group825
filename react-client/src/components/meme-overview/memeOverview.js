@@ -120,11 +120,12 @@ class MemeOverview extends React.Component {
 
         return(
             <div>
-                <p className={'switch'}>Grid Overview</p>
+                <p className={'switch'} style={{marginRight: "20px"}}>Grid Overview</p>
                 <FormControlLabel className={'switch'}
                     control={<Switch checked={this.state.isSingleView} onChange={toggleChecked} />}
-                    label="Single View"
+                    // label="Single View"
                 />
+                <p style={{display: "inline-block"}}>Single View</p>
                 <SwitchView
                     isSingleView={this.state.isSingleView}
                     memes={this.state.filterPrivate}

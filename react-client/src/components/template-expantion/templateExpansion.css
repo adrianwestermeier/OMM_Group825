@@ -24,9 +24,13 @@
 }
 
 .header-button-group > h2 {
-    background-color: black;
-    color: white;
+    background-color:   #FFC107;
+    color:black;
     padding: 0px 10px;
+    font-family: 'Amatic SC';
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0.05em;
 }
 
 .header-button-group > button {

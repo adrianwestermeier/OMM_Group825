@@ -135,9 +135,9 @@ export default class SingleView extends React.Component{
 
         return(
             <div>
-                <button onClick={() => {this.randomMeme()}}>Random</button>
-                <button disabled={this.state.autoPlayRandom} onClick={() => {this.autoPlayMemes(true)}}>{autoPlayOrderedLabel} ordered</button>
-                <button disabled={this.state.autoPlayOrdered} onClick={() => {this.autoPlayMemes(false)}}>{autoPlayRandomLabel} random</button>
+                <button className="secondary-button" style={{marginRight:"15px"}} onClick={() => {this.randomMeme()}}>Random</button>
+                <button className="secondary-button" style={{marginRight:"15px"}} disabled={this.state.autoPlayRandom} onClick={() => {this.autoPlayMemes(true)}}>{autoPlayOrderedLabel} ordered</button>
+                <button className="secondary-button" style={{marginRight:"15px"}} disabled={this.state.autoPlayOrdered} onClick={() => {this.autoPlayMemes(false)}}>{autoPlayRandomLabel} random</button>
                 <div>
                     <div className="arrows" id="arrows">
                         <img src={arrowBack} className="backButton"  alt="" onClick={() => this.previous()}/>

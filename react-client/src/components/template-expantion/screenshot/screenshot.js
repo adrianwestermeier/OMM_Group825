@@ -81,7 +81,7 @@ export default class Screenshot extends React.Component {
           </div>
           <div className="screenshot-group" id="screenshot-group">
             <input type="text" placeholder="enter your website url" name="name" id="name-input" onChange={this.changeName}/>
-            <button id="submit-button" onClick={this.onSubmit}>create screenshot & save as template</button>
+            <button className="secondary-button" style={{marginLeft:"20px"}} id="submit-button" onClick={this.onSubmit}>create screenshot & save as template</button>
             <p>(this may take a few seconds)</p>
           </div>
         </div>

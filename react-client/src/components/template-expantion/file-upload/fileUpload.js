@@ -72,7 +72,7 @@ export default class FileUpload extends React.Component {
               </div>
                 <div className="file-upload-inputs" id="file-upload-inputs">
                   <input type="file" name="sampleFile" onChange={this.onFileChangeHandler}/>
-                  <button className="upload-button" type="button" onClick={this.onClickHandler}>Upload</button>
+                  <button className="secondary-button" type="button" onClick={this.onClickHandler}>Upload</button>
                 </div>
             </div>
         )
