@@ -135,14 +135,6 @@ export default class SlideShow extends React.Component {
 
      // choose a template out of the template overview
      onClickChooseTemplate(index){
-        // document.getElementById('draw-panel').style.display = "none";
-        // document.getElementById('edit-gif-panel').style.display = "none";
-        // document.getElementById('reset-gif-canvas').style.display= "none";
-        // document.getElementById('custom-canvas').style.display = "none";
-        // document.getElementById('insert-additional-image').style.display= "none";
-        // document.getElementById('meme-wrapper').style.display = "block";
-        // document.getElementById('arrows').style.display = "block";
-
          this.setState({
              currentIndex: index,
              heading: "Choose a template",
@@ -152,13 +144,6 @@ export default class SlideShow extends React.Component {
          })
 
          if(this.state.gifMode) {
-            // document.getElementById('draw-panel').style.display = "none";
-            // document.getElementById('edit-gif-panel').style.display = "block";
-            // document.getElementById('reset-gif-canvas').style.display= "inline";
-            // document.getElementById('custom-canvas').style.display = "inline";
-            // document.getElementById('insert-additional-image').style.display= "inline-block";
-            // document.getElementById('meme-wrapper').style.display = "none";
-            // document.getElementById('arrows').style.display = "block";
             let picture = this.state.pictures[index];
             this.gifChild.current.draw(picture);
          }
@@ -238,7 +223,7 @@ export default class SlideShow extends React.Component {
                         createMode: false,
                         createdImage: img,
                        })
-                       this.setGenerateMemeView()
+                       that.setGenerateMemeView()
                        node.style.border = "1px solid black";
                        that.onMemeCreated(true);
                    })
@@ -246,7 +231,12 @@ export default class SlideShow extends React.Component {
                        console.error('oops, something went wrong!', error);
                    });
             } else {
-                node = document.getElementById('image-wrapper');
+                if (this.state.gifMode) {
+                    node = document.getElementById('edit-gif-panel');
+                } else {
+                    node = document.getElementById('image-wrapper');
+                }
+                
                 const that = this
              
                 // convert html section as image
@@ -516,6 +506,7 @@ export default class SlideShow extends React.Component {
         document.getElementById('refresh-gif-canvas').style.display= "none";
         document.getElementById('undo-last-insert').style.display= "none";
         document.getElementById('choose-template-heading').style.display= "inline";
+        document.getElementById('draw-button').style.display= "block";
     }
 
     setEditPngView = () => {
