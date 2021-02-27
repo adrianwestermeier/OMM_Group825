@@ -3,47 +3,6 @@ import { BsFillCaretDownFill, BsFillCaretLeftFill, BsFillCaretRightFill, BsFillC
 import { SketchPicker, CompactPicker } from 'react-color';
 import './textEditor.css';
 import SpeechToText from "../../speechToText/speechToText";
-// import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
-
-
-
-// const SpeechToText = (props) => {
-
-//     const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-//     let caption = ''
-
-//     if (!browserSupportsSpeechRecognition) {
-//         return null
-//     }
-
-
-
-//     return(
-//         <div>
-//             <button onClick={SpeechRecognition.startListening}>Start</button>
-//             <button onClick={SpeechRecognition.stopListening}>Stop</button>
-//             <button onClick={resetTranscript}>Reset</button>
-//             <InputsText
-//                 key={props.key}
-//                 index={props.index}
-//                 captionType={props.captionType}
-//                 heading={props.heading}
-//                 placeholder={props.placeholder}
-//                 textSubmitHandle={props.textSubmitHandle}
-//                 increaseHorizontalPosition={props.increaseHorizontalPosition}
-//                 decreaseHorizontalPosition={props.decreaseHorizontalPosition}
-//                 increaseVerticalPosition={props.increaseVerticalPosition}
-//                 decreaseVerticalPosition={props.decreaseVerticalPosition}
-//                 clickedItalic={props.clickedItalic}
-//                 clickedBold={props.clickedBold}
-//                 changedSize={props.changedSize}
-//                 changedColor={props.changedColor}
-//                 // text={transcript}
-//             />
-//         </div>
-//     )
-
-// }
 
 /**
 * class that handles all the text editing on the templates

@@ -169,6 +169,7 @@ export default class Generator extends React.Component {
       this.setState({
         texts: newTexts,
       });
+      this.slideShowChild.current.updateTexts()
     }
 
     handleTitleSubmit = (event) => {
