@@ -83,16 +83,6 @@ img.backButton {
   border: 2px solid black;
 }
 
-button[type=submit] {
-  background-color: white;
-  color: black;
-  width: 30%;
-  /* padding: 10px 18px; */
-  margin-left: 30px;
-  border: 2px solid #555555;
-  cursor: pointer;
-}
-
 .custom-canvas {
   display: none;
 }

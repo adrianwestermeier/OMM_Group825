@@ -68,13 +68,3 @@ margin-left: 0px !important;
 h2 {
 margin: 0px;
 }
-
-.addTextButton {
-  background-color: black;
-  color: white;
-  width: 30%;
-  padding: 10px;
-  margin-top: 30px;
-  border: 2px solid #555555;
-  cursor: pointer;
-}
