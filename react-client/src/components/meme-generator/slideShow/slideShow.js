@@ -27,7 +27,7 @@ export default class SlideShow extends React.Component {
             currentIndex: 0,
             heading: "Choose a template",
             headingButton: "Draw a Meme",
-            gifButton: "Edit GIF Template",
+            gifButton: "Edit Template on Canvas",
             buttonText: "Create Meme",
             createMode: true,
             drawMode: false,
@@ -135,14 +135,6 @@ export default class SlideShow extends React.Component {
 
      // choose a template out of the template overview
      onClickChooseTemplate(index){
-        document.getElementById('draw-panel').style.display = "none";
-        document.getElementById('edit-gif-panel').style.display = "none";
-        document.getElementById('reset-gif-canvas').style.display= "none";
-        document.getElementById('custom-canvas').style.display = "none";
-        document.getElementById('insert-additional-image').style.display= "none";
-        document.getElementById('meme-wrapper').style.display = "block";
-        document.getElementById('arrows').style.display = "block";
-
          this.setState({
              currentIndex: index,
              heading: "Choose a template",
@@ -152,16 +144,8 @@ export default class SlideShow extends React.Component {
          })
 
          if(this.state.gifMode) {
-            document.getElementById('draw-panel').style.display = "none";
-            document.getElementById('edit-gif-panel').style.display = "block";
-            document.getElementById('reset-gif-canvas').style.display= "inline";
-            document.getElementById('custom-canvas').style.display = "inline";
-            document.getElementById('insert-additional-image').style.display= "inline-block";
-            document.getElementById('meme-wrapper').style.display = "none";
-            document.getElementById('arrows').style.display = "block";
             let picture = this.state.pictures[index];
             this.gifChild.current.draw(picture);
-            // this.gifChild.current.addText("Test", 50, 200)
          }
      }
 
@@ -239,14 +223,7 @@ export default class SlideShow extends React.Component {
                         createMode: false,
                         createdImage: img,
                        })
-                       document.getElementById('draw-panel').style.display = "none";
-                       document.getElementById('edit-gif-panel').style.display = "none";
-                       document.getElementById('reset-gif-canvas').style.display= "none";
-                       document.getElementById('custom-canvas').style.display = "none";
-                       document.getElementById('insert-additional-image').style.display= "none";
-                       document.getElementById('get-imgflip-button').style.display = "none";
-                       document.getElementById('button-group').style.display = "inline";
-                       document.getElementById('template-overview').style.display= "none";
+                       that.setGenerateMemeView()
                        node.style.border = "1px solid black";
                        that.onMemeCreated(true);
                    })
@@ -254,7 +231,12 @@ export default class SlideShow extends React.Component {
                        console.error('oops, something went wrong!', error);
                    });
             } else {
-                node = document.getElementById('image-wrapper');
+                if (this.state.gifMode) {
+                    node = document.getElementById('edit-gif-panel');
+                } else {
+                    node = document.getElementById('image-wrapper');
+                }
+                
                 const that = this
              
                 // convert html section as image
@@ -270,14 +252,7 @@ export default class SlideShow extends React.Component {
                         createMode: false,
                         createdImage: img,
                        })
-                       document.getElementById('meme-wrapper').style.display = "none";
-                       document.getElementById('get-imgflip-button').style.display = "none";
-                       document.getElementById('arrows').style.display = "none";
-                       document.getElementById('reset-gif-canvas').style.display= "none";
-                       document.getElementById('custom-canvas').style.display = "none";
-                       document.getElementById('insert-additional-image').style.display= "none";
-                       document.getElementById('button-group').style.display = "inline";
-                       document.getElementById('template-overview').style.display= "none";
+                    that.setGenerateMemeView()
                        that.onMemeCreated(true);
                    })
                    .catch(function (error) {
@@ -290,13 +265,16 @@ export default class SlideShow extends React.Component {
                 document.getElementById('get-imgflip-button').style.display = "inline-block";
             }
             if(this.state.drawMode){
-                document.getElementById('draw-panel').style.display = "inline-block";
-                document.getElementById('edit-gif-panel').style.display = "none";
-                document.getElementById('reset-gif-canvas').style.display= "none";
-                document.getElementById('custom-canvas').style.display = "none";
-                document.getElementById('insert-additional-image').style.display= "none";
-                document.getElementById('button-group').style.display = "none";
-                document.getElementById('template-overview').style.display= "block";
+                this.setDrawView()
+                this.setState({
+                    showPng: false,
+                    png: "",
+                    buttonText:"Create Meme",
+                    createMode: true,
+                });
+                this.onMemeCreated(false);
+            } else if (!this.state.gifMode){
+                this.setEditPngView()
                 this.setState({
                     showPng: false,
                     png: "",
@@ -305,22 +283,19 @@ export default class SlideShow extends React.Component {
                 });
                 this.onMemeCreated(false);
             } else {
-                document.getElementById('meme-wrapper').style.display = "block";
-                document.getElementById('arrows').style.display = "block";
-                document.getElementById('button-group').style.display = "none";
-                document.getElementById('template-overview').style.display= "none";
-                document.getElementById('edit-gif-panel').style.display = "none";
-                document.getElementById('reset-gif-canvas').style.display= "none";
-                document.getElementById('custom-canvas').style.display = "none";
-                document.getElementById('insert-additional-image').style.display= "none";
-                document.getElementById('gif-button').style.display= "block";
+                this.setEditGifView()
+                // TODO: Switch to Edith GIF State prüfen
                 this.setState({
-                    showPng: false,
-                    png: "",
+                    heading: "Choose a template",
+                    headingButton: "Draw a Meme",
+                    gifButton: "Edit PNG Template",
                     buttonText:"Create Meme",
+                    drawMode: false,
+                    gifMode: true,
                     createMode: true,
-                });
-                this.onMemeCreated(false);
+                }) 
+                let picture = this.state.pictures[this.state.currentIndex];
+                this.gifChild.current.draw(picture);
             }
         }
      })
@@ -332,40 +307,34 @@ export default class SlideShow extends React.Component {
              return;
          }
         if(!this.state.drawMode){
-            document.getElementById('draw-panel').style.display = "inline-block";
-            document.getElementById('edit-gif-panel').style.display = "none";
-            document.getElementById('reset-gif-canvas').style.display= "none";
-            document.getElementById('custom-canvas').style.display = "none";
-            document.getElementById('insert-additional-image').style.display= "none";
-            document.getElementById('meme-wrapper').style.display = "none";
-            document.getElementById('arrows').style.display = "none";
-            document.getElementById('template-overview-wrapper').style.display= "none";
-            document.getElementById('gif-button').style.display= "none";
-            
+            this.setDrawView()
             this.setState({
                 heading: "Draw",
                 headingButton: "Choose Template",
                 drawMode: true,
             })
         // switch from drawing mode to template editing
-        } else {
-            document.getElementById('draw-panel').style.display = "none";
-            document.getElementById('edit-gif-panel').style.display = "none";
-            document.getElementById('reset-gif-canvas').style.display= "none";
-            document.getElementById('custom-canvas').style.display = "none";
-            document.getElementById('insert-additional-image').style.display= "none";
-            document.getElementById('meme-wrapper').style.display = "block";
-            document.getElementById('arrows').style.display = "block";
-            document.getElementById('template-overview-wrapper').style.display= "block";
-            document.getElementById('gif-button').style.display= "block";
-            
+        } else if (!this.state.gifMode){
+            this.setEditPngView()
             this.setState({
                 heading: "Choose a template",
                 headingButton: "Draw a Meme",
                 drawMode: false,
-                gifButton: "Edit GIF Template",
+                gifButton: "Edit Template on Canvas",
                 gifMode:false,
             }) 
+        } else {
+            this.setEditGifView()
+            // TODO: Switch to Edith GIF State prüfen
+            this.setState({
+                heading: "Choose a template",
+                headingButton: "Draw a Meme",
+                gifButton: "Edit PNG Template",
+                drawMode: false,
+                gifMode: true
+            }) 
+            let picture = this.state.pictures[this.state.currentIndex];
+            this.gifChild.current.draw(picture);
         }
      })
      // switch from png template to gif template
@@ -380,16 +349,7 @@ export default class SlideShow extends React.Component {
        } else {
            // switch from template to gif editing
            if(!this.state.gifMode){
-            document.getElementById('draw-panel').style.display = "none";
-            document.getElementById('edit-gif-panel').style.display = "block";
-            document.getElementById('reset-gif-canvas').style.display= "inline";
-            document.getElementById('custom-canvas').style.display = "inline";
-            document.getElementById('insert-additional-image').style.display= "block";
-            document.getElementById('meme-wrapper').style.display = "none";
-            document.getElementById('arrows').style.display = "block";
-            document.getElementById('template-overview-wrapper').style.display= "block";
-            document.getElementById('input-section-template').style.display="block";
-            
+                this.setEditGifView()
             this.setState({
                 heading: "Choose a template",
                 headingButton: "Draw a Meme",
@@ -403,25 +363,15 @@ export default class SlideShow extends React.Component {
 
             // switch from gif to template editing
            } else {
-            document.getElementById('draw-panel').style.display = "none";
-            document.getElementById('edit-gif-panel').style.display = "none";
-            document.getElementById('reset-gif-canvas').style.display= "none";
-            document.getElementById('custom-canvas').style.display = "none";
-            document.getElementById('insert-additional-image').style.display= "none";
-            document.getElementById('meme-wrapper').style.display = "block";
-            document.getElementById('arrows').style.display = "block";
-            document.getElementById('template-overview-wrapper').style.display= "block";
-            document.getElementById('input-section-template').style.display="block";
-            
-            this.setState({
-                heading: "Choose a template",
-                headingButton: "Draw a Meme",
-                gifButton: "Edit GIF Template",
-                drawMode: false,
-                gifMode: false
-            }) 
-           }
-           
+               this.setEditPngView()
+               this.setState({
+                   heading: "Choose a template",
+                   headingButton: "Draw a Meme",
+                   gifButton: "Edit Template on Canvas",
+                   drawMode: false,
+                   gifMode: false
+               }) 
+           }  
        }
     })
 
@@ -540,6 +490,83 @@ export default class SlideShow extends React.Component {
           }
     }
 
+    setDrawView = () => {
+        console.log("Changed to Draw View")
+        document.getElementById('button-group').style.display = "none";
+        document.getElementById('template-overview').style.display= "block";
+        document.getElementById('draw-panel').style.display = "inline-block";
+        document.getElementById('edit-gif-panel').style.display = "none";
+        document.getElementById('reset-gif-canvas').style.display= "none";
+        document.getElementById('custom-canvas').style.display = "none";
+        document.getElementById('insert-additional-image').style.display= "none";
+        document.getElementById('meme-wrapper').style.display = "none";
+        document.getElementById('arrows').style.display = "none";
+        document.getElementById('template-overview-wrapper').style.display= "none";
+        document.getElementById('gif-button').style.display= "none";
+        document.getElementById('refresh-gif-canvas').style.display= "none";
+        document.getElementById('undo-last-insert').style.display= "none";
+        document.getElementById('choose-template-heading').style.display= "inline";
+        document.getElementById('draw-button').style.display= "block";
+    }
+
+    setEditPngView = () => {
+        console.log("Changed to Edit PNG View")
+        document.getElementById('button-group').style.display = "none";
+        document.getElementById('template-overview').style.display= "none";
+        document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('edit-gif-panel').style.display = "none";
+        document.getElementById('reset-gif-canvas').style.display= "none";
+        document.getElementById('custom-canvas').style.display = "none";
+        document.getElementById('insert-additional-image').style.display= "none";
+        document.getElementById('meme-wrapper').style.display = "block";
+        document.getElementById('arrows').style.display = "block";
+        document.getElementById('template-overview-wrapper').style.display= "block";
+        document.getElementById('gif-button').style.display= "block";
+        document.getElementById('draw-button').style.display= "block";
+        document.getElementById('input-section-template').style.display="block";
+        document.getElementById('refresh-gif-canvas').style.display= "none";
+        document.getElementById('undo-last-insert').style.display= "none";
+        document.getElementById('choose-template-heading').style.display= "inline";
+    }
+
+    setEditGifView = () => {
+        console.log("Changed to Edit GIF View")
+        document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('edit-gif-panel').style.display = "block";
+        document.getElementById('reset-gif-canvas').style.display= "inline";
+        document.getElementById('custom-canvas').style.display = "inline";
+        document.getElementById('insert-additional-image').style.display= "block";
+        document.getElementById('meme-wrapper').style.display = "none";
+        document.getElementById('arrows').style.display = "block";
+        document.getElementById('template-overview-wrapper').style.display= "block";
+        document.getElementById('input-section-template').style.display="block";
+        document.getElementById('refresh-gif-canvas').style.display= "inline";
+        document.getElementById('undo-last-insert').style.display= "inline";
+        document.getElementById('gif-button').style.display= "block";
+        document.getElementById('draw-button').style.display= "block";
+        document.getElementById('choose-template-heading').style.display= "inline";
+    }
+
+    setGenerateMemeView = () => {
+        console.log("Changed to Generate Meme View")
+        document.getElementById('draw-panel').style.display = "none";
+        document.getElementById('edit-gif-panel').style.display = "none";
+        document.getElementById('reset-gif-canvas').style.display= "none";
+        document.getElementById('custom-canvas').style.display = "none";
+        document.getElementById('insert-additional-image').style.display= "none";
+        document.getElementById('get-imgflip-button').style.display = "none";
+        document.getElementById('button-group').style.display = "inline";
+        document.getElementById('template-overview').style.display= "none";
+        document.getElementById('meme-wrapper').style.display = "none";
+        document.getElementById('arrows').style.display = "none";
+        document.getElementById('refresh-gif-canvas').style.display= "none";
+        document.getElementById('undo-last-insert').style.display= "none";
+        document.getElementById('gif-button').style.display= "none";
+        document.getElementById('draw-button').style.display= "none";
+        document.getElementById('template-overview-wrapper').style.display= "none";
+        document.getElementById('choose-template-heading').style.display= "none";
+    }
+
     handleWidthChange = (event) => {
         event.preventDefault();
         let val = event.target.value;
@@ -645,8 +672,8 @@ export default class SlideShow extends React.Component {
          return (
              <div className="main">
                  <div className="slide-show-heading">
-                    <h2>{this.state.heading} or </h2>
-                    <button className="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
+                    <h2 id="choose-template-heading">{this.state.heading} or </h2>
+                    <button className="draw-button" id="draw-button" onClick={this.changeToDraw}>{this.state.headingButton}</button>
                     <button className="gif-button" id ="gif-button" onClick={this.changeToGif}>{this.state.gifButton}</button>
                  </div>
 
@@ -722,6 +749,7 @@ export default class SlideShow extends React.Component {
                         <div className="flex-overview">
                             {allTemplatesToAdd}  
                         </div>
+                        <div>Click on Canvas to insert additional Template.</div>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
                         <TemplateMeme 
