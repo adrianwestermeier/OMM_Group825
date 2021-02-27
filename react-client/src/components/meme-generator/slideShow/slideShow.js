@@ -724,19 +724,7 @@ export default class SlideShow extends React.Component {
                     </div>
                  </div>
 
- 
-                <React.Fragment>
-                    <div className="draw-panel" id="draw-panel">
-                        <DrawApp title={this.props.title} />
-                    </div>
-                    <div className="edit-gif-panel" id="edit-gif-panel">
-                        <GifEditor ref={this.gifChild}
-                            title={this.props.title}
-                            currentIndex={this.state.currentIndex}
-                            picture={this.state.pictures[this.state.currentIndex]}
-                            texts={this.props.texts}/>
-                    </div>
-                    <div className="insert-additional-image" id="insert-additional-image">
+                 <div className="insert-additional-image" id="insert-additional-image">
                         <h2>Choose additional Template to insert:</h2>
                         <div className="size-inserted-image" id="size-inserted-image">
                             <span>Maximum size of inserted image: </span>
@@ -749,6 +737,17 @@ export default class SlideShow extends React.Component {
                             {allTemplatesToAdd}  
                         </div>
                         <p>Click on Canvas to insert additional Template.</p>
+                    </div>
+                <React.Fragment>
+                    <div className="draw-panel" id="draw-panel">
+                        <DrawApp title={this.props.title} />
+                    </div>
+                    <div className="edit-gif-panel" id="edit-gif-panel">
+                        <GifEditor ref={this.gifChild}
+                            title={this.props.title}
+                            currentIndex={this.state.currentIndex}
+                            picture={this.state.pictures[this.state.currentIndex]}
+                            texts={this.props.texts}/>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
                         <TemplateMeme 
