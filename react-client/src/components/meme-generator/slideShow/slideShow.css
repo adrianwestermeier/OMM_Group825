@@ -135,9 +135,11 @@ button[type=submit] {
 }
 
 .refresh-gif-canvas {
+  display: none;
   height: 40px;
 }
 
 .undo-last-insert {
+  display: none;
   height: 40px;
 }
