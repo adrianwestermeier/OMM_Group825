@@ -27,7 +27,7 @@ export default class SlideShow extends React.Component {
             currentIndex: 0,
             heading: "Choose a template",
             headingButton: "Draw a Meme",
-            gifButton: "Edit GIF Template",
+            gifButton: "Edit Template on Canvas",
             buttonText: "Create Meme",
             createMode: true,
             drawMode: false,
@@ -320,7 +320,7 @@ export default class SlideShow extends React.Component {
                 heading: "Choose a template",
                 headingButton: "Draw a Meme",
                 drawMode: false,
-                gifButton: "Edit GIF Template",
+                gifButton: "Edit Template on Canvas",
                 gifMode:false,
             }) 
         } else {
@@ -367,7 +367,7 @@ export default class SlideShow extends React.Component {
                this.setState({
                    heading: "Choose a template",
                    headingButton: "Draw a Meme",
-                   gifButton: "Edit GIF Template",
+                   gifButton: "Edit Template on Canvas",
                    drawMode: false,
                    gifMode: false
                }) 
@@ -749,6 +749,7 @@ export default class SlideShow extends React.Component {
                         <div className="flex-overview">
                             {allTemplatesToAdd}  
                         </div>
+                        <div>Click on Canvas to insert additional Template.</div>
                     </div>
                     <div className="meme-wrapper" id="meme-wrapper">
                         <TemplateMeme 
