@@ -696,9 +696,9 @@ export default class SlideShow extends React.Component {
                         <img src={arrowForward} alt="Arrow pointing to the right" className="nextButton" onClick={() => this.onClickNext()}></img>
                     </div>
                     <button className="secondary-button" style={{height: "40px"}} onClick={this.showImage}>{this.state.buttonText}</button>
-                    <button className="secondary-button" style={{height: "40px"}} id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
-                    <button className="secondary-button" style={{height: "40px"}} id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button>
-                    <button className="secondary-button" style={{height: "40px"}} id="undo-last-insert" onClick={() => this.undoLastInsert()} >Undo last insert</button>
+                    <button className="secondary-button" style={{height: "40px", display:"none"}} id="reset-gif-canvas" onClick={() => this.resetGifCanvas()}>Reset</button>
+                    <button className="secondary-button" style={{height: "40px", display:"none"}} id="refresh-gif-canvas" onClick={() => this.refreshGifCanvas()}>Refresh</button>
+                    <button className="secondary-button" style={{height: "40px", display:"none"}} id="undo-last-insert" onClick={() => this.undoLastInsert()} >Undo last insert</button>
                  </div>
 
                  <div className="custom-canvas" id="custom-canvas">
