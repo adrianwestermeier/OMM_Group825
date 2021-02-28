@@ -37,11 +37,11 @@ export default class SwitchView extends React.Component {
             })
         } else if (event.target.value === 'upvotes'){
             newPostList.sort(function(a,b){
-                return parseInt(b.upVotes) - parseInt(a.upVotes);
+                return parseInt(b.upVotes.length) - parseInt(a.upVotes.length);
             })
         } else if (event.target.value === 'downvotes'){
             newPostList.sort(function(a,b){
-                return parseInt(b.downVotes) - parseInt(a.downVotes);
+                return parseInt(b.downVotes.length) - parseInt(a.downVotes.length);
             })
         }
         this.setState({
